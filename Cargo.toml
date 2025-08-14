@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-ratatui = "0.26"
-crossterm = "0.27"
+ratatui = "0.29"
+crossterm = "0.29"
 anyhow = "1.0"
+framework_lib = { git = "https://github.com/FrameworkComputer/framework-system.git", package = "framework_lib" }

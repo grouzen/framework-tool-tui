@@ -93,18 +93,19 @@ impl App {
     fn render_main(&self, frame: &mut Frame, area: Rect) {
         let [left_area, right_area] =
             Layout::horizontal([Constraint::Min(0), Constraint::Min(0)]).areas(area);
-        let [
-            charging_panel_area,
-            privacy_panel_area,
-            brightness_panel_area,
-        ] = Layout::vertical([Constraint::Min(0), Constraint::Min(0), Constraint::Min(0)])
-            .areas(left_area);
-        let [smbios_panel_area] = Layout::vertical([Constraint::Min(0)]).areas(right_area);
+        let [charging_panel_area, privacy_and_smbios_panels_area] =
+            Layout::vertical([Constraint::Min(0), Constraint::Max(7)]).areas(left_area);
+        let [privacy_panel_area, smbios_panel_area] =
+            Layout::horizontal([Constraint::Min(0), Constraint::Min(0)])
+                .areas(privacy_and_smbios_panels_area);
+        let [brightness_panel_area] = Layout::vertical([Constraint::Min(0)]).areas(right_area);
 
         self.render_charge_panel(frame, charging_panel_area);
+
         self.render_privacy_panel(frame, privacy_panel_area);
-        self.render_brightness_panel(frame, brightness_panel_area);
         self.render_smbios_panel(frame, smbios_panel_area);
+
+        self.render_brightness_panel(frame, brightness_panel_area);
     }
 
     fn render_charge_panel(&self, frame: &mut Frame, area: Rect) {

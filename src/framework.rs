@@ -166,6 +166,15 @@ impl FrameworkControls {
             .unwrap_or(false)
     }
 
+    pub fn charging_status(&self) -> &'static str {
+        match (self.is_charging(), self.is_ac_connected()) {
+            (true, true) => "Charging",
+            (false, true) => "Fully charged",
+            (false, false) => "Discharging",
+            (true, false) => "???",
+        }
+    }
+
     pub fn max_charge_limit(&self) -> Option<u8> {
         self.charge_limit
             .as_ref()

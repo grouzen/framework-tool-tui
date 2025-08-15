@@ -564,6 +564,7 @@ dependencies = [
  "crossterm 0.29.0",
  "framework_lib",
  "ratatui",
+ "smbios-lib",
  "tui-framework-experiment",
 ]
 

@@ -1,6 +1,9 @@
 use framework_lib::chromium_ec::CrosEc;
 use framework_lib::chromium_ec::commands::FpLedBrightnessLevel;
 use framework_lib::power::PowerInfo;
+use framework_lib::smbios;
+use smbioslib::DefinedStruct;
+use smbioslib::SMBiosData;
 use std::time::Duration;
 use std::time::Instant;
 
@@ -27,6 +30,7 @@ impl Framework {
         let privacy = self.ec.get_privacy_info().ok();
         let fp_brightness = self.ec.get_fp_led_level().ok();
         let kb_brightness = self.ec.get_keyboard_backlight().ok();
+        let smbios = smbios::get_smbios();
 
         // let fan_count = framework_lib::power::get_fan_num(&self.ec).ok();
         // let pd_info = Some(
@@ -41,8 +45,9 @@ impl Framework {
             charge_limit,
             privacy,
             fp_brightness,
-            kb_brightness, // fan_count,
-                           // pd_info,
+            kb_brightness,
+            smbios, // fan_count,
+                    // pd_info,
         }
     }
 
@@ -60,8 +65,9 @@ pub struct FrameworkControls {
     charge_limit: Option<(u8, u8)>,
     privacy: Option<(bool, bool)>,
     fp_brightness: Option<(u8, Option<FpLedBrightnessLevel>)>,
-    kb_brightness: Option<u8>, // pub fan_count: Option<usize>,
-                               // pub pd_info: Option<Vec<UsbPdPowerInfo>>,
+    kb_brightness: Option<u8>,
+    smbios: Option<SMBiosData>, // pub fan_count: Option<usize>,
+                                // pub pd_info: Option<Vec<UsbPdPowerInfo>>,
 }
 
 impl FrameworkControls {
@@ -195,5 +201,56 @@ impl FrameworkControls {
 
     pub fn kb_brightness_percentage(&self) -> Option<u8> {
         self.kb_brightness
+    }
+
+    pub fn smbios_version(&self) -> Option<String> {
+        self.smbios
+            .as_ref()
+            .map(|smbios| {
+                smbios
+                    .iter()
+                    .find_map(|undefined_struct| match undefined_struct.defined_struct() {
+                        DefinedStruct::Information(data) => {
+                            Some(smbios::dmidecode_string_val(&data.version()))
+                        }
+                        _ => None,
+                    })
+                    .flatten()
+            })
+            .flatten()
+    }
+
+    pub fn smbios_release_date(&self) -> Option<String> {
+        self.smbios
+            .as_ref()
+            .map(|smbios| {
+                smbios
+                    .iter()
+                    .find_map(|undefined_struct| match undefined_struct.defined_struct() {
+                        DefinedStruct::Information(data) => {
+                            Some(smbios::dmidecode_string_val(&data.release_date()))
+                        }
+                        _ => None,
+                    })
+                    .flatten()
+            })
+            .flatten()
+    }
+
+    pub fn smbios_vendor(&self) -> Option<String> {
+        self.smbios
+            .as_ref()
+            .map(|smbios| {
+                smbios
+                    .iter()
+                    .find_map(|undefined_struct| match undefined_struct.defined_struct() {
+                        DefinedStruct::Information(data) => {
+                            Some(smbios::dmidecode_string_val(&data.vendor()))
+                        }
+                        _ => None,
+                    })
+                    .flatten()
+            })
+            .flatten()
     }
 }

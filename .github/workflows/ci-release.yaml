@@ -33,7 +33,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install libudev-dev
-        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update && sudo apt-get install -y libudev-dev
 
       - name: Get the release version from the tag

@@ -8,3 +8,4 @@ ratatui = "0.29"
 crossterm = "0.29"
 anyhow = "1.0"
 framework_lib = { git = "https://github.com/FrameworkComputer/framework-system.git", package = "framework_lib" }
+tui-framework-experiment = "0.4.0"

@@ -22,6 +22,8 @@ impl Framework {
 
     pub fn poll(&mut self) {
         let power = framework_lib::power::power_info(&self.ec);
+        let privacy = self.ec.get_privacy_info().ok();
+
         // let fan_count = framework_lib::power::get_fan_num(&self.ec).ok();
         // let pd_info = Some(
         //     framework_lib::power::get_pd_info(&self.ec, 4)
@@ -32,8 +34,8 @@ impl Framework {
 
         self.controls = FrameworkControls {
             power,
-            // fan_count,
-            // pd_info,
+            privacy, // fan_count,
+                     // pd_info,
         }
     }
 
@@ -47,9 +49,9 @@ impl Framework {
 
 #[derive(Default)]
 pub struct FrameworkControls {
-    pub power: Option<PowerInfo>,
-    // pub fan_count: Option<usize>,
-    // pub pd_info: Option<Vec<UsbPdPowerInfo>>,
+    power: Option<PowerInfo>,
+    privacy: Option<(bool, bool)>, // pub fan_count: Option<usize>,
+                                   // pub pd_info: Option<Vec<UsbPdPowerInfo>>,
 }
 
 impl FrameworkControls {
@@ -115,6 +117,24 @@ impl FrameworkControls {
             .flatten()
     }
 
+    pub fn capacity_loss_percentage(&self) -> Option<f32> {
+        match (self.design_capacity(), self.last_full_charge_capacity()) {
+            (Some(design), Some(last)) => {
+                Some(((design as f32 - last as f32) / design as f32) * 100.0)
+            }
+            _ => None,
+        }
+    }
+
+    pub fn capacity_loss_per_cycle(&self) -> Option<f32> {
+        match (self.capacity_loss_percentage(), self.cycle_count()) {
+            (Some(loss_percentage), Some(cycle_count)) => {
+                Some(loss_percentage / (cycle_count as f32))
+            }
+            _ => None,
+        }
+    }
+
     pub fn is_charging(&self) -> bool {
         self.power
             .as_ref()
@@ -127,6 +147,20 @@ impl FrameworkControls {
         self.power
             .as_ref()
             .map(|power| power.ac_present)
+            .unwrap_or(false)
+    }
+
+    pub fn is_microphone_enabled(&self) -> bool {
+        self.privacy
+            .as_ref()
+            .map(|privacy| privacy.0)
+            .unwrap_or(false)
+    }
+
+    pub fn is_camera_enabled(&self) -> bool {
+        self.privacy
+            .as_ref()
+            .map(|privacy| privacy.1)
             .unwrap_or(false)
     }
 }

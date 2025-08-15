@@ -1,4 +1,5 @@
 use framework_lib::chromium_ec::CrosEc;
+use framework_lib::chromium_ec::commands::FpLedBrightnessLevel;
 use framework_lib::power::PowerInfo;
 use std::time::Duration;
 use std::time::Instant;
@@ -23,6 +24,8 @@ impl Framework {
     pub fn poll(&mut self) {
         let power = framework_lib::power::power_info(&self.ec);
         let privacy = self.ec.get_privacy_info().ok();
+        let fp_brightness = self.ec.get_fp_led_level().ok();
+        let kb_brightness = self.ec.get_keyboard_backlight().ok();
 
         // let fan_count = framework_lib::power::get_fan_num(&self.ec).ok();
         // let pd_info = Some(
@@ -34,8 +37,10 @@ impl Framework {
 
         self.controls = FrameworkControls {
             power,
-            privacy, // fan_count,
-                     // pd_info,
+            privacy,
+            fp_brightness,
+            kb_brightness, // fan_count,
+                           // pd_info,
         }
     }
 
@@ -50,8 +55,10 @@ impl Framework {
 #[derive(Default)]
 pub struct FrameworkControls {
     power: Option<PowerInfo>,
-    privacy: Option<(bool, bool)>, // pub fan_count: Option<usize>,
-                                   // pub pd_info: Option<Vec<UsbPdPowerInfo>>,
+    privacy: Option<(bool, bool)>,
+    fp_brightness: Option<(u8, Option<FpLedBrightnessLevel>)>,
+    kb_brightness: Option<u8>, // pub fan_count: Option<usize>,
+                               // pub pd_info: Option<Vec<UsbPdPowerInfo>>,
 }
 
 impl FrameworkControls {
@@ -162,5 +169,22 @@ impl FrameworkControls {
             .as_ref()
             .map(|privacy| privacy.1)
             .unwrap_or(false)
+    }
+
+    pub fn fp_brightness_percentage(&self) -> Option<u8> {
+        self.fp_brightness
+            .as_ref()
+            .map(|fp_brightness| fp_brightness.0)
+    }
+
+    pub fn fp_brightness_level(&self) -> Option<&FpLedBrightnessLevel> {
+        self.fp_brightness
+            .as_ref()
+            .map(|fp_brightness| fp_brightness.1.as_ref())
+            .flatten()
+    }
+
+    pub fn kb_brightness_percentage(&self) -> Option<u8> {
+        self.kb_brightness
     }
 }

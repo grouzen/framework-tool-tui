@@ -40,7 +40,7 @@ sudo ./target/release/framework-tool-tui
 
 ## Architecture
 
-See [`docs/mvp-plan.md`](docs/mvp-plan.md:1) for full technical breakdown.  
+See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for full technical breakdown.  
 - Modular panel rendering and state management ([`src/app.rs`](src/app.rs:1), [`src/framework.rs`](src/framework.rs:1))
 - Hardware polling via [`framework_lib`](https://github.com/FrameworkComputer/framework-system)
 - Keyboard shortcuts and instant updates

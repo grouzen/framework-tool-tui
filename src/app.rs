@@ -3,14 +3,14 @@ use framework_lib::chromium_ec::CrosEc;
 use ratatui::{
     layout::{Constraint, Layout},
     prelude::*,
-    widgets::{Block, Borders, Gauge, Paragraph},
+    widgets::{Block, BorderType, Borders, Gauge, Paragraph},
 };
 use std::time::Duration;
 use tui_framework_experiment::toggle_switch::{State, ToggleSwitch};
 
 use crate::framework::Framework;
 
-const APP_TITLE: &str = "FRAMEWORK SYSTEM TUI";
+const APP_TITLE: &str = " Framework System ";
 const FOOTER_HELP: &str = "[Tab] Switch Focus  [Enter] Apply  [Esc] Cancel  [Q] Quit";
 const NORMAL_CAPACITY_LOSS_MAX: f32 = 0.048;
 
@@ -73,13 +73,19 @@ impl App {
     }
 
     fn render_title(&self, frame: &mut Frame, area: Rect) {
-        let block = Block::default().title(APP_TITLE).borders(Borders::ALL);
+        let block = Block::default()
+            .title(APP_TITLE)
+            .borders(Borders::ALL)
+            .border_type(BorderType::Rounded);
 
         frame.render_widget(block, area);
     }
 
     fn render_footer(&self, frame: &mut Frame, area: Rect) {
-        let block = Block::default().title("HELP").borders(Borders::ALL);
+        let block = Block::default()
+            .title(" Help ")
+            .borders(Borders::ALL)
+            .border_type(BorderType::Rounded);
 
         frame.render_widget(Paragraph::new(FOOTER_HELP).block(block), area);
     }
@@ -87,97 +93,26 @@ impl App {
     fn render_main(&self, frame: &mut Frame, area: Rect) {
         let [left_area, right_area] =
             Layout::horizontal([Constraint::Min(0), Constraint::Min(0)]).areas(area);
-        let [
-            charging_panel_area,
-            privacy_panel_area,
-            brightness_panel_area,
-        ] = Layout::vertical([Constraint::Min(0), Constraint::Min(0), Constraint::Min(0)])
-            .areas(left_area);
-        let [smbios_panel_area] = Layout::vertical([Constraint::Min(0)]).areas(right_area);
+        let [charging_panel_area, privacy_and_smbios_panels_area] =
+            Layout::vertical([Constraint::Min(0), Constraint::Max(7)]).areas(left_area);
+        let [privacy_panel_area, smbios_panel_area] =
+            Layout::horizontal([Constraint::Min(0), Constraint::Min(0)])
+                .areas(privacy_and_smbios_panels_area);
+        let [brightness_panel_area] = Layout::vertical([Constraint::Min(0)]).areas(right_area);
 
         self.render_charge_panel(frame, charging_panel_area);
+
         self.render_privacy_panel(frame, privacy_panel_area);
-        self.render_brightness_panel(frame, brightness_panel_area);
         self.render_smbios_panel(frame, smbios_panel_area);
-    }
 
-    fn render_smbios_panel(&self, frame: &mut Frame, area: Rect) {
-        let block = Block::default().title("BIOS").borders(Borders::ALL);
-
-        let [keys_area, values_area] =
-            Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
-                .horizontal_margin(2)
-                .vertical_margin(1)
-                .areas(block.inner(area));
-
-        let keys_block = Block::default().borders(Borders::NONE);
-        let values_block = Block::default().borders(Borders::NONE);
-
-        let [
-            smbios_vendor_key_area,
-            smbios_version_key_area,
-            smbios_release_date_key_area,
-        ] = Layout::vertical([Constraint::Max(1), Constraint::Max(1), Constraint::Max(1)])
-            .areas(keys_block.inner(keys_area));
-        let [
-            smbios_vendor_value_area,
-            smbios_version_value_area,
-            smbios_release_date_value_area,
-        ] = Layout::vertical([Constraint::Max(1), Constraint::Max(1), Constraint::Max(1)])
-            .areas(values_block.inner(values_area));
-
-        // Vendor
-        self.render_smbios_vendor(frame, smbios_vendor_key_area, smbios_vendor_value_area);
-
-        // Version
-        self.render_smbios_version(frame, smbios_version_key_area, smbios_version_value_area);
-
-        // Release date
-        self.render_smbios_release_date(
-            frame,
-            smbios_release_date_key_area,
-            smbios_release_date_value_area,
-        );
-
-        // Render blocks
-        frame.render_widget(keys_block, keys_area);
-        frame.render_widget(values_block, values_area);
-
-        frame.render_widget(block, area);
-    }
-
-    fn render_smbios_version(&self, frame: &mut Frame, key_area: Rect, value_area: Rect) {
-        let smbios_version_text = match self.framework.controls.smbios_version() {
-            Some(smbios_version) => smbios_version,
-            None => "N/A".to_string(),
-        };
-
-        frame.render_widget(Paragraph::new("Version"), key_area);
-        frame.render_widget(Paragraph::new(smbios_version_text), value_area);
-    }
-
-    fn render_smbios_release_date(&self, frame: &mut Frame, key_area: Rect, value_area: Rect) {
-        let smbios_release_date_text = match self.framework.controls.smbios_release_date() {
-            Some(smbios_release_date) => smbios_release_date,
-            None => "N/A".to_string(),
-        };
-
-        frame.render_widget(Paragraph::new("Release date"), key_area);
-        frame.render_widget(Paragraph::new(smbios_release_date_text), value_area);
-    }
-
-    fn render_smbios_vendor(&self, frame: &mut Frame, key_area: Rect, value_area: Rect) {
-        let smbios_vendor_text = match self.framework.controls.smbios_vendor() {
-            Some(smbios_vendor) => smbios_vendor,
-            None => "N/A".to_string(),
-        };
-
-        frame.render_widget(Paragraph::new("Vendor"), key_area);
-        frame.render_widget(Paragraph::new(smbios_vendor_text), value_area);
+        self.render_brightness_panel(frame, brightness_panel_area);
     }
 
     fn render_charge_panel(&self, frame: &mut Frame, area: Rect) {
-        let block = Block::default().title("Charge").borders(Borders::ALL);
+        let block = Block::default()
+            .title(" Charge ")
+            .borders(Borders::ALL)
+            .border_type(BorderType::Rounded);
 
         let [keys_area, values_area] =
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
@@ -190,7 +125,9 @@ impl App {
 
         let [
             charge_level_key_area,
+            _empty1_key_area,
             charge_limit_key_area,
+            _empty2_key_area,
             charger_voltage_key_area,
             charger_current_key_area,
             design_capacity_key_area,
@@ -208,11 +145,15 @@ impl App {
             Constraint::Max(1),
             Constraint::Max(1),
             Constraint::Max(1),
+            Constraint::Max(1),
+            Constraint::Max(1),
         ])
         .areas(keys_block.inner(keys_area));
         let [
             charge_level_value_area,
+            _empty1_value_area,
             charge_limit_value_area,
+            _empty2_value_area,
             charger_voltage_value_area,
             charger_current_value_area,
             design_capacity_value_area,
@@ -221,6 +162,8 @@ impl App {
             cycle_count_value_area,
             capacity_loss_per_cycle_value_area,
         ] = Layout::vertical([
+            Constraint::Max(1),
+            Constraint::Max(1),
             Constraint::Max(1),
             Constraint::Max(1),
             Constraint::Max(1),
@@ -422,7 +365,10 @@ impl App {
     }
 
     fn render_privacy_panel(&self, frame: &mut Frame, area: Rect) {
-        let block = Block::default().title("Privacy").borders(Borders::ALL);
+        let block = Block::default()
+            .title(" Privacy ")
+            .borders(Borders::ALL)
+            .border_type(BorderType::Rounded);
 
         let [mic_area, camera_area] = Layout::vertical([Constraint::Max(1), Constraint::Max(1)])
             .spacing(1)
@@ -463,7 +409,10 @@ impl App {
     }
 
     fn render_brightness_panel(&self, frame: &mut Frame, area: Rect) {
-        let block = Block::default().title("Brightness").borders(Borders::ALL);
+        let block = Block::default()
+            .title(" Brightness ")
+            .borders(Borders::ALL)
+            .border_type(BorderType::Rounded);
 
         let [keys_area, values_area] =
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
@@ -533,5 +482,83 @@ impl App {
 
         frame.render_widget(Paragraph::new("Keyboard brightness"), key_area);
         frame.render_widget(gauge, value_area);
+    }
+
+    fn render_smbios_panel(&self, frame: &mut Frame, area: Rect) {
+        let block = Block::default()
+            .title(" BIOS ")
+            .borders(Borders::ALL)
+            .border_type(BorderType::Rounded);
+
+        let [keys_area, values_area] =
+            Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
+                .horizontal_margin(2)
+                .vertical_margin(1)
+                .areas(block.inner(area));
+
+        let keys_block = Block::default().borders(Borders::NONE);
+        let values_block = Block::default().borders(Borders::NONE);
+
+        let [
+            smbios_vendor_key_area,
+            smbios_version_key_area,
+            smbios_release_date_key_area,
+        ] = Layout::vertical([Constraint::Max(1), Constraint::Max(1), Constraint::Max(1)])
+            .areas(keys_block.inner(keys_area));
+        let [
+            smbios_vendor_value_area,
+            smbios_version_value_area,
+            smbios_release_date_value_area,
+        ] = Layout::vertical([Constraint::Max(1), Constraint::Max(1), Constraint::Max(1)])
+            .areas(values_block.inner(values_area));
+
+        // Vendor
+        self.render_smbios_vendor(frame, smbios_vendor_key_area, smbios_vendor_value_area);
+
+        // Version
+        self.render_smbios_version(frame, smbios_version_key_area, smbios_version_value_area);
+
+        // Release date
+        self.render_smbios_release_date(
+            frame,
+            smbios_release_date_key_area,
+            smbios_release_date_value_area,
+        );
+
+        // Render blocks
+        frame.render_widget(keys_block, keys_area);
+        frame.render_widget(values_block, values_area);
+
+        frame.render_widget(block, area);
+    }
+
+    fn render_smbios_version(&self, frame: &mut Frame, key_area: Rect, value_area: Rect) {
+        let smbios_version_text = match self.framework.controls.smbios_version() {
+            Some(smbios_version) => smbios_version,
+            None => "N/A".to_string(),
+        };
+
+        frame.render_widget(Paragraph::new("Version"), key_area);
+        frame.render_widget(Paragraph::new(smbios_version_text), value_area);
+    }
+
+    fn render_smbios_release_date(&self, frame: &mut Frame, key_area: Rect, value_area: Rect) {
+        let smbios_release_date_text = match self.framework.controls.smbios_release_date() {
+            Some(smbios_release_date) => smbios_release_date,
+            None => "N/A".to_string(),
+        };
+
+        frame.render_widget(Paragraph::new("Release date"), key_area);
+        frame.render_widget(Paragraph::new(smbios_release_date_text), value_area);
+    }
+
+    fn render_smbios_vendor(&self, frame: &mut Frame, key_area: Rect, value_area: Rect) {
+        let smbios_vendor_text = match self.framework.controls.smbios_vendor() {
+            Some(smbios_vendor) => smbios_vendor,
+            None => "N/A".to_string(),
+        };
+
+        frame.render_widget(Paragraph::new("Vendor"), key_area);
+        frame.render_widget(Paragraph::new(smbios_vendor_text), value_area);
     }
 }

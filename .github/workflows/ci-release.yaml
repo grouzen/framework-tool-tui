@@ -40,6 +40,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install libudev-dev
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
       - name: Get the release version from the tag
         shell: bash
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV

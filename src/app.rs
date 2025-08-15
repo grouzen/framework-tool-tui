@@ -46,10 +46,9 @@ impl App {
         Ok(())
     }
 
-    pub fn run(
-        &mut self,
-        terminal: &mut ratatui::Terminal<ratatui::backend::CrosstermBackend<std::io::Stdout>>,
-    ) -> anyhow::Result<()> {
+    pub fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> anyhow::Result<()> {
+        self.framework.poll();
+
         while self.running {
             self.framework.poll_if_needed();
 
@@ -59,6 +58,7 @@ impl App {
 
             let _ = self.handle_events();
         }
+
         Ok(())
     }
 

@@ -557,7 +557,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "framework-tui"
+name = "framework-tool-tui"
 version = "0.1.0"
 dependencies = [
  "anyhow",

@@ -124,7 +124,9 @@ impl App {
 
         let [
             charge_level_key_area,
+            _empty1_key_area,
             charge_limit_key_area,
+            _empty2_key_area,
             charger_voltage_key_area,
             charger_current_key_area,
             design_capacity_key_area,
@@ -142,11 +144,15 @@ impl App {
             Constraint::Max(1),
             Constraint::Max(1),
             Constraint::Max(1),
+            Constraint::Max(1),
+            Constraint::Max(1),
         ])
         .areas(keys_block.inner(keys_area));
         let [
             charge_level_value_area,
+            _empty1_value_area,
             charge_limit_value_area,
+            _empty2_value_area,
             charger_voltage_value_area,
             charger_current_value_area,
             design_capacity_value_area,
@@ -155,6 +161,8 @@ impl App {
             cycle_count_value_area,
             capacity_loss_per_cycle_value_area,
         ] = Layout::vertical([
+            Constraint::Max(1),
+            Constraint::Max(1),
             Constraint::Max(1),
             Constraint::Max(1),
             Constraint::Max(1),

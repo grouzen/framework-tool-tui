@@ -46,7 +46,7 @@ impl App {
         Ok(())
     }
 
-    pub fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> anyhow::Result<()> {
+    pub fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
         self.framework.poll();
 
         while self.running {

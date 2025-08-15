@@ -33,14 +33,14 @@ impl App {
     }
 
     pub fn handle_events(&mut self) -> anyhow::Result<()> {
-        if event::poll(Duration::from_millis(50))? {
-            if let Event::Key(key) = event::read()? {
-                match key.code {
-                    KeyCode::Char('q') | KeyCode::Esc => {
-                        self.running = false;
-                    }
-                    _ => {}
+        if event::poll(Duration::from_millis(50))?
+            && let Event::Key(key) = event::read()?
+        {
+            match key.code {
+                KeyCode::Char('q') | KeyCode::Esc => {
+                    self.running = false;
                 }
+                _ => {}
             }
         }
 

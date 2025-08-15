@@ -23,6 +23,7 @@ impl Framework {
 
     pub fn poll(&mut self) {
         let power = framework_lib::power::power_info(&self.ec);
+        let charge_limit = self.ec.get_charge_limit().ok();
         let privacy = self.ec.get_privacy_info().ok();
         let fp_brightness = self.ec.get_fp_led_level().ok();
         let kb_brightness = self.ec.get_keyboard_backlight().ok();
@@ -37,6 +38,7 @@ impl Framework {
 
         self.controls = FrameworkControls {
             power,
+            charge_limit,
             privacy,
             fp_brightness,
             kb_brightness, // fan_count,
@@ -55,6 +57,7 @@ impl Framework {
 #[derive(Default)]
 pub struct FrameworkControls {
     power: Option<PowerInfo>,
+    charge_limit: Option<(u8, u8)>,
     privacy: Option<(bool, bool)>,
     fp_brightness: Option<(u8, Option<FpLedBrightnessLevel>)>,
     kb_brightness: Option<u8>, // pub fan_count: Option<usize>,
@@ -155,6 +158,12 @@ impl FrameworkControls {
             .as_ref()
             .map(|power| power.ac_present)
             .unwrap_or(false)
+    }
+
+    pub fn max_charge_limit(&self) -> Option<u8> {
+        self.charge_limit
+            .as_ref()
+            .map(|charge_limit| charge_limit.1)
     }
 
     pub fn is_microphone_enabled(&self) -> bool {

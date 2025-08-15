@@ -112,6 +112,7 @@ impl App {
 
         let [
             charge_level_key_area,
+            charge_limit_key_area,
             charger_voltage_key_area,
             charger_current_key_area,
             design_capacity_key_area,
@@ -128,10 +129,12 @@ impl App {
             Constraint::Max(1),
             Constraint::Max(1),
             Constraint::Max(1),
+            Constraint::Max(1),
         ])
         .areas(keys_block.inner(keys_area));
         let [
             charge_level_value_area,
+            charge_limit_value_area,
             charger_voltage_value_area,
             charger_current_value_area,
             design_capacity_value_area,
@@ -148,11 +151,15 @@ impl App {
             Constraint::Max(1),
             Constraint::Max(1),
             Constraint::Max(1),
+            Constraint::Max(1),
         ])
         .areas(values_block.inner(values_area));
 
         // Charge level
         self.render_charge_level(frame, charge_level_key_area, charge_level_value_area);
+
+        // Max charge limit
+        self.render_charge_limit(frame, charge_limit_key_area, charge_limit_value_area);
 
         // Charger voltage
         self.render_charger_voltage(frame, charger_voltage_key_area, charger_voltage_value_area);
@@ -218,6 +225,18 @@ impl App {
         };
 
         frame.render_widget(Paragraph::new("Charge level"), key_area);
+        frame.render_widget(gauge, value_area);
+    }
+
+    fn render_charge_limit(&self, frame: &mut Frame, key_area: Rect, value_area: Rect) {
+        let gauge = match self.framework.controls.max_charge_limit() {
+            Some(max_charge_limit) => Gauge::default()
+                .percent(max_charge_limit as u16)
+                .gauge_style(Style::new().light_blue().on_gray()),
+            None => Gauge::default().percent(0).label("N/A"),
+        };
+
+        frame.render_widget(Paragraph::new("Max charge limit"), key_area);
         frame.render_widget(gauge, value_area);
     }
 

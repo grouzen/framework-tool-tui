@@ -13,6 +13,7 @@ use crate::framework::Framework;
 const APP_TITLE: &str = " Framework System ";
 const FOOTER_HELP: &str = "[Tab] Switch Focus  [Enter] Apply  [Esc] Cancel  [Q] Quit";
 const NORMAL_CAPACITY_LOSS_MAX: f32 = 0.048;
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub struct App {
     framework: Framework,
@@ -46,10 +47,9 @@ impl App {
         Ok(())
     }
 
-    pub fn run(
-        &mut self,
-        terminal: &mut ratatui::Terminal<ratatui::backend::CrosstermBackend<std::io::Stdout>>,
-    ) -> anyhow::Result<()> {
+    pub fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
+        self.framework.poll();
+
         while self.running {
             self.framework.poll_if_needed();
 
@@ -59,6 +59,7 @@ impl App {
 
             let _ = self.handle_events();
         }
+
         Ok(())
     }
 
@@ -138,7 +139,21 @@ impl App {
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded);
 
-        frame.render_widget(Paragraph::new(FOOTER_HELP).block(block), area);
+        let [help_area, version_area] = ratatui::layout::Layout::horizontal([
+            Constraint::Min(1),
+            Constraint::Max(12),
+        ])
+        .horizontal_margin(1)
+        .areas(block.inner(area));
+
+        frame.render_widget(Paragraph::new(FOOTER_HELP), help_area);
+        frame.render_widget(
+            Paragraph::new(format!("v{}", VERSION))
+                .alignment(ratatui::prelude::Alignment::Right),
+            version_area,
+        );
+
+        frame.render_widget(block, area);
     }
 
     fn render_main(&self, frame: &mut Frame, area: Rect) {

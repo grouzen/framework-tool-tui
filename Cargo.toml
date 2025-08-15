@@ -10,3 +10,4 @@ anyhow = "1.0"
 framework_lib = { git = "https://github.com/FrameworkComputer/framework-system.git", package = "framework_lib" }
 smbios-lib = { git = "https://github.com/FrameworkComputer/smbios-lib.git", branch = "no-std", default-features = false }
 tui-framework-experiment = "0.4.0"
+color-eyre = "0.6.5"

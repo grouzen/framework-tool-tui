@@ -139,17 +139,14 @@ impl App {
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded);
 
-        let [help_area, version_area] = ratatui::layout::Layout::horizontal([
-            Constraint::Min(1),
-            Constraint::Max(12),
-        ])
-        .horizontal_margin(1)
-        .areas(block.inner(area));
+        let [help_area, version_area] =
+            ratatui::layout::Layout::horizontal([Constraint::Min(1), Constraint::Max(12)])
+                .horizontal_margin(1)
+                .areas(block.inner(area));
 
         frame.render_widget(Paragraph::new(FOOTER_HELP), help_area);
         frame.render_widget(
-            Paragraph::new(format!("v{}", VERSION))
-                .alignment(ratatui::prelude::Alignment::Right),
+            Paragraph::new(format!("v{}", VERSION)).alignment(ratatui::prelude::Alignment::Right),
             version_area,
         );
 

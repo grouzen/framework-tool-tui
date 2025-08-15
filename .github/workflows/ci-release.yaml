@@ -32,8 +32,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install libudev-dev
+      - name: Install libudev-dev (x86_64)
+        if: "!matrix.use-cross"
         run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
+      - name: Install libudev-dev (aarch64)
+        if: matrix.use-cross
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev:arm64
 
       - name: Get the release version from the tag
         shell: bash

@@ -22,7 +22,7 @@ pub struct App {
 
 impl App {
     pub fn new() -> Self {
-        let poll_interval = Duration::from_millis(1000);
+        let poll_interval = Duration::from_millis(2000);
         let ec = CrosEc::new();
         let framework = Framework::new(ec, poll_interval);
 
@@ -30,21 +30,6 @@ impl App {
             framework,
             running: true,
         }
-    }
-
-    pub fn handle_events(&mut self) -> anyhow::Result<()> {
-        if event::poll(Duration::from_millis(50))?
-            && let Event::Key(key) = event::read()?
-        {
-            match key.code {
-                KeyCode::Char('q') | KeyCode::Esc => {
-                    self.running = false;
-                }
-                _ => {}
-            }
-        }
-
-        Ok(())
     }
 
     pub fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
@@ -61,7 +46,26 @@ impl App {
         Ok(())
     }
 
-    pub fn render<B: Backend>(&self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
+    fn handle_events(&mut self) -> anyhow::Result<()> {
+        if event::poll(Duration::from_millis(50))?
+            && let Event::Key(key) = event::read()?
+        {
+            match key.code {
+                KeyCode::Char('q') | KeyCode::Esc => {
+                    self.quit();
+                }
+                _ => {}
+            }
+        }
+
+        Ok(())
+    }
+
+    fn quit(&mut self) {
+        self.running = false;
+    }
+
+    fn render<B: Backend>(&self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
         terminal.draw(|frame| {
             let [title_area, main_area, footer_area] =
                 Layout::vertical([Constraint::Max(3), Constraint::Min(0), Constraint::Max(3)])

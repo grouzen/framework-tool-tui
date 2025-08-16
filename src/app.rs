@@ -53,9 +53,7 @@ impl App {
         while self.running {
             self.framework.poll_if_needed();
 
-            terminal.draw(|frame| {
-                self.render(frame);
-            })?;
+            self.render(terminal)?;
 
             let _ = self.handle_events();
         }
@@ -63,14 +61,18 @@ impl App {
         Ok(())
     }
 
-    pub fn render(&self, frame: &mut Frame) {
-        let [title_area, main_area, footer_area] =
-            Layout::vertical([Constraint::Max(3), Constraint::Min(0), Constraint::Max(3)])
-                .areas(frame.area());
+    pub fn render<B: Backend>(&self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
+        terminal.draw(|frame| {
+            let [title_area, main_area, footer_area] =
+                Layout::vertical([Constraint::Max(3), Constraint::Min(0), Constraint::Max(3)])
+                    .areas(frame.area());
 
-        self.render_title(frame, title_area);
-        self.render_main(frame, main_area);
-        self.render_footer(frame, footer_area);
+            self.render_title(frame, title_area);
+            self.render_main(frame, main_area);
+            self.render_footer(frame, footer_area);
+        })?;
+
+        Ok(())
     }
 
     fn render_title(&self, frame: &mut Frame, area: Rect) {

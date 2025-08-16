@@ -72,65 +72,51 @@ pub struct FrameworkControls {
 
 impl FrameworkControls {
     pub fn charge_percentage(&self) -> Option<u32> {
-        self.power
-            .as_ref()
-            .map(|power| {
-                power
-                    .battery
-                    .as_ref()
-                    .map(|battery| battery.charge_percentage)
-            })
-            .flatten()
+        self.power.as_ref().and_then(|power| {
+            power
+                .battery
+                .as_ref()
+                .map(|battery| battery.charge_percentage)
+        })
     }
 
     pub fn charger_voltage(&self) -> Option<u32> {
-        self.power
-            .as_ref()
-            .map(|power| {
-                power
-                    .battery
-                    .as_ref()
-                    .map(|battery| battery.present_voltage)
-            })
-            .flatten()
+        self.power.as_ref().and_then(|power| {
+            power
+                .battery
+                .as_ref()
+                .map(|battery| battery.present_voltage)
+        })
     }
 
     pub fn charger_current(&self) -> Option<u32> {
         self.power
             .as_ref()
-            .map(|power| power.battery.as_ref().map(|battery| battery.present_rate))
-            .flatten()
+            .and_then(|power| power.battery.as_ref().map(|battery| battery.present_rate))
     }
 
     pub fn design_capacity(&self) -> Option<u32> {
-        self.power
-            .as_ref()
-            .map(|power| {
-                power
-                    .battery
-                    .as_ref()
-                    .map(|battery| battery.design_capacity)
-            })
-            .flatten()
+        self.power.as_ref().and_then(|power| {
+            power
+                .battery
+                .as_ref()
+                .map(|battery| battery.design_capacity)
+        })
     }
 
     pub fn last_full_charge_capacity(&self) -> Option<u32> {
-        self.power
-            .as_ref()
-            .map(|power| {
-                power
-                    .battery
-                    .as_ref()
-                    .map(|battery| battery.last_full_charge_capacity)
-            })
-            .flatten()
+        self.power.as_ref().and_then(|power| {
+            power
+                .battery
+                .as_ref()
+                .map(|battery| battery.last_full_charge_capacity)
+        })
     }
 
     pub fn cycle_count(&self) -> Option<u32> {
         self.power
             .as_ref()
-            .map(|power| power.battery.as_ref().map(|battery| battery.cycle_count))
-            .flatten()
+            .and_then(|power| power.battery.as_ref().map(|battery| battery.cycle_count))
     }
 
     pub fn capacity_loss_percentage(&self) -> Option<f32> {
@@ -154,8 +140,7 @@ impl FrameworkControls {
     pub fn is_charging(&self) -> bool {
         self.power
             .as_ref()
-            .map(|power| power.battery.as_ref().map(|battery| battery.charging))
-            .flatten()
+            .and_then(|power| power.battery.as_ref().map(|battery| battery.charging))
             .unwrap_or(false)
     }
 
@@ -204,8 +189,7 @@ impl FrameworkControls {
     pub fn fp_brightness_level(&self) -> Option<&FpLedBrightnessLevel> {
         self.fp_brightness
             .as_ref()
-            .map(|fp_brightness| fp_brightness.1.as_ref())
-            .flatten()
+            .and_then(|fp_brightness| fp_brightness.1.as_ref())
     }
 
     pub fn kb_brightness_percentage(&self) -> Option<u8> {
@@ -213,53 +197,44 @@ impl FrameworkControls {
     }
 
     pub fn smbios_version(&self) -> Option<String> {
-        self.smbios
-            .as_ref()
-            .map(|smbios| {
-                smbios
-                    .iter()
-                    .find_map(|undefined_struct| match undefined_struct.defined_struct() {
-                        DefinedStruct::Information(data) => {
-                            Some(smbios::dmidecode_string_val(&data.version()))
-                        }
-                        _ => None,
-                    })
-                    .flatten()
-            })
-            .flatten()
+        self.smbios.as_ref().and_then(|smbios| {
+            smbios
+                .iter()
+                .find_map(|undefined_struct| match undefined_struct.defined_struct() {
+                    DefinedStruct::Information(data) => {
+                        Some(smbios::dmidecode_string_val(&data.version()))
+                    }
+                    _ => None,
+                })
+                .flatten()
+        })
     }
 
     pub fn smbios_release_date(&self) -> Option<String> {
-        self.smbios
-            .as_ref()
-            .map(|smbios| {
-                smbios
-                    .iter()
-                    .find_map(|undefined_struct| match undefined_struct.defined_struct() {
-                        DefinedStruct::Information(data) => {
-                            Some(smbios::dmidecode_string_val(&data.release_date()))
-                        }
-                        _ => None,
-                    })
-                    .flatten()
-            })
-            .flatten()
+        self.smbios.as_ref().and_then(|smbios| {
+            smbios
+                .iter()
+                .find_map(|undefined_struct| match undefined_struct.defined_struct() {
+                    DefinedStruct::Information(data) => {
+                        Some(smbios::dmidecode_string_val(&data.release_date()))
+                    }
+                    _ => None,
+                })
+                .flatten()
+        })
     }
 
     pub fn smbios_vendor(&self) -> Option<String> {
-        self.smbios
-            .as_ref()
-            .map(|smbios| {
-                smbios
-                    .iter()
-                    .find_map(|undefined_struct| match undefined_struct.defined_struct() {
-                        DefinedStruct::Information(data) => {
-                            Some(smbios::dmidecode_string_val(&data.vendor()))
-                        }
-                        _ => None,
-                    })
-                    .flatten()
-            })
-            .flatten()
+        self.smbios.as_ref().and_then(|smbios| {
+            smbios
+                .iter()
+                .find_map(|undefined_struct| match undefined_struct.defined_struct() {
+                    DefinedStruct::Information(data) => {
+                        Some(smbios::dmidecode_string_val(&data.vendor()))
+                    }
+                    _ => None,
+                })
+                .flatten()
+        })
     }
 }

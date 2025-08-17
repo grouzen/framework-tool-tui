@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 pub mod component;
+pub mod control;
 
 use ratatui::{
     Terminal,

@@ -5,7 +5,7 @@ use std::time::Duration;
 use crate::{framework::Framework, tui::Tui};
 
 pub const APP_TITLE: &str = " Framework System ";
-pub const FOOTER_HELP: &str = "[tab] switch panels  [enter] apply  [esc] cancel [q] quit";
+pub const FOOTER_HELP: &str = "[tab] switch panels  [enter] focus/apply  [esc] cancel [q] quit";
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub struct App {

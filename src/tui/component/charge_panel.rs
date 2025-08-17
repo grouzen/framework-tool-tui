@@ -1,19 +1,26 @@
 use ratatui::{
     Frame,
+    crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout, Rect},
     prelude::*,
+    style::Styled,
     widgets::{Block, BorderType, Borders, Gauge, Paragraph},
 };
 
 use crate::{
     framework::FrameworkControls,
-    tui::component::{Component, SelectableComponent},
+    tui::{
+        component::{Component, SelectableComponent},
+        control::{AdjustableControl, percentage_control},
+    },
 };
 
 const NORMAL_CAPACITY_LOSS_MAX: f32 = 0.048;
 
 pub struct ChargePanelComponent {
     selected: bool,
+    controls: Vec<AdjustableControl>,
+    selected_control: usize,
 }
 
 impl Default for ChargePanelComponent {
@@ -24,7 +31,31 @@ impl Default for ChargePanelComponent {
 
 impl ChargePanelComponent {
     pub fn new() -> Self {
-        Self { selected: false }
+        Self {
+            selected: false,
+            controls: vec![percentage_control(0)],
+            selected_control: 0,
+        }
+    }
+
+    fn cycle_controls_up(&mut self) {
+        let len = self.controls.len();
+
+        if self.selected_control == 0 {
+            self.selected_control = len - 1;
+        } else {
+            self.selected_control -= 1;
+        }
+    }
+
+    fn cycle_controls_down(&mut self) {
+        let len = self.controls.len();
+
+        if self.selected_control < len - 1 {
+            self.selected_control += 1;
+        } else {
+            self.selected_control = 0;
+        }
     }
 
     fn borders_style(&self) -> Style {
@@ -32,6 +63,14 @@ impl ChargePanelComponent {
             Style::new().yellow().bold()
         } else {
             Style::default()
+        }
+    }
+
+    fn selectable_control_style(&self, selected: Style, default: Style, index: usize) -> Style {
+        if self.selected && self.selected_control == index {
+            selected
+        } else {
+            default
         }
     }
 
@@ -70,14 +109,28 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
+        let style =
+            self.selectable_control_style(Style::new().on_light_magenta(), Style::default(), 0);
+
         let gauge = match controls.max_charge_limit() {
-            Some(max_charge_limit) => Gauge::default()
-                .percent(max_charge_limit as u16)
-                .gauge_style(Style::new().light_blue().on_gray()),
-            None => Gauge::default().percent(0).label("N/A"),
+            Some(max_charge_limit) => {
+                let style = self.selectable_control_style(
+                    Style::new().light_magenta().on_gray(),
+                    Style::new().light_blue().on_gray(),
+                    0,
+                );
+
+                Gauge::default()
+                    .percent(max_charge_limit as u16)
+                    .gauge_style(style)
+            }
+            None => Gauge::default().percent(0).label("N/A").gauge_style(style),
         };
 
-        frame.render_widget(Paragraph::new("Max charge limit"), key_area);
+        frame.render_widget(
+            Paragraph::new("Max charge limit").set_style(style),
+            key_area,
+        );
         frame.render_widget(gauge, value_area);
     }
 
@@ -232,6 +285,21 @@ impl SelectableComponent for ChargePanelComponent {
 }
 
 impl Component for ChargePanelComponent {
+    fn handle_input(
+        &mut self,
+        event: ratatui::crossterm::event::Event,
+    ) -> color_eyre::Result<Option<crate::app::AppEvent>> {
+        if let Event::Key(key) = event {
+            match key.code {
+                KeyCode::Down => self.cycle_controls_down(),
+                KeyCode::Up => self.cycle_controls_up(),
+                _ => {}
+            }
+        }
+
+        Ok(None)
+    }
+
     fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
         let block = Block::default()
             .title(" Charge ")

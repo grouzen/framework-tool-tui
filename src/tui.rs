@@ -33,13 +33,18 @@ impl Tui {
     }
 
     pub fn handle_input(&mut self) -> color_eyre::Result<Option<AppEvent>> {
-        let event = if event::poll(Duration::from_millis(50))?
-            && let Event::Key(key) = event::read()?
-        {
-            match key.code {
-                KeyCode::Char('q') => Some(AppEvent::Quit),
+        let event = if event::poll(Duration::from_millis(50))? {
+            let tui_event = event::read()?;
+
+            let top_level_event = match tui_event {
+                Event::Key(key) => match key.code {
+                    KeyCode::Char('q') => Some(AppEvent::Quit),
+                    _ => None,
+                },
                 _ => None,
-            }
+            };
+
+            top_level_event.or(self.main.handle_input(tui_event)?)
         } else {
             None
         };

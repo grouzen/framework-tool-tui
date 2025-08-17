@@ -5,11 +5,28 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, Gauge, Paragraph},
 };
 
-use crate::{framework::FrameworkControls, tui::component::Component};
+use crate::{
+    framework::FrameworkControls,
+    tui::component::{Component, SelectableComponent},
+};
 
-pub struct BrightnessPanelComponent;
+pub struct BrightnessPanelComponent {
+    selected: bool,
+}
 
 impl BrightnessPanelComponent {
+    pub fn new() -> Self {
+        Self { selected: false }
+    }
+
+    fn borders_style(&self) -> Style {
+        if self.selected {
+            Style::new().yellow().bold()
+        } else {
+            Style::default()
+        }
+    }
+
     fn render_fp_brightness(
         &self,
         frame: &mut Frame,
@@ -62,12 +79,23 @@ impl BrightnessPanelComponent {
     }
 }
 
+impl SelectableComponent for BrightnessPanelComponent {
+    fn toggle(&mut self) {
+        self.selected = !self.selected;
+    }
+
+    fn is_selected(&self) -> bool {
+        self.selected
+    }
+}
+
 impl Component for BrightnessPanelComponent {
     fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
         let block = Block::default()
             .title(" Brightness ")
             .borders(Borders::ALL)
-            .border_type(BorderType::Rounded);
+            .border_type(BorderType::Rounded)
+            .border_style(self.borders_style());
 
         let [keys_area, values_area] =
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])

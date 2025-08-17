@@ -5,13 +5,30 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, Gauge, Paragraph},
 };
 
-use crate::{framework::FrameworkControls, tui::component::Component};
+use crate::{
+    framework::FrameworkControls,
+    tui::component::{Component, SelectableComponent},
+};
 
 const NORMAL_CAPACITY_LOSS_MAX: f32 = 0.048;
 
-pub struct ChargePanelComponent;
+pub struct ChargePanelComponent {
+    selected: bool,
+}
 
 impl ChargePanelComponent {
+    pub fn new() -> Self {
+        Self { selected: false }
+    }
+
+    fn borders_style(&self) -> Style {
+        if self.selected {
+            Style::new().yellow().bold()
+        } else {
+            Style::default()
+        }
+    }
+
     fn render_charge_level(
         &self,
         frame: &mut Frame,
@@ -198,17 +215,23 @@ impl ChargePanelComponent {
     }
 }
 
+impl SelectableComponent for ChargePanelComponent {
+    fn toggle(&mut self) {
+        self.selected = !self.selected;
+    }
+
+    fn is_selected(&self) -> bool {
+        self.selected
+    }
+}
+
 impl Component for ChargePanelComponent {
-    fn render(
-        &mut self,
-        frame: &mut Frame,
-        area: Rect,
-        controls: &FrameworkControls,
-    ) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
         let block = Block::default()
             .title(" Charge ")
             .borders(Borders::ALL)
-            .border_type(BorderType::Rounded);
+            .border_type(BorderType::Rounded)
+            .border_style(self.borders_style());
 
         let [keys_area, values_area] =
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])

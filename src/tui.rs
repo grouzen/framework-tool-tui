@@ -60,7 +60,7 @@ impl Tui {
             _ => None,
         };
 
-        Ok(top_level_event.or(self.main.handle_input(event)?))
+        Ok(top_level_event.or(self.main.handle_input(event)))
     }
 
     pub fn render<B: Backend>(

@@ -14,6 +14,13 @@ impl AdjustableControl {
             }
         }
     }
+
+    pub fn is_focused(&self) -> bool {
+        match self {
+            AdjustableControl::Percentage(focused, ..) => *focused,
+            AdjustableControl::Range(focused, ..) => *focused,
+        }
+    }
 }
 
 pub fn percentage_control(value: u8) -> AdjustableControl {

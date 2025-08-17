@@ -58,6 +58,10 @@ impl ChargePanelComponent {
         }
     }
 
+    fn toggle_adjustable_control_focus(&mut self) {
+        self.controls[self.selected_control] = self.controls[self.selected_control].toggle_focus();
+    }
+
     fn borders_style(&self) -> Style {
         if self.selected {
             Style::new().yellow().bold()
@@ -66,9 +70,19 @@ impl ChargePanelComponent {
         }
     }
 
-    fn selectable_control_style(&self, selected: Style, default: Style, index: usize) -> Style {
+    fn adjustable_control_style(
+        &self,
+        selected: Style,
+        focused: Style,
+        default: Style,
+        index: usize,
+    ) -> Style {
         if self.selected && self.selected_control == index {
-            selected
+            if self.controls[index].is_focused() {
+                focused
+            } else {
+                selected
+            }
         } else {
             default
         }
@@ -109,13 +123,18 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let style =
-            self.selectable_control_style(Style::new().on_light_magenta(), Style::default(), 0);
+        let style = self.adjustable_control_style(
+            Style::new().on_light_magenta(),
+            Style::new().on_magenta(),
+            Style::default(),
+            0,
+        );
 
         let gauge = match controls.max_charge_limit() {
             Some(max_charge_limit) => {
-                let style = self.selectable_control_style(
+                let style = self.adjustable_control_style(
                     Style::new().light_magenta().on_gray(),
+                    Style::new().magenta().on_gray(),
                     Style::new().light_blue().on_gray(),
                     0,
                 );
@@ -288,16 +307,17 @@ impl Component for ChargePanelComponent {
     fn handle_input(
         &mut self,
         event: ratatui::crossterm::event::Event,
-    ) -> color_eyre::Result<Option<crate::app::AppEvent>> {
+    ) -> Option<crate::app::AppEvent> {
         if let Event::Key(key) = event {
             match key.code {
                 KeyCode::Down => self.cycle_controls_down(),
                 KeyCode::Up => self.cycle_controls_up(),
+                KeyCode::Enter => self.toggle_adjustable_control_focus(),
                 _ => {}
             }
         }
 
-        Ok(None)
+        None
     }
 
     fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {

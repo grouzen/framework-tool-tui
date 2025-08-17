@@ -62,14 +62,16 @@ impl MainComponent {
 }
 
 impl Component for MainComponent {
-    fn handle_input(&mut self, event: Event) -> color_eyre::Result<Option<crate::app::AppEvent>> {
+    fn handle_input(&mut self, event: Event) -> Option<crate::app::AppEvent> {
         if let Event::Key(key) = event
             && key.code == KeyCode::Tab
         {
             self.switch_panels();
         }
 
-        Ok(None)
+        self.selectable_panels
+            .iter_mut()
+            .find_map(|panel| panel.handle_input(event.clone()))
     }
 
     fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {

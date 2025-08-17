@@ -20,6 +20,12 @@ pub struct MainComponent {
     selected_panel: Option<usize>,
 }
 
+impl Default for MainComponent {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MainComponent {
     pub fn new() -> Self {
         let charge_panel = Box::new(ChargePanelComponent::new());
@@ -57,14 +63,10 @@ impl MainComponent {
 
 impl Component for MainComponent {
     fn handle_input(&mut self, event: Event) -> color_eyre::Result<Option<crate::app::AppEvent>> {
-        match event {
-            Event::Key(key) => match key.code {
-                KeyCode::Tab => {
-                    self.switch_panels();
-                }
-                _ => {}
-            },
-            _ => {}
+        if let Event::Key(key) = event
+            && key.code == KeyCode::Tab
+        {
+            self.switch_panels();
         }
 
         Ok(None)

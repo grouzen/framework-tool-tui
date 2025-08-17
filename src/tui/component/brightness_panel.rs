@@ -14,6 +14,12 @@ pub struct BrightnessPanelComponent {
     selected: bool,
 }
 
+impl Default for BrightnessPanelComponent {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl BrightnessPanelComponent {
     pub fn new() -> Self {
         Self { selected: false }

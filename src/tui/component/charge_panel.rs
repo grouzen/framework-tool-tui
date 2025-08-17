@@ -16,6 +16,12 @@ pub struct ChargePanelComponent {
     selected: bool,
 }
 
+impl Default for ChargePanelComponent {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ChargePanelComponent {
     pub fn new() -> Self {
         Self { selected: false }

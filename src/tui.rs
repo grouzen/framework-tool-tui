@@ -23,6 +23,12 @@ pub struct Tui {
     footer: FooterComponent,
 }
 
+impl Default for Tui {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Tui {
     pub fn new() -> Self {
         Self {

@@ -58,8 +58,42 @@ impl ChargePanelComponent {
         }
     }
 
-    fn toggle_adjustable_control_focus(&mut self) {
-        self.controls[self.selected_control] = self.controls[self.selected_control].toggle_focus();
+    fn toggle_selected_control_focus(&mut self) {
+        self.controls[self.selected_control] = self.get_selected_control().toggle_focus();
+    }
+
+    fn adjust_focused_control(&mut self, delta: i8) {
+        if let Some(control) = self.get_selected_and_focused_control() {
+            match control {
+                AdjustableControl::Percentage(focused, value) => {
+                    let new_value = *value as i8 + delta;
+
+                    if new_value >= 0 && new_value <= 100 {
+                        self.controls[self.selected_control] =
+                            AdjustableControl::Percentage(*focused, new_value as u8);
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+
+    fn get_selected_and_focused_control(&self) -> Option<&AdjustableControl> {
+        let selected = self.get_selected_control();
+
+        if selected.is_focused() {
+            Some(selected)
+        } else {
+            None
+        }
+    }
+
+    fn get_selected_control(&self) -> &AdjustableControl {
+        &self.controls[self.selected_control]
+    }
+
+    fn is_selected_and_focused(&self, index: usize) -> bool {
+        self.selected && self.selected_control == index && self.get_selected_control().is_focused()
     }
 
     fn borders_style(&self) -> Style {
@@ -70,19 +104,9 @@ impl ChargePanelComponent {
         }
     }
 
-    fn adjustable_control_style(
-        &self,
-        selected: Style,
-        focused: Style,
-        default: Style,
-        index: usize,
-    ) -> Style {
+    fn adjustable_control_style(&self, selected: Style, default: Style, index: usize) -> Style {
         if self.selected && self.selected_control == index {
-            if self.controls[index].is_focused() {
-                focused
-            } else {
-                selected
-            }
+            selected
         } else {
             default
         }
@@ -116,31 +140,41 @@ impl ChargePanelComponent {
         frame.render_widget(gauge, value_area);
     }
 
-    fn render_charge_limit(
+    fn render_max_charge_limit(
         &self,
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let style = self.adjustable_control_style(
-            Style::new().on_light_magenta(),
-            Style::new().on_magenta(),
-            Style::default(),
-            0,
-        );
+        let style = self.adjustable_control_style(Style::new().on_gray(), Style::default(), 0);
 
-        let gauge = match controls.max_charge_limit() {
+        let max_charge_limit = if self.is_selected_and_focused(0)
+            && let Some(value) = self.get_selected_control().get_percentage_value()
+        {
+            Some(value)
+        } else if let Some(value) = controls.max_charge_limit() {
+            Some(value)
+        } else {
+            None
+        };
+
+        let gauge = match max_charge_limit {
             Some(max_charge_limit) => {
                 let style = self.adjustable_control_style(
-                    Style::new().light_magenta().on_gray(),
-                    Style::new().magenta().on_gray(),
+                    Style::new().gray().on_black(),
                     Style::new().light_blue().on_gray(),
                     0,
                 );
+                let label = if self.is_selected_and_focused(0) {
+                    format!("◀ {:3}% ▶", max_charge_limit)
+                } else {
+                    format!("{:3}%", max_charge_limit)
+                };
 
                 Gauge::default()
                     .percent(max_charge_limit as u16)
+                    .label(label)
                     .gauge_style(style)
             }
             None => Gauge::default().percent(0).label("N/A").gauge_style(style),
@@ -304,15 +338,17 @@ impl SelectableComponent for ChargePanelComponent {
 }
 
 impl Component for ChargePanelComponent {
-    fn handle_input(
-        &mut self,
-        event: ratatui::crossterm::event::Event,
-    ) -> Option<crate::app::AppEvent> {
-        if let Event::Key(key) = event {
+    fn handle_input(&mut self, event: Event) -> Option<crate::app::AppEvent> {
+        if self.is_selected()
+            && let Event::Key(key) = event
+        {
             match key.code {
                 KeyCode::Down => self.cycle_controls_down(),
                 KeyCode::Up => self.cycle_controls_up(),
-                KeyCode::Enter => self.toggle_adjustable_control_focus(),
+                KeyCode::Enter => self.toggle_selected_control_focus(),
+                KeyCode::Left => self.adjust_focused_control(-5),
+                KeyCode::Right => self.adjust_focused_control(5),
+                KeyCode::Esc => self.toggle_selected_control_focus(),
                 _ => {}
             }
         }
@@ -398,7 +434,7 @@ impl Component for ChargePanelComponent {
         );
 
         // Max charge limit
-        self.render_charge_limit(
+        self.render_max_charge_limit(
             frame,
             charge_limit_key_area,
             charge_limit_value_area,
@@ -466,5 +502,46 @@ impl Component for ChargePanelComponent {
         frame.render_widget(values_block, values_area);
 
         frame.render_widget(block, area);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use ratatui::crossterm::event::{Event, KeyCode, KeyEvent};
+
+    use crate::tui::{
+        component::{Component, SelectableComponent, charge_panel::ChargePanelComponent},
+        control::AdjustableControl,
+    };
+
+    #[test]
+    fn handle_input_enter_when_panel_selected() {
+        let mut panel = ChargePanelComponent::new();
+        let event = Event::Key(KeyEvent::from(KeyCode::Enter));
+
+        panel.toggle();
+        let _ = panel.handle_input(event);
+
+        assert!(panel.is_selected());
+        assert!(panel.controls.len() == 1);
+        assert!(panel.controls[0].is_focused())
+    }
+
+    #[test]
+    fn handle_input_left_for_focused_percentage_control_stay_in_range() {
+        let mut panel = ChargePanelComponent::new();
+        let event = Event::Key(KeyEvent::from(KeyCode::Left));
+
+        panel.toggle();
+        panel.toggle_selected_control_focus();
+        let _ = panel.handle_input(event);
+
+        assert!(panel.is_selected());
+        assert!(panel.controls.len() == 1);
+        assert!(panel.is_selected_and_focused(0));
+        assert!(matches!(
+            panel.get_selected_control(),
+            AdjustableControl::Percentage(true, 0)
+        ));
     }
 }

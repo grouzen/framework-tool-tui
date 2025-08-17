@@ -8,7 +8,6 @@ use std::time::Duration;
 use std::time::Instant;
 
 pub struct Framework {
-    pub controls: FrameworkControls,
     ec: CrosEc,
     last_poll: Instant,
     poll_interval: Duration,
@@ -17,14 +16,13 @@ pub struct Framework {
 impl Framework {
     pub fn new(ec: CrosEc, poll_interval: Duration) -> Self {
         Framework {
-            controls: Default::default(),
             ec,
             last_poll: Instant::now(),
             poll_interval,
         }
     }
 
-    pub fn poll(&mut self) {
+    pub fn poll(&mut self) -> FrameworkControls {
         let power = framework_lib::power::power_info(&self.ec);
         let charge_limit = self.ec.get_charge_limit().ok();
         let privacy = self.ec.get_privacy_info().ok();
@@ -40,7 +38,7 @@ impl Framework {
         //         .collect::<Vec<_>>(),
         // );
 
-        self.controls = FrameworkControls {
+        FrameworkControls {
             power,
             charge_limit,
             privacy,
@@ -51,10 +49,13 @@ impl Framework {
         }
     }
 
-    pub fn poll_if_needed(&mut self) {
+    pub fn poll_if_needed(&mut self) -> Option<FrameworkControls> {
         if self.last_poll.elapsed() >= self.poll_interval {
-            self.poll();
             self.last_poll = Instant::now();
+
+            Some(self.poll())
+        } else {
+            None
         }
     }
 }

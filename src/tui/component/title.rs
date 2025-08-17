@@ -32,14 +32,14 @@ impl Component for TitleComponent {
         .areas(block.inner(area));
 
         // BIOS version
-        if let Some(smbios_version) = controls.smbios_version() {
+        if let Some(smbios_version) = &controls.smbios_version {
             frame.render_widget(
                 Paragraph::new(format!("v{}", smbios_version)),
                 smbios_version_area,
             );
         }
 
-        let charge_percentage = controls.charge_percentage();
+        let charge_percentage = controls.charge_percentage;
         let charge_style = match charge_percentage {
             Some(charge_percentage) if charge_percentage < 15 => Style::new().red(),
             _ => Style::new().green(),
@@ -47,12 +47,12 @@ impl Component for TitleComponent {
 
         // Charging status
         frame.render_widget(
-            Paragraph::new(controls.charging_status()).style(charge_style),
+            Paragraph::new(controls.charging_status).style(charge_style),
             charging_status_area,
         );
 
         // Charge percentage
-        if let Some(charge_percentage) = controls.charge_percentage() {
+        if let Some(charge_percentage) = controls.charge_percentage {
             frame.render_widget(
                 Paragraph::new(format!("{}%", charge_percentage)).style(charge_style),
                 charge_percentage_area,
@@ -60,7 +60,7 @@ impl Component for TitleComponent {
         }
 
         // Max charge limit
-        if let Some(max_charge_limit) = controls.max_charge_limit() {
+        if let Some(max_charge_limit) = controls.max_charge_limit {
             frame.render_widget(
                 Paragraph::new(format!("Max: {}%", max_charge_limit)),
                 max_charge_limit_area,

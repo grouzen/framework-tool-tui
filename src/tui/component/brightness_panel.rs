@@ -40,7 +40,7 @@ impl BrightnessPanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let gauge = match controls.fp_brightness_percentage() {
+        let gauge = match controls.fp_brightness_percentage {
             Some(fp_brightness_percentage) => Gauge::default()
                 .percent(fp_brightness_percentage as u16)
                 .gauge_style(Style::new().yellow()),
@@ -48,22 +48,23 @@ impl BrightnessPanelComponent {
         };
 
         frame.render_widget(Paragraph::new("Fingerprint LED brigtness"), key_area);
+        frame.render_widget(gauge, value_area);
 
-        match controls.fp_brightness_level() {
-            Some(fp_brightness_level) => {
-                let [gauge_area, level_area] =
-                    Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
-                        .areas(value_area);
+        // match controls.fp_brightness_level() {
+        //     Some(fp_brightness_level) => {
+        //         let [gauge_area, level_area] =
+        //             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
+        //                 .areas(value_area);
 
-                let fp_brightness_level_text = format!("{:?}", fp_brightness_level);
+        //         let fp_brightness_level_text = format!("{:?}", fp_brightness_level);
 
-                frame.render_widget(gauge, gauge_area);
-                frame.render_widget(Paragraph::new(fp_brightness_level_text), level_area);
-            }
-            None => {
-                frame.render_widget(gauge, value_area);
-            }
-        }
+        //         frame.render_widget(gauge, gauge_area);
+        //         frame.render_widget(Paragraph::new(fp_brightness_level_text), level_area);
+        //     }
+        //     None => {
+        //         frame.render_widget(gauge, value_area);
+        //     }
+        // }
     }
 
     fn render_kb_brightness(
@@ -73,7 +74,7 @@ impl BrightnessPanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let gauge = match controls.kb_brightness_percentage() {
+        let gauge = match controls.kb_brightness_percentage {
             Some(kb_brightness_percentage) => Gauge::default()
                 .percent(kb_brightness_percentage as u16)
                 .gauge_style(Style::new().yellow()),

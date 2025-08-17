@@ -122,14 +122,14 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let gauge = match controls.charge_percentage() {
+        let gauge = match controls.charge_percentage {
             Some(charge_percentage) => {
                 let gauge_style = if charge_percentage < 15 {
                     Style::new().red().on_gray()
                 } else {
                     Style::new().green().on_gray()
                 };
-                let label = format!("{} {}%", controls.charging_status(), charge_percentage);
+                let label = format!("{} {}%", controls.charging_status, charge_percentage);
 
                 Gauge::default()
                     .percent(charge_percentage as u16)
@@ -150,15 +150,22 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let style =
-            self.adjustable_control_style(Style::new().on_gray().black(), Style::default(), MAX_CHARGE_LIMIT_CONTROL_INDEX);
+        let style = self.adjustable_control_style(
+            Style::new().on_gray().black(),
+            Style::default(),
+            MAX_CHARGE_LIMIT_CONTROL_INDEX,
+        );
 
-        let max_charge_limit = if self.is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX)
+        let max_charge_limit = if self
+            .is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX)
             && let Some(value) = self.get_selected_control().get_percentage_value()
         {
             Some(value)
-        } else if let Some(value) = controls.max_charge_limit() {
-            self.set_percentage_control_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX, percentage_control(value));
+        } else if let Some(value) = controls.max_charge_limit {
+            self.set_percentage_control_by_index(
+                MAX_CHARGE_LIMIT_CONTROL_INDEX,
+                percentage_control(value),
+            );
 
             Some(value)
         } else {
@@ -172,7 +179,9 @@ impl ChargePanelComponent {
                     Style::new().light_blue().on_gray(),
                     MAX_CHARGE_LIMIT_CONTROL_INDEX,
                 );
-                let label = if self.is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX) {
+                let label = if self
+                    .is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX)
+                {
                     format!("◀ {:3}% ▶", max_charge_limit)
                 } else {
                     format!("{:3}%", max_charge_limit)
@@ -200,7 +209,7 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let charger_voltage_text = match controls.charger_voltage() {
+        let charger_voltage_text = match controls.charger_voltage {
             Some(charger_voltage) => format!("{} mV", charger_voltage),
             None => "N/A".to_string(),
         };
@@ -216,7 +225,7 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let charger_current_text = match controls.charger_current() {
+        let charger_current_text = match controls.charger_current {
             Some(charger_current) => format!("{} mA", charger_current),
             None => "N/A".to_string(),
         };
@@ -232,7 +241,7 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let design_capacity_text = match controls.design_capacity() {
+        let design_capacity_text = match controls.design_capacity {
             Some(design_capacity) => format!("{} mAh", design_capacity),
             None => "N/A".to_string(),
         };
@@ -248,7 +257,7 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let last_full_charge_capacity_text = match controls.last_full_charge_capacity() {
+        let last_full_charge_capacity_text = match controls.last_full_charge_capacity {
             Some(last_full_charge_capacity) => format!("{} mAh", last_full_charge_capacity),
             None => "N/A".to_string(),
         };
@@ -264,7 +273,7 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let capacity_loss_text = match controls.capacity_loss_percentage() {
+        let capacity_loss_text = match controls.capacity_loss_percentage {
             Some(capacity_loss_percentage) => {
                 if capacity_loss_percentage > 0.0 {
                     format!("-{:.2}%", capacity_loss_percentage)
@@ -286,7 +295,7 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let cycle_count_text = match controls.cycle_count() {
+        let cycle_count_text = match controls.cycle_count {
             Some(cycle_count) => format!("{}", cycle_count),
             None => "N/A".to_string(),
         };
@@ -302,7 +311,7 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let capacity_loss_per_cycle = controls.capacity_loss_per_cycle();
+        let capacity_loss_per_cycle = controls.capacity_loss_per_cycle;
 
         let capacity_loss_per_cycle_style = match capacity_loss_per_cycle {
             Some(capacity_loss_per_cycle) => {
@@ -355,7 +364,9 @@ impl Component for ChargePanelComponent {
                 KeyCode::Up => self.cycle_controls_up(),
                 KeyCode::Enter => {
                     match self.get_selected_and_focused_control() {
-                        Some(control) if self.selected_control == MAX_CHARGE_LIMIT_CONTROL_INDEX => {
+                        Some(control)
+                            if self.selected_control == MAX_CHARGE_LIMIT_CONTROL_INDEX =>
+                        {
                             if let Some(value) = control.get_percentage_value() {
                                 app_event = Some(AppEvent::SetMaxChargeLimit(value));
                             }
@@ -530,7 +541,10 @@ mod tests {
     use ratatui::crossterm::event::{Event, KeyCode, KeyEvent};
 
     use crate::tui::{
-        component::{charge_panel::{ChargePanelComponent, MAX_CHARGE_LIMIT_CONTROL_INDEX}, Component, SelectableComponent},
+        component::{
+            Component, SelectableComponent,
+            charge_panel::{ChargePanelComponent, MAX_CHARGE_LIMIT_CONTROL_INDEX},
+        },
         control::AdjustableControl,
     };
 
@@ -558,7 +572,9 @@ mod tests {
 
         assert!(panel.is_selected());
         assert!(panel.controls.len() == 1);
-        assert!(panel.is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX));
+        assert!(
+            panel.is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX)
+        );
         assert!(matches!(
             panel.get_selected_control(),
             AdjustableControl::Percentage(true, 0)

@@ -11,7 +11,7 @@ pub struct PrivacyPanelComponent;
 
 impl PrivacyPanelComponent {
     fn render_mic(&self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
-        let toggle_state = if controls.is_microphone_enabled() {
+        let toggle_state = if controls.is_microphone_enabled {
             State::On
         } else {
             State::Off
@@ -22,7 +22,7 @@ impl PrivacyPanelComponent {
     }
 
     fn render_camera(&self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
-        let toggle_state = if controls.is_camera_enabled() {
+        let toggle_state = if controls.is_camera_enabled {
             State::On
         } else {
             State::Off

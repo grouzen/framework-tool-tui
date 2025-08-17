@@ -16,9 +16,9 @@ impl SmbiosPanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let smbios_version_text = match controls.smbios_version() {
+        let smbios_version_text = match &controls.smbios_version {
             Some(smbios_version) => smbios_version,
-            None => "N/A".to_string(),
+            None => "N/A",
         };
 
         frame.render_widget(Paragraph::new("Version"), key_area);
@@ -32,9 +32,9 @@ impl SmbiosPanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let smbios_release_date_text = match controls.smbios_release_date() {
+        let smbios_release_date_text = match &controls.smbios_release_date {
             Some(smbios_release_date) => smbios_release_date,
-            None => "N/A".to_string(),
+            None => "N/A",
         };
 
         frame.render_widget(Paragraph::new("Release date"), key_area);
@@ -48,9 +48,9 @@ impl SmbiosPanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let smbios_vendor_text = match controls.smbios_vendor() {
+        let smbios_vendor_text = match &controls.smbios_vendor {
             Some(smbios_vendor) => smbios_vendor,
-            None => "N/A".to_string(),
+            None => "N/A",
         };
 
         frame.render_widget(Paragraph::new("Vendor"), key_area);

@@ -16,6 +16,7 @@ pub struct App {
 
 pub enum AppEvent {
     Quit,
+    SetMaxChargeLimit(u8),
 }
 
 impl Default for App {
@@ -26,7 +27,7 @@ impl Default for App {
 
 impl App {
     pub fn new() -> Self {
-        let poll_interval = Duration::from_millis(2000);
+        let poll_interval = Duration::from_millis(1000);
         let ec = CrosEc::new();
         let framework = Framework::new(ec, poll_interval);
         let tui = Tui::new();
@@ -49,17 +50,20 @@ impl App {
             self.tui.render(terminal, &controls)?;
 
             if let Some(event) = self.tui.handle_input()? {
-                self.handle_event(event);
+                self.handle_event(event)?;
             }
         }
 
         Ok(())
     }
 
-    fn handle_event(&mut self, event: AppEvent) {
+    fn handle_event(&mut self, event: AppEvent) -> color_eyre::Result<()> {
         match event {
             AppEvent::Quit => self.quit(),
+            AppEvent::SetMaxChargeLimit(value) => self.framework.set_max_charge_limit(value)?,
         }
+
+        Ok(())
     }
 
     fn quit(&mut self) {

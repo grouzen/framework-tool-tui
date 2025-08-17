@@ -8,6 +8,7 @@ use ratatui::{
 };
 
 use crate::{
+    app::AppEvent,
     framework::FrameworkControls,
     tui::{
         component::{Component, SelectableComponent},
@@ -78,6 +79,10 @@ impl ChargePanelComponent {
         }
     }
 
+    fn set_percentage_control_by_index(&mut self, index: usize, control: AdjustableControl) {
+        self.controls[index] = control;
+    }
+
     fn get_selected_and_focused_control(&self) -> Option<&AdjustableControl> {
         let selected = self.get_selected_control();
 
@@ -92,7 +97,7 @@ impl ChargePanelComponent {
         &self.controls[self.selected_control]
     }
 
-    fn is_selected_and_focused(&self, index: usize) -> bool {
+    fn is_panel_selected_and_control_focused_by_index(&self, index: usize) -> bool {
         self.selected && self.selected_control == index && self.get_selected_control().is_focused()
     }
 
@@ -141,19 +146,22 @@ impl ChargePanelComponent {
     }
 
     fn render_max_charge_limit(
-        &self,
+        &mut self,
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let style = self.adjustable_control_style(Style::new().on_gray().black(), Style::default(), 0);
+        let style =
+            self.adjustable_control_style(Style::new().on_gray().black(), Style::default(), 0);
 
-        let max_charge_limit = if self.is_selected_and_focused(0)
+        let max_charge_limit = if self.is_panel_selected_and_control_focused_by_index(0)
             && let Some(value) = self.get_selected_control().get_percentage_value()
         {
             Some(value)
         } else if let Some(value) = controls.max_charge_limit() {
+            self.set_percentage_control_by_index(0, percentage_control(value));
+
             Some(value)
         } else {
             None
@@ -166,7 +174,7 @@ impl ChargePanelComponent {
                     Style::new().light_blue().on_gray(),
                     0,
                 );
-                let label = if self.is_selected_and_focused(0) {
+                let label = if self.is_panel_selected_and_control_focused_by_index(0) {
                     format!("◀ {:3}% ▶", max_charge_limit)
                 } else {
                     format!("{:3}%", max_charge_limit)
@@ -339,13 +347,26 @@ impl SelectableComponent for ChargePanelComponent {
 
 impl Component for ChargePanelComponent {
     fn handle_input(&mut self, event: Event) -> Option<crate::app::AppEvent> {
+        let mut app_event = None;
+
         if self.is_selected()
             && let Event::Key(key) = event
         {
             match key.code {
                 KeyCode::Down => self.cycle_controls_down(),
                 KeyCode::Up => self.cycle_controls_up(),
-                KeyCode::Enter => self.toggle_selected_control_focus(),
+                KeyCode::Enter => {
+                    match self.get_selected_and_focused_control() {
+                        Some(control) if self.selected_control == 0 => {
+                            if let Some(value) = control.get_percentage_value() {
+                                app_event = Some(AppEvent::SetMaxChargeLimit(value));
+                            }
+                        }
+                        _ => {}
+                    }
+
+                    self.toggle_selected_control_focus()
+                }
                 KeyCode::Left => self.adjust_focused_control(-5),
                 KeyCode::Right => self.adjust_focused_control(5),
                 KeyCode::Esc => self.toggle_selected_control_focus(),
@@ -353,7 +374,7 @@ impl Component for ChargePanelComponent {
             }
         }
 
-        None
+        app_event
     }
 
     fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
@@ -539,7 +560,7 @@ mod tests {
 
         assert!(panel.is_selected());
         assert!(panel.controls.len() == 1);
-        assert!(panel.is_selected_and_focused(0));
+        assert!(panel.is_panel_selected_and_control_focused_by_index(0));
         assert!(matches!(
             panel.get_selected_control(),
             AdjustableControl::Percentage(true, 0)

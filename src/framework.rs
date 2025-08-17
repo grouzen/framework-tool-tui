@@ -1,3 +1,4 @@
+use color_eyre::eyre::Report;
 use framework_lib::chromium_ec::CrosEc;
 use framework_lib::chromium_ec::commands::FpLedBrightnessLevel;
 use framework_lib::power::PowerInfo;
@@ -13,6 +14,17 @@ pub struct Framework {
     poll_interval: Duration,
 }
 
+#[derive(Debug)]
+struct EcErrorWrapper(framework_lib::chromium_ec::EcError);
+
+impl std::fmt::Display for EcErrorWrapper {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self.0)
+    }
+}
+
+impl std::error::Error for EcErrorWrapper {}
+
 impl Framework {
     pub fn new(ec: CrosEc, poll_interval: Duration) -> Self {
         Framework {
@@ -20,6 +32,12 @@ impl Framework {
             last_poll: Instant::now(),
             poll_interval,
         }
+    }
+
+    pub fn set_max_charge_limit(&self, value: u8) -> color_eyre::Result<()> {
+        self.ec
+            .set_charge_limit(0, value)
+            .map_err(|error| Report::from(EcErrorWrapper(error)))
     }
 
     pub fn poll(&mut self) -> FrameworkControls {

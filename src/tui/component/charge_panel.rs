@@ -147,7 +147,7 @@ impl ChargePanelComponent {
         value_area: Rect,
         controls: &FrameworkControls,
     ) {
-        let style = self.adjustable_control_style(Style::new().on_gray(), Style::default(), 0);
+        let style = self.adjustable_control_style(Style::new().on_gray().black(), Style::default(), 0);
 
         let max_charge_limit = if self.is_selected_and_focused(0)
             && let Some(value) = self.get_selected_control().get_percentage_value()
@@ -423,6 +423,7 @@ impl Component for ChargePanelComponent {
             Constraint::Max(1),
             Constraint::Max(1),
         ])
+        .horizontal_margin(2)
         .areas(values_block.inner(values_area));
 
         // Charge level

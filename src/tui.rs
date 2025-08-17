@@ -40,22 +40,26 @@ impl Tui {
 
     pub fn handle_input(&mut self) -> color_eyre::Result<Option<AppEvent>> {
         let event = if event::poll(Duration::from_millis(50))? {
-            let tui_event = event::read()?;
+            let event = event::read()?;
 
-            let top_level_event = match tui_event {
-                Event::Key(key) => match key.code {
-                    KeyCode::Char('q') => Some(AppEvent::Quit),
-                    _ => None,
-                },
-                _ => None,
-            };
-
-            top_level_event.or(self.main.handle_input(tui_event)?)
+            self.handle_input_internal(event)?
         } else {
             None
         };
 
         Ok(event)
+    }
+
+    fn handle_input_internal(&mut self, event: Event) -> color_eyre::Result<Option<AppEvent>> {
+        let top_level_event = match event {
+            Event::Key(key) => match key.code {
+                KeyCode::Char('q') => Some(AppEvent::Quit),
+                _ => None,
+            },
+            _ => None,
+        };
+
+        Ok(top_level_event.or(self.main.handle_input(event)?))
     }
 
     pub fn render<B: Backend>(
@@ -79,5 +83,22 @@ impl Tui {
         })?;
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use ratatui::crossterm::event::{Event, KeyCode, KeyEvent};
+
+    use crate::{app::AppEvent, tui::Tui};
+
+    #[test]
+    fn handle_input_internal_quit_event() {
+        let mut tui = Tui::new();
+        let event = Event::Key(KeyEvent::from(KeyCode::Char('q')));
+
+        let app_event = tui.handle_input_internal(event);
+
+        assert!(matches!(app_event, Ok(Some(AppEvent::Quit))))
     }
 }

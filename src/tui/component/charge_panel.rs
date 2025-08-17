@@ -17,6 +17,7 @@ use crate::{
 };
 
 const NORMAL_CAPACITY_LOSS_MAX: f32 = 0.048;
+const MAX_CHARGE_LIMIT_CONTROL_INDEX: usize = 0;
 
 pub struct ChargePanelComponent {
     selected: bool,
@@ -35,7 +36,7 @@ impl ChargePanelComponent {
         Self {
             selected: false,
             controls: vec![percentage_control(0)],
-            selected_control: 0,
+            selected_control: MAX_CHARGE_LIMIT_CONTROL_INDEX,
         }
     }
 
@@ -150,14 +151,14 @@ impl ChargePanelComponent {
         controls: &FrameworkControls,
     ) {
         let style =
-            self.adjustable_control_style(Style::new().on_gray().black(), Style::default(), 0);
+            self.adjustable_control_style(Style::new().on_gray().black(), Style::default(), MAX_CHARGE_LIMIT_CONTROL_INDEX);
 
-        let max_charge_limit = if self.is_panel_selected_and_control_focused_by_index(0)
+        let max_charge_limit = if self.is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX)
             && let Some(value) = self.get_selected_control().get_percentage_value()
         {
             Some(value)
         } else if let Some(value) = controls.max_charge_limit() {
-            self.set_percentage_control_by_index(0, percentage_control(value));
+            self.set_percentage_control_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX, percentage_control(value));
 
             Some(value)
         } else {
@@ -169,9 +170,9 @@ impl ChargePanelComponent {
                 let style = self.adjustable_control_style(
                     Style::new().gray().on_black(),
                     Style::new().light_blue().on_gray(),
-                    0,
+                    MAX_CHARGE_LIMIT_CONTROL_INDEX,
                 );
-                let label = if self.is_panel_selected_and_control_focused_by_index(0) {
+                let label = if self.is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX) {
                     format!("◀ {:3}% ▶", max_charge_limit)
                 } else {
                     format!("{:3}%", max_charge_limit)
@@ -354,7 +355,7 @@ impl Component for ChargePanelComponent {
                 KeyCode::Up => self.cycle_controls_up(),
                 KeyCode::Enter => {
                     match self.get_selected_and_focused_control() {
-                        Some(control) if self.selected_control == 0 => {
+                        Some(control) if self.selected_control == MAX_CHARGE_LIMIT_CONTROL_INDEX => {
                             if let Some(value) = control.get_percentage_value() {
                                 app_event = Some(AppEvent::SetMaxChargeLimit(value));
                             }
@@ -529,7 +530,7 @@ mod tests {
     use ratatui::crossterm::event::{Event, KeyCode, KeyEvent};
 
     use crate::tui::{
-        component::{Component, SelectableComponent, charge_panel::ChargePanelComponent},
+        component::{charge_panel::{ChargePanelComponent, MAX_CHARGE_LIMIT_CONTROL_INDEX}, Component, SelectableComponent},
         control::AdjustableControl,
     };
 
@@ -543,7 +544,7 @@ mod tests {
 
         assert!(panel.is_selected());
         assert!(panel.controls.len() == 1);
-        assert!(panel.controls[0].is_focused())
+        assert!(panel.controls[MAX_CHARGE_LIMIT_CONTROL_INDEX].is_focused())
     }
 
     #[test]
@@ -557,7 +558,7 @@ mod tests {
 
         assert!(panel.is_selected());
         assert!(panel.controls.len() == 1);
-        assert!(panel.is_panel_selected_and_control_focused_by_index(0));
+        assert!(panel.is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX));
         assert!(matches!(
             panel.get_selected_control(),
             AdjustableControl::Percentage(true, 0)

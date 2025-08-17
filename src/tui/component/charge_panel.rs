@@ -64,17 +64,14 @@ impl ChargePanelComponent {
     }
 
     fn adjust_focused_control(&mut self, delta: i8) {
-        if let Some(control) = self.get_selected_and_focused_control() {
-            match control {
-                AdjustableControl::Percentage(focused, value) => {
-                    let new_value = *value as i8 + delta;
+        if let Some(AdjustableControl::Percentage(focused, value)) =
+            self.get_selected_and_focused_control()
+        {
+            let new_value = *value as i8 + delta;
 
-                    if new_value >= 0 && new_value <= 100 {
-                        self.controls[self.selected_control] =
-                            AdjustableControl::Percentage(*focused, new_value as u8);
-                    }
-                }
-                _ => {}
+            if (0..=100).contains(&new_value) {
+                self.controls[self.selected_control] =
+                    AdjustableControl::Percentage(*focused, new_value as u8);
             }
         }
     }

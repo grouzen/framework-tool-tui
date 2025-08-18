@@ -21,6 +21,8 @@ pub struct App {
 pub enum AppEvent {
     Quit,
     SetMaxChargeLimit(u8),
+    SetFingerprintBrightness(u8),
+    SetKeyboardBrightness(u8),
 }
 
 impl Default for App {
@@ -69,6 +71,14 @@ impl App {
             AppEvent::SetMaxChargeLimit(value) => {
                 self.framework.set_max_charge_limit(value)?;
                 self.controls.max_charge_limit = Some(value);
+            }
+            AppEvent::SetFingerprintBrightness(percentage) => {
+                self.framework.set_fp_brightness(percentage)?;
+                self.controls.fp_brightness_percentage = Some(percentage);
+            }
+            AppEvent::SetKeyboardBrightness(percentage) => {
+                self.framework.set_kb_brightness(percentage);
+                self.controls.kb_brightness_percentage = Some(percentage);
             }
         }
 

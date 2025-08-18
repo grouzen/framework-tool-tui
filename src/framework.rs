@@ -1,5 +1,6 @@
 use color_eyre::eyre::Report;
 use framework_lib::chromium_ec::CrosEc;
+use framework_lib::chromium_ec::EcError;
 use framework_lib::chromium_ec::commands::FpLedBrightnessLevel;
 use framework_lib::power::PowerInfo;
 use framework_lib::smbios;
@@ -15,7 +16,7 @@ pub struct Framework {
 }
 
 #[derive(Debug)]
-struct EcErrorWrapper(framework_lib::chromium_ec::EcError);
+struct EcErrorWrapper(EcError);
 
 impl std::fmt::Display for EcErrorWrapper {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -38,6 +39,17 @@ impl Framework {
         self.ec
             .set_charge_limit(0, value)
             .map_err(|error| Report::from(EcErrorWrapper(error)))
+    }
+
+    pub fn set_fp_brightness(&self, percentage: u8) -> color_eyre::Result<()> {
+        self.ec
+            .set_fp_led_percentage(percentage)
+            .map_err(|error| Report::from(EcErrorWrapper(error)))
+    }
+
+    // NOTE: the underlying ec API is weird
+    pub fn set_kb_brightness(&self, percentage: u8) {
+        self.ec.set_keyboard_backlight(percentage);
     }
 
     pub fn poll(&mut self) -> FrameworkControls {

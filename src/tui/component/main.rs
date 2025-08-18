@@ -7,7 +7,7 @@ use ratatui::{
 use crate::{
     framework::FrameworkControls,
     tui::component::{
-        Component, SelectableComponent, brightness_panel::BrightnessPanelComponent,
+        AdjustableComponent, Component, brightness_panel::BrightnessPanelComponent,
         charge_panel::ChargePanelComponent, privacy_panel::PrivacyPanelComponent,
         smbios_panel::SmbiosPanelComponent,
     },
@@ -16,7 +16,7 @@ use crate::{
 pub struct MainComponent {
     privacy_panel: PrivacyPanelComponent,
     smbios_panel: SmbiosPanelComponent,
-    selectable_panels: Vec<Box<dyn SelectableComponent>>,
+    adjustable_panels: Vec<Box<dyn AdjustableComponent>>,
     selected_panel: Option<usize>,
 }
 
@@ -34,28 +34,28 @@ impl MainComponent {
         Self {
             privacy_panel: PrivacyPanelComponent,
             smbios_panel: SmbiosPanelComponent,
-            selectable_panels: vec![charge_panel, brightness_panel],
+            adjustable_panels: vec![charge_panel, brightness_panel],
             selected_panel: None,
         }
     }
 
     fn switch_panels(&mut self) {
-        let len = self.selectable_panels.len();
+        let len = self.adjustable_panels.len();
 
         if let Some(selected_panel) = self.selected_panel {
             if selected_panel < len - 1 {
                 let next = selected_panel + 1;
 
-                self.selectable_panels[selected_panel].toggle();
-                self.selectable_panels[next].toggle();
+                self.adjustable_panels[selected_panel].panel().toggle();
+                self.adjustable_panels[next].panel().toggle();
 
                 self.selected_panel = Some(next);
             } else {
-                self.selectable_panels[selected_panel].toggle();
+                self.adjustable_panels[selected_panel].panel().toggle();
                 self.selected_panel = None;
             }
         } else {
-            self.selectable_panels[0].toggle();
+            self.adjustable_panels[0].panel().toggle();
             self.selected_panel = Some(0);
         }
     }
@@ -69,7 +69,7 @@ impl Component for MainComponent {
             self.switch_panels();
         }
 
-        self.selectable_panels
+        self.adjustable_panels
             .iter_mut()
             .find_map(|panel| panel.handle_input(event.clone()))
     }
@@ -85,7 +85,7 @@ impl Component for MainComponent {
         let [brightness_panel_area] = Layout::vertical([Constraint::Min(0)]).areas(right_area);
 
         // Charge panel
-        self.selectable_panels[0].render(frame, charge_panel_area, controls);
+        self.adjustable_panels[0].render(frame, charge_panel_area, controls);
 
         // Privacy panel
         self.privacy_panel
@@ -95,6 +95,6 @@ impl Component for MainComponent {
         self.smbios_panel.render(frame, smbios_panel_area, controls);
 
         // Brightness panel
-        self.selectable_panels[1].render(frame, brightness_panel_area, controls);
+        self.adjustable_panels[1].render(frame, brightness_panel_area, controls);
     }
 }

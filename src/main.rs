@@ -1,6 +1,4 @@
-mod app;
-mod framework;
-use app::App;
+use framework_tool_tui::app::App;
 
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;

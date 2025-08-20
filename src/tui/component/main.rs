@@ -8,9 +8,8 @@ use crate::{
     framework::FrameworkControls,
     tui::component::{
         AdjustableComponent, Component, brightness_panel::BrightnessPanelComponent,
-        charge_panel::ChargePanelComponent, privacy_panel::PrivacyPanelComponent,
-        smbios_panel::SmbiosPanelComponent,
-        pd_ports_panel::PdPortsPanelComponent,
+        charge_panel::ChargePanelComponent, pd_ports_panel::PdPortsPanelComponent,
+        privacy_panel::PrivacyPanelComponent, smbios_panel::SmbiosPanelComponent,
     },
 };
 
@@ -85,10 +84,8 @@ impl Component for MainComponent {
         let [privacy_panel_area, smbios_panel_area] =
             Layout::horizontal([Constraint::Min(0), Constraint::Min(0)])
                 .areas(privacy_and_smbios_panels_area);
-        let [brightness_panel_area, pd_ports_panel_area] = Layout::vertical([
-            Constraint::Ratio(2, 3),
-            Constraint::Ratio(1, 3)
-        ]).areas(right_area);
+        let [brightness_panel_area, pd_ports_panel_area] =
+            Layout::vertical([Constraint::Fill(1), Constraint::Fill(2)]).areas(right_area);
 
         // Charge panel
         self.adjustable_panels[0].render(frame, charge_panel_area, controls);
@@ -104,6 +101,7 @@ impl Component for MainComponent {
         self.adjustable_panels[1].render(frame, brightness_panel_area, controls);
 
         // PD Ports panel (bottom of right_area)
-        self.pd_ports_panel.render(frame, pd_ports_panel_area, controls);
+        self.pd_ports_panel
+            .render(frame, pd_ports_panel_area, controls);
     }
 }

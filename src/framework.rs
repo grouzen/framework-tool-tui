@@ -59,7 +59,10 @@ impl Framework {
         let fp_brightness = self.ec.get_fp_led_level().ok();
         let kb_brightness = self.ec.get_keyboard_backlight().ok();
         let smbios = smbios::get_smbios();
-        let pd_ports = framework_lib::power::get_pd_info(&self.ec, 4);
+        let pd_ports = framework_lib::power::get_pd_info(&self.ec, 4)
+            .into_iter()
+            .map(Result::ok)
+            .collect();
 
         FrameworkControls {
             charge_percentage: charge_percentage(&power),
@@ -120,7 +123,7 @@ pub struct FrameworkControls {
     pub smbios_release_date: Option<String>,
     pub smbios_vendor: Option<String>,
     /// List of USB-C PD ports
-    pub pd_ports: Vec<Result<framework_lib::power::UsbPdPowerInfo, framework_lib::chromium_ec::EcError>>,
+    pub pd_ports: Vec<Option<framework_lib::power::UsbPdPowerInfo>>,
 }
 
 fn charge_percentage(power: &Option<PowerInfo>) -> Option<u32> {

@@ -1,3 +1,4 @@
+pub mod pd_ports_panel;
 use ratatui::{Frame, crossterm::event::Event, layout::Rect, prelude::*};
 
 use crate::{app::AppEvent, framework::FrameworkControls, tui::control::AdjustableControl};

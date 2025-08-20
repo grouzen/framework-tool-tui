@@ -10,12 +10,14 @@ use crate::{
         AdjustableComponent, Component, brightness_panel::BrightnessPanelComponent,
         charge_panel::ChargePanelComponent, privacy_panel::PrivacyPanelComponent,
         smbios_panel::SmbiosPanelComponent,
+        pd_ports_panel::PdPortsPanelComponent,
     },
 };
 
 pub struct MainComponent {
     privacy_panel: PrivacyPanelComponent,
     smbios_panel: SmbiosPanelComponent,
+    pd_ports_panel: PdPortsPanelComponent,
     adjustable_panels: Vec<Box<dyn AdjustableComponent>>,
     selected_panel: Option<usize>,
 }
@@ -34,6 +36,7 @@ impl MainComponent {
         Self {
             privacy_panel: PrivacyPanelComponent,
             smbios_panel: SmbiosPanelComponent,
+            pd_ports_panel: PdPortsPanelComponent::new(),
             adjustable_panels: vec![charge_panel, brightness_panel],
             selected_panel: None,
         }
@@ -82,7 +85,10 @@ impl Component for MainComponent {
         let [privacy_panel_area, smbios_panel_area] =
             Layout::horizontal([Constraint::Min(0), Constraint::Min(0)])
                 .areas(privacy_and_smbios_panels_area);
-        let [brightness_panel_area] = Layout::vertical([Constraint::Min(0)]).areas(right_area);
+        let [brightness_panel_area, pd_ports_panel_area] = Layout::vertical([
+            Constraint::Ratio(2, 3),
+            Constraint::Ratio(1, 3)
+        ]).areas(right_area);
 
         // Charge panel
         self.adjustable_panels[0].render(frame, charge_panel_area, controls);
@@ -94,7 +100,10 @@ impl Component for MainComponent {
         // SMBIOS panel
         self.smbios_panel.render(frame, smbios_panel_area, controls);
 
-        // Brightness panel
+        // Brightness panel (top of right_area)
         self.adjustable_panels[1].render(frame, brightness_panel_area, controls);
+
+        // PD Ports panel (bottom of right_area)
+        self.pd_ports_panel.render(frame, pd_ports_panel_area, controls);
     }
 }

@@ -8,16 +8,26 @@ A terminal dashboard for controlling and monitoring your Framework Laptop hardwa
 
 ## Features
 
-- [ ] **Live battery status** with limits and charging controls
-- [ ] **Privacy toggles** for microphone & camera
+- [x] **Live battery status** with limits and charging controls
+- [x] **Privacy toggles** for microphone & camera
 - [ ] **Input Deck Mode** selector (Framework 16)
-- [ ] **Keyboard & Fingerprint brightness** controls
-- [ ] **USB PD port monitoring & reset**
+- [x] **Keyboard & Fingerprint brightness** controls
+- [x] **USB PD port monitoring & reset**
 - [ ] **Fan RPM and target setting**
 - [ ] **Thermal info:** CPU/GPU temperatures
-- [ ] **System info:** BIOS details
+- [x] **System info:** BIOS details
 - [ ] **Log pane** for executed actions and errors
-- [ ] **Accessible:** All controls visible at once, rapid navigation via keyboard
+- [x] **Accessible:** All controls visible at once, rapid navigation via keyboard
+
+## Screenshots
+
+Dashboard
+
+![dashboard](docs/screenshots/dahsboard-mode.png)
+
+Switching between panels and setting values
+
+![adjust-value](docs/screenshots/adjust-value.png)
 
 ## Installation
 

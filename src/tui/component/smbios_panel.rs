@@ -78,14 +78,22 @@ impl Component for SmbiosPanelComponent {
             smbios_vendor_key_area,
             smbios_version_key_area,
             smbios_release_date_key_area,
-        ] = Layout::vertical([Constraint::Max(1), Constraint::Max(1), Constraint::Max(1)])
-            .areas(keys_block.inner(keys_area));
+        ] = Layout::vertical([
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+        ])
+        .areas(keys_block.inner(keys_area));
         let [
             smbios_vendor_value_area,
             smbios_version_value_area,
             smbios_release_date_value_area,
-        ] = Layout::vertical([Constraint::Max(1), Constraint::Max(1), Constraint::Max(1)])
-            .areas(values_block.inner(values_area));
+        ] = Layout::vertical([
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+        ])
+        .areas(values_block.inner(values_area));
 
         // Vendor
         self.render_smbios_vendor(

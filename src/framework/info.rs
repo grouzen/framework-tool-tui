@@ -1,6 +1,8 @@
 use framework_lib::chromium_ec::commands::FpLedBrightnessLevel;
 use framework_lib::power::PowerInfo;
+use framework_lib::power::UsbChargingType;
 use framework_lib::power::UsbPdPowerInfo;
+use framework_lib::power::UsbPowerRoles;
 use framework_lib::smbios;
 use smbioslib::DefinedStruct;
 use smbioslib::SMBiosData;
@@ -27,7 +29,7 @@ pub struct FrameworkInfo {
     pub smbios_version: Option<String>,
     pub smbios_release_date: Option<String>,
     pub smbios_vendor: Option<String>,
-    pub pd_ports: Vec<Option<framework_lib::power::UsbPdPowerInfo>>,
+    pub pd_ports: PdPortsInfo,
 }
 
 impl FrameworkInfo {
@@ -61,9 +63,29 @@ impl FrameworkInfo {
             smbios_version: smbios_version(smbios),
             smbios_release_date: smbios_release_date(smbios),
             smbios_vendor: smbios_vendor(smbios),
-            pd_ports,
+            pd_ports: pd_ports_info(pd_ports),
         }
     }
+}
+
+#[derive(Default)]
+pub struct PdPortsInfo {
+    pub left_back: Option<PdPortInfo>,
+    pub left_front: Option<PdPortInfo>,
+    pub right_back: Option<PdPortInfo>,
+    pub right_front: Option<PdPortInfo>,
+}
+
+#[derive(Default)]
+pub struct PdPortInfo {
+    pub role: String,
+    pub dualrole: String,
+    pub charging_type: String,
+    pub max_power: f32,
+    pub voltage_now: f32,
+    pub voltage_max: f32,
+    pub current_limit: u16,
+    pub current_max: u16,
 }
 
 fn charge_percentage(power: &Option<PowerInfo>) -> Option<u32> {
@@ -147,7 +169,7 @@ fn charging_status(power: &Option<PowerInfo>) -> &'static str {
         (true, true) => "Charging",
         (false, true) => "Fully charged",
         (false, false) => "Discharging",
-        (true, false) => "???",
+        (true, false) => "Unknown",
     }
 }
 
@@ -221,4 +243,66 @@ fn smbios_vendor(smbios: &Option<SMBiosData>) -> Option<String> {
             })
             .flatten()
     })
+}
+
+fn pd_ports_info(pd_ports: Vec<Option<UsbPdPowerInfo>>) -> PdPortsInfo {
+    let left_back = pd_ports
+        .get(3)
+        .and_then(|port| port.as_ref().map(pd_port_info));
+    let left_front = pd_ports
+        .get(2)
+        .and_then(|port| port.as_ref().map(pd_port_info));
+    let right_back = pd_ports
+        .first()
+        .and_then(|port| port.as_ref().map(pd_port_info));
+    let right_front = pd_ports
+        .get(1)
+        .and_then(|port| port.as_ref().map(pd_port_info));
+
+    PdPortsInfo {
+        left_back,
+        left_front,
+        right_back,
+        right_front,
+    }
+}
+
+fn pd_port_info(pd_port: &UsbPdPowerInfo) -> PdPortInfo {
+    let role = match pd_port.role {
+        UsbPowerRoles::Disconnected => "Disconnected".to_string(),
+        UsbPowerRoles::Source => "Source".to_string(),
+        UsbPowerRoles::Sink => "Sink".to_string(),
+        UsbPowerRoles::SinkNotCharging => "Sink (Not Charging)".to_string(),
+    };
+    let dualrole = if pd_port.dualrole {
+        "DRP".to_string()
+    } else {
+        "Charger".to_string()
+    };
+    let charging_type = match pd_port.charging_type {
+        UsbChargingType::None => "None".to_string(),
+        UsbChargingType::PD => "PD".to_string(),
+        UsbChargingType::TypeC => "Type-C".to_string(),
+        UsbChargingType::Proprietary => "Proprietary".to_string(),
+        UsbChargingType::Bc12Dcp => "BC1.2 DCP".to_string(),
+        UsbChargingType::Bc12Cdp => "BC1.2 CDP".to_string(),
+        UsbChargingType::Bc12Sdp => "BC1.2 SDP".to_string(),
+        UsbChargingType::Other => "Other".to_string(),
+        UsbChargingType::VBus => "VBUS".to_string(),
+        UsbChargingType::Unknown => "Unknown".to_string(),
+    };
+    let max_power = pd_port.max_power as f32 / 1000.0;
+    let voltage_now = pd_port.meas.voltage_now as f32 / 1000.0;
+    let voltage_max = pd_port.meas.voltage_max as f32 / 1000.0;
+
+    PdPortInfo {
+        role,
+        dualrole,
+        charging_type,
+        max_power,
+        voltage_now,
+        voltage_max,
+        current_limit: pd_port.meas.current_lim,
+        current_max: pd_port.meas.current_max,
+    }
 }

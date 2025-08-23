@@ -31,7 +31,7 @@ impl PdPortsPanelComponent {
         let block = Block::default()
             .title(format!(" {} ", name))
             .borders(Borders::ALL)
-            .border_type(BorderType::Thick);
+            .border_type(BorderType::Plain);
 
         if let Some(info) = info {
             let [key_area, value_area] =
@@ -198,7 +198,11 @@ impl PdPortsPanelComponent {
     ) {
         frame.render_widget(Paragraph::new("Max power"), key_area);
         frame.render_widget(
-            Paragraph::new(format!("{:.2} W", info.max_power)),
+            Paragraph::new(format!(
+                "{}.{} W",
+                info.max_power / 1000,
+                info.max_power % 1000
+            )),
             value_area,
         );
     }
@@ -215,9 +219,13 @@ impl Component for PdPortsPanelComponent {
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)]).areas(block.inner(area));
 
         let [left_back_area, left_front_area] =
-            Layout::vertical([Constraint::Max(12), Constraint::Max(12)]).areas(left_area);
+            Layout::vertical([Constraint::Max(12), Constraint::Max(12)])
+                .margin(1)
+                .areas(left_area);
         let [right_back_area, right_front_area] =
-            Layout::vertical([Constraint::Max(12), Constraint::Max(12)]).areas(right_area);
+            Layout::vertical([Constraint::Max(12), Constraint::Max(12)])
+                .margin(1)
+                .areas(right_area);
 
         self.render_port_block(frame, left_back_area, "Left back", &info.pd_ports.left_back);
         self.render_port_block(

@@ -81,7 +81,7 @@ pub struct PdPortInfo {
     pub role: String,
     pub dualrole: String,
     pub charging_type: String,
-    pub max_power: f32,
+    pub max_power: u32,
     pub voltage_now: f32,
     pub voltage_max: f32,
     pub current_limit: u16,
@@ -291,7 +291,7 @@ fn pd_port_info(pd_port: &UsbPdPowerInfo) -> PdPortInfo {
         UsbChargingType::VBus => "VBUS".to_string(),
         UsbChargingType::Unknown => "Unknown".to_string(),
     };
-    let max_power = pd_port.max_power as f32 / 1000.0;
+    let max_power = pd_port.max_power / 1000;
     let voltage_now = pd_port.meas.voltage_now as f32 / 1000.0;
     let voltage_max = pd_port.meas.voltage_max as f32 / 1000.0;
 

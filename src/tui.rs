@@ -12,7 +12,7 @@ use ratatui::{
 
 use crate::{
     app::AppEvent,
-    framework::FrameworkControls,
+    framework::info::FrameworkInfo,
     tui::component::{
         Component, footer::FooterComponent, main::MainComponent, title::TitleComponent,
     },
@@ -66,7 +66,7 @@ impl Tui {
     pub fn render<B: Backend>(
         &mut self,
         terminal: &mut Terminal<B>,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) -> color_eyre::Result<()> {
         terminal.draw(|frame| {
             let [title_area, main_area, footer_area] =
@@ -74,13 +74,13 @@ impl Tui {
                     .areas(frame.area());
 
             // Title
-            self.title.render(frame, title_area, controls);
+            self.title.render(frame, title_area, info);
 
             // Main
-            self.main.render(frame, main_area, controls);
+            self.main.render(frame, main_area, info);
 
             // Footer
-            self.footer.render(frame, footer_area, controls);
+            self.footer.render(frame, footer_area, info);
         })?;
 
         Ok(())

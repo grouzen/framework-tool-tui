@@ -5,13 +5,13 @@ use ratatui::{
 };
 use tui_framework_experiment::toggle_switch::{State, ToggleSwitch};
 
-use crate::{framework::FrameworkControls, tui::component::Component};
+use crate::{framework::info::FrameworkInfo, tui::component::Component};
 
 pub struct PrivacyPanelComponent;
 
 impl PrivacyPanelComponent {
-    fn render_mic(&self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
-        let toggle_state = if controls.is_microphone_enabled {
+    fn render_mic(&self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
+        let toggle_state = if info.is_microphone_enabled {
             State::On
         } else {
             State::Off
@@ -21,8 +21,8 @@ impl PrivacyPanelComponent {
         frame.render_widget(toggle, area);
     }
 
-    fn render_camera(&self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
-        let toggle_state = if controls.is_camera_enabled {
+    fn render_camera(&self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
+        let toggle_state = if info.is_camera_enabled {
             State::On
         } else {
             State::Off
@@ -34,7 +34,7 @@ impl PrivacyPanelComponent {
 }
 
 impl Component for PrivacyPanelComponent {
-    fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
         let block = Block::default()
             .title(" Privacy ")
             .borders(Borders::ALL)
@@ -47,10 +47,10 @@ impl Component for PrivacyPanelComponent {
             .areas(block.inner(area));
 
         // Micrhophone
-        self.render_mic(frame, mic_area, controls);
+        self.render_mic(frame, mic_area, info);
 
         // Camera
-        self.render_camera(frame, camera_area, controls);
+        self.render_camera(frame, camera_area, info);
 
         // Render block
         frame.render_widget(block, area);

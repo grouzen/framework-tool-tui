@@ -9,7 +9,7 @@ use ratatui::{
 
 use crate::{
     app::AppEvent,
-    framework::FrameworkControls,
+    framework::info::FrameworkInfo,
     tui::{
         component::{AdjustableComponent, AdjustablePanel, Component},
         control::percentage_control,
@@ -41,7 +41,7 @@ impl BrightnessPanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
         let style = self.0.adjustable_control_style(
             Style::new().on_gray().black(),
@@ -55,7 +55,7 @@ impl BrightnessPanelComponent {
             && let Some(value) = self.0.get_selected_control().get_percentage_value()
         {
             Some(value)
-        } else if let Some(value) = controls.fp_brightness_percentage {
+        } else if let Some(value) = info.fp_brightness_percentage {
             self.0.set_percentage_control_by_index(
                 FINGERPRINT_BRIGHTNESS_CONTROL_INDEX,
                 percentage_control(value),
@@ -117,7 +117,7 @@ impl BrightnessPanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
         let style = self.0.adjustable_control_style(
             Style::new().on_gray().black(),
@@ -131,7 +131,7 @@ impl BrightnessPanelComponent {
             && let Some(value) = self.0.get_selected_control().get_percentage_value()
         {
             Some(value)
-        } else if let Some(value) = controls.kb_brightness_percentage {
+        } else if let Some(value) = info.kb_brightness_percentage {
             self.0.set_percentage_control_by_index(
                 KEYBOARD_BRIGHTNESS_CONTROL_INDEX,
                 percentage_control(value),
@@ -220,7 +220,7 @@ impl Component for BrightnessPanelComponent {
         app_event
     }
 
-    fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
         let block = Block::default()
             .title(" Brightness ")
             .borders(Borders::ALL)
@@ -251,7 +251,7 @@ impl Component for BrightnessPanelComponent {
             frame,
             fp_brightness_key_area,
             fp_brightness_value_area,
-            controls,
+            info,
         );
 
         // Keyboard brightness
@@ -259,7 +259,7 @@ impl Component for BrightnessPanelComponent {
             frame,
             kb_brightness_key_area,
             kb_brightness_value_area,
-            controls,
+            info,
         );
 
         // Render blocks

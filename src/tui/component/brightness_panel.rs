@@ -237,11 +237,11 @@ impl Component for BrightnessPanelComponent {
         let values_block = Block::default().borders(Borders::NONE);
 
         let [fp_brightness_key_area, kb_brightness_key_area] =
-            Layout::vertical([Constraint::Max(1), Constraint::Max(1)])
+            Layout::vertical([Constraint::Length(1), Constraint::Length(1)])
                 .spacing(1)
                 .areas(keys_block.inner(keys_area));
         let [fp_brightness_value_area, kb_brightness_value_area] =
-            Layout::vertical([Constraint::Max(1), Constraint::Max(1)])
+            Layout::vertical([Constraint::Length(1), Constraint::Length(1)])
                 .spacing(1)
                 .horizontal_margin(1)
                 .areas(values_block.inner(values_area));

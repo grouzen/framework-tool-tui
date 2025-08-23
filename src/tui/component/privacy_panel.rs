@@ -40,11 +40,12 @@ impl Component for PrivacyPanelComponent {
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded);
 
-        let [mic_area, camera_area] = Layout::vertical([Constraint::Max(1), Constraint::Max(1)])
-            .spacing(1)
-            .horizontal_margin(2)
-            .vertical_margin(1)
-            .areas(block.inner(area));
+        let [mic_area, camera_area] =
+            Layout::vertical([Constraint::Length(1), Constraint::Length(1)])
+                .spacing(1)
+                .horizontal_margin(2)
+                .vertical_margin(1)
+                .areas(block.inner(area));
 
         // Micrhophone
         self.render_mic(frame, mic_area, info);

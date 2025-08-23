@@ -85,7 +85,7 @@ impl Component for MainComponent {
             Layout::horizontal([Constraint::Min(0), Constraint::Min(0)])
                 .areas(privacy_and_smbios_panels_area);
         let [brightness_panel_area, pd_ports_panel_area] =
-            Layout::vertical([Constraint::Fill(1), Constraint::Fill(2)]).areas(right_area);
+            Layout::vertical([Constraint::Max(7), Constraint::Fill(1)]).areas(right_area);
 
         // Charge panel
         self.adjustable_panels[0].render(frame, charge_panel_area, info);

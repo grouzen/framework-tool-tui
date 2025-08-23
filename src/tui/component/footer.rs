@@ -6,14 +6,14 @@ use ratatui::{
 
 use crate::{
     app::{FOOTER_HELP, VERSION},
-    framework::FrameworkControls,
+    framework::info::FrameworkInfo,
     tui::component::Component,
 };
 
 pub struct FooterComponent;
 
 impl Component for FooterComponent {
-    fn render(&mut self, frame: &mut Frame, area: Rect, _controls: &FrameworkControls) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, _info: &FrameworkInfo) {
         let block = Block::default()
             .title(" Help ")
             .borders(Borders::ALL)

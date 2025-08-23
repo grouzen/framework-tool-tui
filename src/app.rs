@@ -3,7 +3,7 @@ use ratatui::{Terminal, prelude::Backend};
 use std::time::Duration;
 
 use crate::{
-    framework::{Framework, FrameworkControls},
+    framework::{Framework, info::FrameworkInfo},
     tui::Tui,
 };
 
@@ -13,7 +13,7 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub struct App {
     framework: Framework,
-    controls: FrameworkControls,
+    info: FrameworkInfo,
     running: bool,
     tui: Tui,
 }
@@ -36,26 +36,26 @@ impl App {
         let poll_interval = Duration::from_millis(1000);
         let ec = CrosEc::new();
         let framework = Framework::new(ec, poll_interval);
-        let controls = FrameworkControls::default();
+        let info = FrameworkInfo::default();
         let tui = Tui::new();
 
         Self {
             framework,
-            controls,
+            info,
             running: true,
             tui,
         }
     }
 
     pub fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
-        self.controls = self.framework.poll();
+        self.info = self.framework.poll();
 
         while self.running {
-            if let Some(new_controls) = self.framework.poll_if_needed() {
-                self.controls = new_controls;
+            if let Some(new_info) = self.framework.poll_if_needed() {
+                self.info = new_info;
             }
 
-            self.tui.render(terminal, &self.controls)?;
+            self.tui.render(terminal, &self.info)?;
 
             if let Some(event) = self.tui.handle_input()? {
                 self.handle_event(event)?;
@@ -70,15 +70,15 @@ impl App {
             AppEvent::Quit => self.quit(),
             AppEvent::SetMaxChargeLimit(value) => {
                 self.framework.set_max_charge_limit(value)?;
-                self.controls.max_charge_limit = Some(value);
+                self.info.max_charge_limit = Some(value);
             }
             AppEvent::SetFingerprintBrightness(percentage) => {
                 self.framework.set_fp_brightness(percentage)?;
-                self.controls.fp_brightness_percentage = Some(percentage);
+                self.info.fp_brightness_percentage = Some(percentage);
             }
             AppEvent::SetKeyboardBrightness(percentage) => {
                 self.framework.set_kb_brightness(percentage);
-                self.controls.kb_brightness_percentage = Some(percentage);
+                self.info.kb_brightness_percentage = Some(percentage);
             }
         }
 

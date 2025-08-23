@@ -5,7 +5,7 @@ use ratatui::{
 };
 
 use crate::{
-    framework::FrameworkControls,
+    framework::info::FrameworkInfo,
     tui::component::{
         AdjustableComponent, Component, brightness_panel::BrightnessPanelComponent,
         charge_panel::ChargePanelComponent, pd_ports_panel::PdPortsPanelComponent,
@@ -76,7 +76,7 @@ impl Component for MainComponent {
             .find_map(|panel| panel.handle_input(event.clone()))
     }
 
-    fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
         let [left_area, right_area] =
             Layout::horizontal([Constraint::Min(0), Constraint::Min(0)]).areas(area);
         let [charge_panel_area, privacy_and_smbios_panels_area] =
@@ -88,20 +88,18 @@ impl Component for MainComponent {
             Layout::vertical([Constraint::Fill(1), Constraint::Fill(2)]).areas(right_area);
 
         // Charge panel
-        self.adjustable_panels[0].render(frame, charge_panel_area, controls);
+        self.adjustable_panels[0].render(frame, charge_panel_area, info);
 
         // Privacy panel
-        self.privacy_panel
-            .render(frame, privacy_panel_area, controls);
+        self.privacy_panel.render(frame, privacy_panel_area, info);
 
         // SMBIOS panel
-        self.smbios_panel.render(frame, smbios_panel_area, controls);
+        self.smbios_panel.render(frame, smbios_panel_area, info);
 
         // Brightness panel (top of right_area)
-        self.adjustable_panels[1].render(frame, brightness_panel_area, controls);
+        self.adjustable_panels[1].render(frame, brightness_panel_area, info);
 
         // PD Ports panel (bottom of right_area)
-        self.pd_ports_panel
-            .render(frame, pd_ports_panel_area, controls);
+        self.pd_ports_panel.render(frame, pd_ports_panel_area, info);
     }
 }

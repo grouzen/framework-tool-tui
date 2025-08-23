@@ -1,4 +1,4 @@
-use crate::{framework::FrameworkControls, tui::component::Component};
+use crate::{framework::info::FrameworkInfo, tui::component::Component};
 use framework_lib::power::{UsbChargingType, UsbPowerRoles};
 use ratatui::{
     Frame,
@@ -131,7 +131,7 @@ impl PdPortsPanelComponent {
 }
 
 impl Component for PdPortsPanelComponent {
-    fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
         let block = Block::default()
             .title(" PD ports ")
             .borders(Borders::ALL)
@@ -145,10 +145,10 @@ impl Component for PdPortsPanelComponent {
         let [right_back_area, right_front_area] =
             Layout::vertical([Constraint::Max(12), Constraint::Max(12)]).areas(right_area);
 
-        let left_back = &controls.pd_ports[3];
-        let left_front = &controls.pd_ports[2];
-        let right_back = &controls.pd_ports[0];
-        let right_front = &controls.pd_ports[1];
+        let left_back = &info.pd_ports[3];
+        let left_front = &info.pd_ports[2];
+        let right_back = &info.pd_ports[0];
+        let right_front = &info.pd_ports[1];
 
         self.render_port_block(frame, left_back_area, "Left back", left_back);
         self.render_port_block(frame, left_front_area, "Left front", left_front);

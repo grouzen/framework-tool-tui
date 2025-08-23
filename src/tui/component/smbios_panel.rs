@@ -4,7 +4,7 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, Paragraph},
 };
 
-use crate::{framework::FrameworkControls, tui::component::Component};
+use crate::{framework::info::FrameworkInfo, tui::component::Component};
 
 pub struct SmbiosPanelComponent;
 
@@ -14,9 +14,9 @@ impl SmbiosPanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let smbios_version_text = match &controls.smbios_version {
+        let smbios_version_text = match &info.smbios_version {
             Some(smbios_version) => smbios_version,
             None => "N/A",
         };
@@ -30,9 +30,9 @@ impl SmbiosPanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let smbios_release_date_text = match &controls.smbios_release_date {
+        let smbios_release_date_text = match &info.smbios_release_date {
             Some(smbios_release_date) => smbios_release_date,
             None => "N/A",
         };
@@ -46,9 +46,9 @@ impl SmbiosPanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let smbios_vendor_text = match &controls.smbios_vendor {
+        let smbios_vendor_text = match &info.smbios_vendor {
             Some(smbios_vendor) => smbios_vendor,
             None => "N/A",
         };
@@ -59,7 +59,7 @@ impl SmbiosPanelComponent {
 }
 
 impl Component for SmbiosPanelComponent {
-    fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
         let block = Block::default()
             .title(" BIOS ")
             .borders(Borders::ALL)
@@ -92,7 +92,7 @@ impl Component for SmbiosPanelComponent {
             frame,
             smbios_vendor_key_area,
             smbios_vendor_value_area,
-            controls,
+            info,
         );
 
         // Version
@@ -100,7 +100,7 @@ impl Component for SmbiosPanelComponent {
             frame,
             smbios_version_key_area,
             smbios_version_value_area,
-            controls,
+            info,
         );
 
         // Release date
@@ -108,7 +108,7 @@ impl Component for SmbiosPanelComponent {
             frame,
             smbios_release_date_key_area,
             smbios_release_date_value_area,
-            controls,
+            info,
         );
 
         // Render blocks

@@ -9,7 +9,7 @@ use ratatui::{
 
 use crate::{
     app::AppEvent,
-    framework::FrameworkControls,
+    framework::info::FrameworkInfo,
     tui::{
         component::{AdjustableComponent, AdjustablePanel, Component},
         control::percentage_control,
@@ -41,16 +41,16 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let gauge = match controls.charge_percentage {
+        let gauge = match info.charge_percentage {
             Some(charge_percentage) => {
                 let gauge_style = if charge_percentage < 15 {
                     Style::new().red().on_gray()
                 } else {
                     Style::new().green().on_gray()
                 };
-                let label = format!("{} {}%", controls.charging_status, charge_percentage);
+                let label = format!("{} {}%", info.charging_status, charge_percentage);
 
                 Gauge::default()
                     .percent(charge_percentage as u16)
@@ -69,7 +69,7 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
         let style = self.0.adjustable_control_style(
             Style::new().on_gray().black(),
@@ -83,7 +83,7 @@ impl ChargePanelComponent {
             && let Some(value) = self.0.get_selected_control().get_percentage_value()
         {
             Some(value)
-        } else if let Some(value) = controls.max_charge_limit {
+        } else if let Some(value) = info.max_charge_limit {
             self.0.set_percentage_control_by_index(
                 MAX_CHARGE_LIMIT_CONTROL_INDEX,
                 percentage_control(value),
@@ -130,9 +130,9 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let charger_voltage_text = match controls.charger_voltage {
+        let charger_voltage_text = match info.charger_voltage {
             Some(charger_voltage) => format!("{} mV", charger_voltage),
             None => "N/A".to_string(),
         };
@@ -146,9 +146,9 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let charger_current_text = match controls.charger_current {
+        let charger_current_text = match info.charger_current {
             Some(charger_current) => format!("{} mA", charger_current),
             None => "N/A".to_string(),
         };
@@ -162,9 +162,9 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let design_capacity_text = match controls.design_capacity {
+        let design_capacity_text = match info.design_capacity {
             Some(design_capacity) => format!("{} mAh", design_capacity),
             None => "N/A".to_string(),
         };
@@ -178,9 +178,9 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let last_full_charge_capacity_text = match controls.last_full_charge_capacity {
+        let last_full_charge_capacity_text = match info.last_full_charge_capacity {
             Some(last_full_charge_capacity) => format!("{} mAh", last_full_charge_capacity),
             None => "N/A".to_string(),
         };
@@ -194,9 +194,9 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let capacity_loss_text = match controls.capacity_loss_percentage {
+        let capacity_loss_text = match info.capacity_loss_percentage {
             Some(capacity_loss_percentage) => {
                 if capacity_loss_percentage > 0.0 {
                     format!("-{:.2}%", capacity_loss_percentage)
@@ -216,9 +216,9 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let cycle_count_text = match controls.cycle_count {
+        let cycle_count_text = match info.cycle_count {
             Some(cycle_count) => format!("{}", cycle_count),
             None => "N/A".to_string(),
         };
@@ -232,9 +232,9 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
-        controls: &FrameworkControls,
+        info: &FrameworkInfo,
     ) {
-        let capacity_loss_per_cycle = controls.capacity_loss_per_cycle;
+        let capacity_loss_per_cycle = info.capacity_loss_per_cycle;
 
         let capacity_loss_per_cycle_style = match capacity_loss_per_cycle {
             Some(capacity_loss_per_cycle) => {
@@ -264,16 +264,6 @@ impl ChargePanelComponent {
         );
     }
 }
-
-// impl SelectableComponent for ChargePanelComponent {
-//     fn toggle(&mut self) {
-//         self.selected = !self.is_selected();
-//     }
-
-//     fn is_selected(&self) -> bool {
-//         self.selected
-//     }
-// }
 
 impl AdjustableComponent for ChargePanelComponent {
     fn panel(&mut self) -> &mut AdjustablePanel {
@@ -315,7 +305,7 @@ impl Component for ChargePanelComponent {
         app_event
     }
 
-    fn render(&mut self, frame: &mut Frame, area: Rect, controls: &FrameworkControls) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
         let block = Block::default()
             .title(" Charge ")
             .borders(Borders::ALL)
@@ -386,27 +376,17 @@ impl Component for ChargePanelComponent {
         .areas(values_block.inner(values_area));
 
         // Charge level
-        self.render_charge_level(
-            frame,
-            charge_level_key_area,
-            charge_level_value_area,
-            controls,
-        );
+        self.render_charge_level(frame, charge_level_key_area, charge_level_value_area, info);
 
         // Max charge limit
-        self.render_max_charge_limit(
-            frame,
-            charge_limit_key_area,
-            charge_limit_value_area,
-            controls,
-        );
+        self.render_max_charge_limit(frame, charge_limit_key_area, charge_limit_value_area, info);
 
         // Charger voltage
         self.render_charger_voltage(
             frame,
             charger_voltage_key_area,
             charger_voltage_value_area,
-            controls,
+            info,
         );
 
         // Charger current
@@ -414,7 +394,7 @@ impl Component for ChargePanelComponent {
             frame,
             charger_current_key_area,
             charger_current_value_area,
-            controls,
+            info,
         );
 
         // Design capacity
@@ -422,7 +402,7 @@ impl Component for ChargePanelComponent {
             frame,
             design_capacity_key_area,
             design_capacity_value_area,
-            controls,
+            info,
         );
 
         // Last full charge capacity
@@ -430,7 +410,7 @@ impl Component for ChargePanelComponent {
             frame,
             last_full_capacity_key_area,
             last_full_capacity_value_area,
-            controls,
+            info,
         );
 
         // Capacity loss
@@ -438,23 +418,18 @@ impl Component for ChargePanelComponent {
             frame,
             capacity_loss_key_area,
             capacity_loss_value_area,
-            controls,
+            info,
         );
 
         // Cycle count
-        self.render_cycle_count(
-            frame,
-            cycle_count_key_area,
-            cycle_count_value_area,
-            controls,
-        );
+        self.render_cycle_count(frame, cycle_count_key_area, cycle_count_value_area, info);
 
         // Capacity loss per cycle
         self.render_capacity_loss_per_cycle(
             frame,
             capacity_loss_per_cycle_key_area,
             capacity_loss_per_cycle_value_area,
-            controls,
+            info,
         );
 
         // Render blocks

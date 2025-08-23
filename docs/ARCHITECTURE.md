@@ -1,34 +1,60 @@
-# Framework System TUI Architecture
+# Framework System TUI: Architecture
 
-This document explains the architecture and data flow for the Framework System TUI as of August 2025.
+*Last updated: August 2025*
 
 ## Overview
 
-The TUI dashboard manages hardware controls and state for Framework laptops. It uses Rust's `ratatui` library for UI, and interfaces with hardware through the `framework_lib` crate.
+Framework System TUI is a Rust-based dashboard that controls and monitors Framework laptop hardware from a terminal interface. It provides real-time data and interactive controls, organized into UI panels, using the [`ratatui`](https://github.com/ratatui-org/ratatui) library, and connects to hardware via the [`framework_lib`](https://github.com/FrameworkComputer/framework-lib) crate.
 
-Core components:
-- **App (src/app.rs)**: Handles the user interface and the main event/render loop.
-- **Framework (src/framework.rs)**: Polls hardware, exposing controls and telemetry via `FrameworkControls`.
-- **Main Entry (src/main.rs)**: Starts the app, sets up the TUI terminal environment.
+### Architectural Goals
 
-## Component Diagram
+- **Separation of Concerns:** UI logic (App) and hardware interface (Framework) are strictly isolated.
+- **Periodic Polling:** Hardware status is updated at a fixed interval.
+- **Panelized UI:** Each type of hardware info/control is presented in a dedicated TUI panel.
+- **Error Handling:** Uses [`color-eyre`](https://docs.rs/color-eyre/) throughout for robust reporting.
+
+## Module Overview
+
+| Module                   | Path                        | Purpose                                            |
+|--------------------------|-----------------------------|----------------------------------------------------|
+| Main                     | [`src/main.rs`](src/main.rs:1)         | App entrypoint. Sets up TUI environment, runs App. |
+| App                      | [`src/app.rs`](src/app.rs:1)           | Event/render loop. Owns Framework; handles UI, input. |
+| Framework                | [`src/framework.rs`](src/framework.rs:1) | Manages hardware polling. Wraps EC and telemetry.  |
+| FrameworkInfo            | [`src/framework/info.rs`](src/framework/info.rs:1) | Aggregates all hardware data for UI panels.         |
+| Tui & Components         | [`src/tui/`](src/tui/)                  | Panels, layout, input handling in TUI.              |
+
+## Data & Control Flow
+
+### High-Level
+
+1. **App Startup**: [`main.rs`](src/main.rs:1) sets up terminal and starts App.
+2. **Event Loop**: [`App`](src/app.rs:14) periodically polls hardware via [`Framework`](src/framework.rs:12).
+3. **Framework Polling**: [`Framework`](src/framework.rs:12) collects hardware info at interval, parses state to [`FrameworkInfo`](src/framework/info.rs:1).
+4. **UI Panels**: [`App`](src/app.rs:14) renders state for distinct panels (battery, privacy, lighting, SMBIOS, PD ports etc).
+5. **User Actions**: Keyboard input dispatched to [`App`](src/app.rs:61), which may trigger hardware mutations via [`Framework`](src/framework.rs:38-53).
+
+### Component Diagram
 
 ```mermaid
-graph LR
+graph TD
     Main["main.rs: main()"]
     App["app.rs: App"]
     Framework["framework.rs: Framework"]
-    Controls["framework.rs: FrameworkControls"]
-    Hardware["External: framework_lib (EC, power, SMBIOS, etc.)"]
+    Info["framework/info.rs: FrameworkInfo"]
+    Tui["tui/"]
+    Hardware["framework_lib (HW APIs)"]
 
     Main --> App
     App --> Framework
-    Framework --> Controls
-    Controls -->|read| App
+    Framework --> Info
+    Info --> Tui
     Framework -->|polls| Hardware
+    App --> Tui
+    Tui -->|renders| User["User"]
+    User --> App
 ```
 
-## Sequence Diagram: Data and Event Flow
+### Event Sequence
 
 ```mermaid
 sequenceDiagram
@@ -36,55 +62,67 @@ sequenceDiagram
     participant Terminal
     participant App
     participant Framework
-    participant Hardware
+    participant HW
     User->>Terminal: Keyboard Input
     Terminal->>App: Key Events
     App->>Framework: poll_if_needed()
-    Framework->>Hardware: Read hardware APIs
-    Hardware-->>Framework: Battery/Privacy/SMBIOS/Lighting
-    Framework-->>App: Controls/Telemetry (FrameworkControls)
-    App-->>Terminal: Render UI Panels
+    Framework->>HW: Query hardware APIs
+    HW-->>Framework: Return telemetry
+    Framework-->>App: FrameworkInfo (snapshot)
+    App-->>Terminal: Render UI
 ```
 
-## Data Flow Diagram
+### Periodic Polling
 
-```mermaid
-flowchart TD
-    Hardware["Hardware API (framework_lib)"] --> Framework["Framework Poll"]
-    Framework --> Controls["FrameworkControls (State/Telemetry)"]
-    Controls --> App["App (TUI Panels)"]
-    App --> User["User (TUI Viewer)"]
-    User --> App["Key events / interaction"]
-```
+- Framework polls hardware at fixed `poll_interval`.
+- Polling gathers:
+  - Battery, charge %, power
+  - Privacy status (cam/mic)
+  - Brightness (keyboard, fingerprint)
+  - SMBIOS info
+  - PD ports
+- State stored in FrameworkInfo then visualized by App.
 
-## Component Descriptions
+## Component Details
 
-### App
-- UI panels for battery, privacy, lighting, SMBIOS and more.
-- Handles event loop: draws UI, reads keyboard actions, controls running state.
-- Receives state from Framework (`self.framework.controls`).
-- Forwards most hardware data queries to FrameworkControls.
+### Main ([`src/main.rs`](src/main.rs:1))
+- Entry point.
+- Sets up color-eyre, initializes `ratatui`, runs `App::run()`.
 
-### Framework
-- Owns a `CrosEc` hardware control object.
-- Periodically polls hardware (interval: `poll_interval`).
-- Updates `FrameworkControls` struct, which extracts key data (battery stats, privacy, brightness, SMBIOS).
-- Is isolated from TUI logic.
+### App ([`src/app.rs`](src/app.rs:14))
+- Owns Framework and Tui.
+- Handles event loop:
+  - Polls Framework for updates.
+  - Renders info in panels.
+  - Handles keyboard input, dispatches actions (quit, set charge limit, adjust brightness).
 
-### FrameworkControls
-- Holds the latest snapshot of all hardware data for UI rendering:
-    - Battery: charge %, voltage, capacity, loss.
-    - Privacy: mic/camera toggles.
-    - Lighting: brightness levels.
-    - SMBIOS: vendor, version, release date.
+### Framework ([`src/framework.rs`](src/framework.rs:12))
+- Wraps underlying EC API (`CrosEc` from framework_lib).
+- Exposes hardware mutation methods (set charge limit, set brightness).
+- Polls all hardware data, collects into [`FrameworkInfo`](src/framework/info.rs:1).
+- Decoupled from UI logic.
 
-### Main
-- Initializes terminal UI environment.
-- Runs main loop (`App::run()`).
-- Handles entering/exiting alternate screen and raw mode.
+### FrameworkInfo ([`src/framework/info.rs`](src/framework/info.rs:1))
+- Captures all hardware states as fields.
+- Passed to TUI panels for display.
 
-## Summary
+### TUI ([`src/tui/`](src/tui/))
+- Panels implemented in submodules:
+  - Battery, Charge, Privacy, SMBIOS, Brightness, PD Ports, Footer, Title
+- Input routing, layout management, rendering via ratatui.
 
-The Framework System TUI is designed for clear separation between UI logic (App) and hardware access (Framework). Real-time data is regularly polled from hardware, then presented in multiple interactive panels.
+## Key Data Structures
 
-License: See [Cargo.toml](Cargo.toml:1).
+- `App` (owns Framework, Info, TUI, controls lifecycle)
+- `Framework` (owns hardware abstraction, polling logic)
+- `FrameworkInfo` (complete telemetry snapshot for UI)
+- `Tui` and panel objects
+
+## Extensibility
+
+- New hardware features added by extending `FrameworkInfo` and panel submodules.
+- Platform independence maintained by isolating hardware logic in Framework.
+
+## License
+
+Licensed under the terms detailed in [`Cargo.toml`](Cargo.toml:1).

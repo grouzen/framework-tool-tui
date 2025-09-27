@@ -1,11 +1,9 @@
-use std::time::Duration;
-
 pub mod component;
 pub mod control;
 
 use ratatui::{
     Terminal,
-    crossterm::event::{self, Event, KeyCode},
+    crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout},
     prelude::Backend,
 };
@@ -39,19 +37,7 @@ impl Tui {
         }
     }
 
-    pub fn handle_input(&mut self) -> color_eyre::Result<Option<AppEvent>> {
-        let event = if event::poll(Duration::from_millis(50))? {
-            let event = event::read()?;
-
-            self.handle_input_internal(event)?
-        } else {
-            None
-        };
-
-        Ok(event)
-    }
-
-    fn handle_input_internal(&mut self, event: Event) -> color_eyre::Result<Option<AppEvent>> {
+    pub fn handle_input(&mut self, event: Event) -> color_eyre::Result<Option<AppEvent>> {
         let top_level_event = match event {
             Event::Key(key) => match key.code {
                 KeyCode::Char('q') => Some(AppEvent::Quit),
@@ -98,7 +84,7 @@ mod tests {
         let mut tui = Tui::new();
         let event = Event::Key(KeyEvent::from(KeyCode::Char('q')));
 
-        let app_event = tui.handle_input_internal(event);
+        let app_event = tui.handle_input(event);
 
         assert!(matches!(app_event, Ok(Some(AppEvent::Quit))))
     }

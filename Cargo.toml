@@ -5,9 +5,11 @@ edition = "2024"
 
 [dependencies]
 ratatui = "0.29"
-crossterm = "0.29"
+crossterm = { version = "0.28.1", features = ["event-stream"] }
 anyhow = "1.0"
 framework_lib = { git = "https://github.com/FrameworkComputer/framework-system.git", package = "framework_lib" }
 smbios-lib = { git = "https://github.com/FrameworkComputer/smbios-lib.git", branch = "no-std", default-features = false }
 tui-framework-experiment = "0.4.0"
 color-eyre = "0.6.5"
+tokio = { version = "1.47.1", features = ["full"] }
+futures = "0.3.31"

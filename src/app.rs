@@ -3,6 +3,7 @@ use ratatui::{Terminal, prelude::Backend};
 use std::time::Duration;
 
 use crate::{
+    event::{Event, EventLoop},
     framework::{Framework, info::FrameworkInfo},
     tui::Tui,
 };
@@ -47,18 +48,26 @@ impl App {
         }
     }
 
-    pub fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
+    pub async fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
+        let mut event_loop = EventLoop::new();
+
+        // Pre-fetch framework info
         self.info = self.framework.poll();
 
-        while self.running {
-            if let Some(new_info) = self.framework.poll_if_needed() {
-                self.info = new_info;
-            }
+        event_loop.run(Duration::from_millis(1000));
 
+        while self.running {
             self.tui.render(terminal, &self.info)?;
 
-            if let Some(event) = self.tui.handle_input()? {
-                self.handle_event(event)?;
+            match event_loop.next().await? {
+                Event::Tick => {
+                    self.info = self.framework.poll();
+                }
+                Event::Input(event) => {
+                    if let Some(app_event) = self.tui.handle_input(event)? {
+                        self.handle_event(app_event)?;
+                    }
+                }
             }
         }
 

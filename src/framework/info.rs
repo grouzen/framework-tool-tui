@@ -30,6 +30,7 @@ pub struct FrameworkInfo {
     pub smbios_release_date: Option<String>,
     pub smbios_vendor: Option<String>,
     pub pd_ports: PdPortsInfo,
+    pub fan_rpm: Option<Vec<u16>>,
 }
 
 impl FrameworkInfo {
@@ -41,6 +42,7 @@ impl FrameworkInfo {
         kb_brightness: Option<u8>,
         smbios: &Option<SMBiosData>,
         pd_ports: Vec<Option<UsbPdPowerInfo>>,
+        fan_rpm: Option<Vec<u16>>,
     ) -> Self {
         Self {
             charge_percentage: charge_percentage(power),
@@ -64,6 +66,7 @@ impl FrameworkInfo {
             smbios_release_date: smbios_release_date(smbios),
             smbios_vendor: smbios_vendor(smbios),
             pd_ports: pd_ports_info(pd_ports),
+            fan_rpm,
         }
     }
 }

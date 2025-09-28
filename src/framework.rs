@@ -1,11 +1,18 @@
 use color_eyre::eyre::Report;
 use framework_lib::chromium_ec::CrosEc;
+use framework_lib::chromium_ec::CrosEcDriver;
 use framework_lib::chromium_ec::EcError;
 use framework_lib::smbios;
 
 use crate::framework::info::FrameworkInfo;
 
 pub mod info;
+
+// Copied from framework_lib::power
+const EC_MEMMAP_FAN: u16 = 0x10; // Fan speeds 0x10 - 0x17
+const EC_FAN_SPEED_ENTRIES: usize = 4;
+/// Used on old EC firmware (before 2023)
+const EC_FAN_SPEED_NOT_PRESENT: u16 = 0xFFFF;
 
 pub struct Framework {
     ec: CrosEc,
@@ -55,6 +62,7 @@ impl Framework {
             .into_iter()
             .map(Result::ok)
             .collect();
+        let fan_rpm = self.get_fan_rpm().ok();
 
         FrameworkInfo::new(
             &power,
@@ -64,6 +72,27 @@ impl Framework {
             kb_brightness,
             &smbios,
             pd_ports,
+            fan_rpm,
         )
+    }
+
+    fn get_fan_rpm(&self) -> color_eyre::Result<Vec<u16>> {
+        let fans = self
+            .ec
+            .read_memory(EC_MEMMAP_FAN, 0x08)
+            .ok_or(Report::msg("Couldn't read fan info"))?;
+        let mut rpms = Vec::new();
+
+        for i in 0..EC_FAN_SPEED_ENTRIES {
+            let rpm = u16::from_le_bytes([fans[i * 2], fans[1 + i * 2]]);
+
+            if rpm == EC_FAN_SPEED_NOT_PRESENT {
+                continue;
+            }
+
+            rpms.push(rpm);
+        }
+
+        Ok(rpms)
     }
 }

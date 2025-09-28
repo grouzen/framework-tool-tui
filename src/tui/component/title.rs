@@ -21,14 +21,15 @@ impl Component for TitleComponent {
             charging_status_area,
             charge_percentage_area,
             max_charge_limit_area,
+            fan_speed_area,
         ] = Layout::horizontal([
             Constraint::Max(10),
             Constraint::Max(15),
             Constraint::Max(6),
             Constraint::Max(13),
+            Constraint::Min(18),
         ])
-        .horizontal_margin(2)
-        .spacing(2)
+        .spacing(1)
         .areas(block.inner(area));
 
         // BIOS version
@@ -65,6 +66,18 @@ impl Component for TitleComponent {
                 Paragraph::new(format!("[ Max: {}% ]", max_charge_limit)),
                 max_charge_limit_area,
             );
+        }
+
+        // FAN speed
+        if let Some(fan_rpm) = &info.fan_rpm {
+            let text = fan_rpm
+                .iter()
+                .enumerate()
+                .map(|(n, rpm)| format!("FAN{}: {} RPM", n + 1, rpm))
+                .collect::<Vec<String>>()
+                .join(", ");
+
+            frame.render_widget(Paragraph::new(format!("[ {} ]", text)), fan_speed_area);
         }
 
         frame.render_widget(block, area);

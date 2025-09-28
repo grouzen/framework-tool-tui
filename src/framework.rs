@@ -2,8 +2,6 @@ use color_eyre::eyre::Report;
 use framework_lib::chromium_ec::CrosEc;
 use framework_lib::chromium_ec::EcError;
 use framework_lib::smbios;
-use std::time::Duration;
-use std::time::Instant;
 
 use crate::framework::info::FrameworkInfo;
 
@@ -11,8 +9,6 @@ pub mod info;
 
 pub struct Framework {
     ec: CrosEc,
-    last_poll: Instant,
-    poll_interval: Duration,
 }
 
 #[derive(Debug)]
@@ -27,12 +23,8 @@ impl std::fmt::Display for EcErrorWrapper {
 impl std::error::Error for EcErrorWrapper {}
 
 impl Framework {
-    pub fn new(ec: CrosEc, poll_interval: Duration) -> Self {
-        Framework {
-            ec,
-            last_poll: Instant::now(),
-            poll_interval,
-        }
+    pub fn new(ec: CrosEc) -> Self {
+        Framework { ec }
     }
 
     pub fn set_max_charge_limit(&self, value: u8) -> color_eyre::Result<()> {
@@ -52,7 +44,7 @@ impl Framework {
         self.ec.set_keyboard_backlight(percentage);
     }
 
-    pub fn poll(&mut self) -> FrameworkInfo {
+    pub fn get_info(&mut self) -> FrameworkInfo {
         let power = framework_lib::power::power_info(&self.ec);
         let charge_limit = self.ec.get_charge_limit().ok();
         let privacy = self.ec.get_privacy_info().ok();
@@ -73,15 +65,5 @@ impl Framework {
             &smbios,
             pd_ports,
         )
-    }
-
-    pub fn poll_if_needed(&mut self) -> Option<FrameworkInfo> {
-        if self.last_poll.elapsed() >= self.poll_interval {
-            self.last_poll = Instant::now();
-
-            Some(self.poll())
-        } else {
-            None
-        }
     }
 }

@@ -37,6 +37,7 @@ impl PdPortsPanelComponent {
             let [key_area, value_area] =
                 Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
                     .margin(1)
+                    .spacing(1)
                     .areas(block.inner(area));
 
             let keys_block = Block::default().borders(Borders::NONE);

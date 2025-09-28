@@ -1,10 +1,8 @@
 # Framework System TUI
 
-![Rust](https://img.shields.io/badge/lang-rust-orange)  
-![ratatui](https://img.shields.io/badge/ui-ratatui-blue)  
-![Framework Laptop](https://img.shields.io/badge/hardware-Framework--Laptop-success)  
+![Rust](https://img.shields.io/badge/lang-rust-orange) ![ratatui](https://img.shields.io/badge/ui-ratatui-blue) ![Framework Laptop](https://img.shields.io/badge/hardware-Framework--Laptop-success)  
 
-A terminal dashboard for controlling and monitoring your Framework Laptop hardware—charging, privacy, lighting, USB PD, and more—via direct API calls.
+A terminal dashboard for controlling and monitoring your Framework Laptop hardware — charging, privacy, lighting, USB PD, and more — via direct API calls.
 
 ## Features
 
@@ -13,7 +11,7 @@ A terminal dashboard for controlling and monitoring your Framework Laptop hardwa
 - [ ] **Input Deck Mode** selector (Framework 16)
 - [x] **Keyboard & Fingerprint brightness** controls
 - [x] **USB PD port monitoring & reset**
-- [ ] **Fan RPM and target setting**
+- [x] **Fan RPM and target setting**
 - [ ] **Thermal info:** CPU/GPU temperatures
 - [x] **System info:** BIOS details
 - [ ] **Log pane** for executed actions and errors
@@ -31,21 +29,41 @@ Switching between panels and setting values
 
 ## Installation
 
+### :dvd: Binaries
+
+The pre-compiled binaries for Linux are available for download on the [Releases](https://github.com/grouzen/framework-tool-tui/releases) page
+
+### :memo: From source
+
 Requires [Rust](https://rustup.rs/) (Edition 2024) and a Framework laptop.
 
 ```sh
 git clone https://github.com/grouzen/framework-tool-tui.git
 cd framework-tool-tui
 cargo build --release
+# or via cargo install
+cargo install --path .
 ```
+
+### :penguin: Linux distros
+
+#### Gentoo linux
+
+It is available via `lamdness` overlay
+
+```sh
+sudo eselect repository enable lamdness
+sudo emaint -r lamdness sync
+sudo emerge -av app-laptop/framework-tool-tui
+```
+
 
 ## Run
 
 It needs to be running with root privileges to access hardware controls.
 
 ```sh
-cargo build --release
-sudo ./target/release/framework-tool-tui
+sudo framework-tool-tui
 ```
 
 ## Architecture
@@ -61,4 +79,4 @@ Pull requests welcome! For bug reports or feature requests, see Issues.
 
 ## License
 
-See [Cargo.toml](Cargo.toml:1) for license & dependencies.
+See [LICENSE](LICENSE) and [Cargo.toml](Cargo.toml:1) for license & dependencies.

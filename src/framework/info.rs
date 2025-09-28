@@ -34,6 +34,7 @@ pub struct FrameworkInfo {
 }
 
 impl FrameworkInfo {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         power: &Option<PowerInfo>,
         charge_limit: &Option<(u8, u8)>,

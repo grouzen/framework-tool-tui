@@ -34,9 +34,8 @@ impl Default for App {
 
 impl App {
     pub fn new() -> Self {
-        let poll_interval = Duration::from_millis(1000);
         let ec = CrosEc::new();
-        let framework = Framework::new(ec, poll_interval);
+        let framework = Framework::new(ec);
         let info = FrameworkInfo::default();
         let tui = Tui::new();
 
@@ -52,7 +51,7 @@ impl App {
         let mut event_loop = EventLoop::new();
 
         // Pre-fetch framework info
-        self.info = self.framework.poll();
+        self.info = self.framework.get_info();
 
         event_loop.run(Duration::from_millis(1000));
 
@@ -61,7 +60,7 @@ impl App {
 
             match event_loop.next().await? {
                 Event::Tick => {
-                    self.info = self.framework.poll();
+                    self.info = self.framework.get_info();
                 }
                 Event::Input(event) => {
                     if let Some(app_event) = self.tui.handle_input(event)? {

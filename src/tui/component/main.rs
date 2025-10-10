@@ -77,27 +77,27 @@ impl Component for MainComponent {
     }
 
     fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
-        let [left_area, right_area] =
-            Layout::horizontal([Constraint::Min(0), Constraint::Min(0)]).areas(area);
-        let [charge_panel_area, privacy_and_smbios_panels_area] =
-            Layout::vertical([Constraint::Min(0), Constraint::Max(7)]).areas(left_area);
+        let [top_area, pd_ports_panel_area] =
+            Layout::vertical([Constraint::Max(15), Constraint::Min(0)]).areas(area);
+        let [charge_panel_area, top_right_area] =
+            Layout::horizontal([Constraint::Min(0), Constraint::Min(0)]).areas(top_area);
+        let [brightness_panel_area, privacy_and_smbios_panels_area] =
+            Layout::vertical([Constraint::Min(7), Constraint::Min(7)]).areas(top_right_area);
         let [privacy_panel_area, smbios_panel_area] =
             Layout::horizontal([Constraint::Min(0), Constraint::Min(0)])
                 .areas(privacy_and_smbios_panels_area);
-        let [brightness_panel_area, pd_ports_panel_area] =
-            Layout::vertical([Constraint::Max(7), Constraint::Fill(1)]).areas(right_area);
 
         // Charge panel
         self.adjustable_panels[0].render(frame, charge_panel_area, info);
+
+        // Brightness panel (top of right_area)
+        self.adjustable_panels[1].render(frame, brightness_panel_area, info);
 
         // Privacy panel
         self.privacy_panel.render(frame, privacy_panel_area, info);
 
         // SMBIOS panel
         self.smbios_panel.render(frame, smbios_panel_area, info);
-
-        // Brightness panel (top of right_area)
-        self.adjustable_panels[1].render(frame, brightness_panel_area, info);
 
         // PD Ports panel (bottom of right_area)
         self.pd_ports_panel.render(frame, pd_ports_panel_area, info);

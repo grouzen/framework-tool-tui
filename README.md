@@ -2,20 +2,20 @@
 
 ![Rust](https://img.shields.io/badge/lang-rust-orange) ![ratatui](https://img.shields.io/badge/ui-ratatui-blue) ![Framework Laptop](https://img.shields.io/badge/hardware-Framework--Laptop-success)  
 
-A terminal dashboard for controlling and monitoring your Framework Laptop hardware — charging, privacy, lighting, USB PD, and more — via direct API calls.
+A snappy TUI dashboard for controlling and monitoring your Framework Laptop hardware — charging, privacy, lighting, USB PD ports, and more.
 
-## Features
+## :octocat: Features
 
-- [x] **Live battery status** with limits and charging controls
+### Framework Laptop Hardware
+
+- [x] **Live battery and charge status** with limits and charging controls
 - [x] **Privacy toggles** for microphone & camera
 - [ ] **Input Deck Mode** selector (Framework 16)
 - [x] **Keyboard & Fingerprint brightness** controls
-- [x] **USB PD port monitoring & reset**
-- [x] **Fan RPM and target setting**
+- [x] **USB PD port monitoring**
+- [x] **Fan RPM**
 - [ ] **Thermal info:** CPU/GPU temperatures
 - [x] **System info:** BIOS details
-- [ ] **Log pane** for executed actions and errors
-- [x] **Accessible:** All controls visible at once, rapid navigation via keyboard
 
 ## Screenshots
 
@@ -58,7 +58,7 @@ sudo emerge -av app-laptop/framework-tool-tui
 ```
 
 
-## Run
+## :man: Run
 
 It needs to be running with root privileges to access hardware controls.
 
@@ -66,17 +66,46 @@ It needs to be running with root privileges to access hardware controls.
 sudo framework-tool-tui
 ```
 
-## Architecture
+## :pencil: Architecture
 
 See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for full technical breakdown.  
-- Modular panel rendering and state management ([`src/app.rs`](src/app.rs:1), [`src/framework.rs`](src/framework.rs:1))
 - Hardware polling via [`framework_lib`](https://github.com/FrameworkComputer/framework-system)
-- Keyboard shortcuts and instant updates
 
-## Contributing
+## :handshake: Contributing
 
 Pull requests welcome! For bug reports or feature requests, see Issues.
 
-## License
+### Technical stack
+
+- [ratatui](https://ratatui.rs)
+- [tokio](https://tokio.rs)
+- [framework_lib](https://github.com/FrameworkComputer/framework-system/tree/main/framework_lib)
+
+## :judge: License
+
+```
+MIT License
+
+Copyright (c) 2025 Mykhailo Nedokushev
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+```
 
 See [LICENSE](LICENSE) and [Cargo.toml](Cargo.toml:1) for license & dependencies.

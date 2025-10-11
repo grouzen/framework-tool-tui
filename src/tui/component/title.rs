@@ -5,15 +5,20 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, Paragraph},
 };
 
-use crate::{app::APP_TITLE, framework::info::FrameworkInfo, tui::component::Component};
+use crate::{
+    app::APP_TITLE,
+    framework::info::FrameworkInfo,
+    tui::{component::Component, theme::Theme},
+};
 
 pub struct TitleComponent;
 
 impl Component for TitleComponent {
-    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, theme: &Theme, info: &FrameworkInfo) {
         let block = Block::default()
             .title(APP_TITLE)
             .borders(Borders::ALL)
+            .border_style(Style::default().fg(theme.border))
             .border_type(BorderType::Rounded);
 
         let [
@@ -35,15 +40,18 @@ impl Component for TitleComponent {
         // BIOS version
         if let Some(smbios_version) = &info.smbios_version {
             frame.render_widget(
-                Paragraph::new(format!("[ v{} ]", smbios_version)),
+                Paragraph::new(format!("[ v{} ]", smbios_version))
+                    .style(Style::default().fg(theme.informative_text)),
                 smbios_version_area,
             );
         }
 
         let charge_percentage = info.charge_percentage;
         let charge_style = match charge_percentage {
-            Some(charge_percentage) if charge_percentage < 15 => Style::new().red(),
-            _ => Style::new().green(),
+            Some(charge_percentage) if charge_percentage < 15 => {
+                Style::default().fg(theme.indication_warning)
+            }
+            _ => Style::default().fg(theme.indication_ok),
         };
 
         // Charging status
@@ -63,7 +71,8 @@ impl Component for TitleComponent {
         // Max charge limit
         if let Some(max_charge_limit) = info.max_charge_limit {
             frame.render_widget(
-                Paragraph::new(format!("[ Max: {}% ]", max_charge_limit)),
+                Paragraph::new(format!("[ Max: {}% ]", max_charge_limit))
+                    .style(Style::default().fg(theme.informative_text)),
                 max_charge_limit_area,
             );
         }
@@ -77,7 +86,11 @@ impl Component for TitleComponent {
                 .collect::<Vec<String>>()
                 .join(", ");
 
-            frame.render_widget(Paragraph::new(format!("[ {} ]", text)), fan_speed_area);
+            frame.render_widget(
+                Paragraph::new(format!("[ {} ]", text))
+                    .style(Style::default().fg(theme.informative_text)),
+                fan_speed_area,
+            );
         }
 
         frame.render_widget(block, area);

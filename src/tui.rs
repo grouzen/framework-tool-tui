@@ -1,18 +1,24 @@
 pub mod component;
 pub mod control;
+pub mod theme;
 
 use ratatui::{
     Terminal,
     crossterm::event::{Event, KeyCode},
-    layout::{Constraint, Layout},
+    layout::{Constraint, Flex, Layout},
     prelude::Backend,
+    style::Style,
+    widgets::Block,
 };
 
 use crate::{
     app::AppEvent,
     framework::info::FrameworkInfo,
-    tui::component::{
-        Component, footer::FooterComponent, main::MainComponent, title::TitleComponent,
+    tui::{
+        component::{
+            Component, footer::FooterComponent, main::MainComponent, title::TitleComponent,
+        },
+        theme::Theme,
     },
 };
 
@@ -20,6 +26,7 @@ pub struct Tui {
     title: TitleComponent,
     main: MainComponent,
     footer: FooterComponent,
+    theme: Theme,
 }
 
 impl Default for Tui {
@@ -34,6 +41,7 @@ impl Tui {
             title: TitleComponent,
             main: MainComponent::new(),
             footer: FooterComponent,
+            theme: Theme::default(),
         }
     }
 
@@ -55,18 +63,30 @@ impl Tui {
         info: &FrameworkInfo,
     ) -> color_eyre::Result<()> {
         terminal.draw(|frame| {
+            let block = Block::default().style(Style::default().bg(self.theme.background));
+            frame.render_widget(block, frame.area());
+
+            let area = frame.area();
+            let [area] = Layout::vertical([Constraint::Max(49)])
+                .flex(Flex::Center)
+                .areas(area);
+            let [area] = Layout::horizontal([Constraint::Max(140)])
+                .flex(Flex::Center)
+                .areas(area);
+
             let [title_area, main_area, footer_area] =
-                Layout::vertical([Constraint::Max(3), Constraint::Min(0), Constraint::Max(3)])
-                    .areas(frame.area());
+                Layout::vertical([Constraint::Max(3), Constraint::Max(44), Constraint::Max(3)])
+                    .flex(Flex::Center)
+                    .areas(area);
 
             // Title
-            self.title.render(frame, title_area, info);
+            self.title.render(frame, title_area, &self.theme, info);
 
             // Main
-            self.main.render(frame, main_area, info);
+            self.main.render(frame, main_area, &self.theme, info);
 
             // Footer
-            self.footer.render(frame, footer_area, info);
+            self.footer.render(frame, footer_area, &self.theme, info);
         })?;
 
         Ok(())

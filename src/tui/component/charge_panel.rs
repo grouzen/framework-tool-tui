@@ -13,6 +13,7 @@ use crate::{
     tui::{
         component::{AdjustableComponent, AdjustablePanel, Component},
         control::percentage_control,
+        theme::Theme,
     },
 };
 
@@ -41,14 +42,15 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let gauge = match info.charge_percentage {
             Some(charge_percentage) => {
                 let gauge_style = if charge_percentage < 15 {
-                    Style::new().red().on_gray()
+                    Style::default().fg(theme.indication_warning).on_gray()
                 } else {
-                    Style::new().green().on_gray()
+                    Style::default().fg(theme.indication_ok).on_gray()
                 };
                 let label = format!("{} {}%", info.charging_status, charge_percentage);
 
@@ -69,6 +71,7 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let style = self.0.adjustable_control_style(
@@ -98,7 +101,7 @@ impl ChargePanelComponent {
             Some(max_charge_limit) => {
                 let style = self.0.adjustable_control_style(
                     Style::new().gray().on_black(),
-                    Style::new().light_blue().on_gray(),
+                    Style::default().fg(theme.charge_bar).on_gray(),
                     MAX_CHARGE_LIMIT_CONTROL_INDEX,
                 );
                 let label = if self
@@ -130,6 +133,7 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let charger_voltage_text = match info.charger_voltage {
@@ -138,7 +142,10 @@ impl ChargePanelComponent {
         };
 
         frame.render_widget(Paragraph::new("Charger voltage"), key_area);
-        frame.render_widget(Paragraph::new(charger_voltage_text), value_area);
+        frame.render_widget(
+            Paragraph::new(charger_voltage_text).style(Style::default().fg(theme.informative_text)),
+            value_area,
+        );
     }
 
     fn render_charger_current(
@@ -146,6 +153,7 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let charger_current_text = match info.charger_current {
@@ -154,7 +162,10 @@ impl ChargePanelComponent {
         };
 
         frame.render_widget(Paragraph::new("Charger current"), key_area);
-        frame.render_widget(Paragraph::new(charger_current_text), value_area);
+        frame.render_widget(
+            Paragraph::new(charger_current_text).style(Style::default().fg(theme.informative_text)),
+            value_area,
+        );
     }
 
     fn render_design_capacity(
@@ -162,6 +173,7 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let design_capacity_text = match info.design_capacity {
@@ -170,7 +182,10 @@ impl ChargePanelComponent {
         };
 
         frame.render_widget(Paragraph::new("Design capacity"), key_area);
-        frame.render_widget(Paragraph::new(design_capacity_text), value_area);
+        frame.render_widget(
+            Paragraph::new(design_capacity_text).style(Style::default().fg(theme.informative_text)),
+            value_area,
+        );
     }
 
     fn render_last_full_charge_capacity(
@@ -178,6 +193,7 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let last_full_charge_capacity_text = match info.last_full_charge_capacity {
@@ -186,7 +202,11 @@ impl ChargePanelComponent {
         };
 
         frame.render_widget(Paragraph::new("Last full capacity"), key_area);
-        frame.render_widget(Paragraph::new(last_full_charge_capacity_text), value_area);
+        frame.render_widget(
+            Paragraph::new(last_full_charge_capacity_text)
+                .style(Style::default().fg(theme.informative_text)),
+            value_area,
+        );
     }
 
     fn render_capacity_loss(
@@ -194,6 +214,7 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let capacity_loss_text = match info.capacity_loss_percentage {
@@ -208,7 +229,10 @@ impl ChargePanelComponent {
         };
 
         frame.render_widget(Paragraph::new("Capacity loss"), key_area);
-        frame.render_widget(Paragraph::new(capacity_loss_text), value_area);
+        frame.render_widget(
+            Paragraph::new(capacity_loss_text).style(Style::default().fg(theme.informative_text)),
+            value_area,
+        );
     }
 
     fn render_cycle_count(
@@ -216,6 +240,7 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let cycle_count_text = match info.cycle_count {
@@ -224,7 +249,10 @@ impl ChargePanelComponent {
         };
 
         frame.render_widget(Paragraph::new("Cycle count"), key_area);
-        frame.render_widget(Paragraph::new(cycle_count_text), value_area);
+        frame.render_widget(
+            Paragraph::new(cycle_count_text).style(Style::default().fg(theme.informative_text)),
+            value_area,
+        );
     }
 
     fn render_capacity_loss_per_cycle(
@@ -232,6 +260,7 @@ impl ChargePanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let capacity_loss_per_cycle = info.capacity_loss_per_cycle;
@@ -239,9 +268,9 @@ impl ChargePanelComponent {
         let capacity_loss_per_cycle_style = match capacity_loss_per_cycle {
             Some(capacity_loss_per_cycle) => {
                 if capacity_loss_per_cycle < NORMAL_CAPACITY_LOSS_MAX {
-                    Style::new().green()
+                    Style::default().fg(theme.indication_ok)
                 } else {
-                    Style::new().red()
+                    Style::default().fg(theme.indication_warning)
                 }
             }
             None => Style::default(),
@@ -305,12 +334,12 @@ impl Component for ChargePanelComponent {
         app_event
     }
 
-    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, theme: &Theme, info: &FrameworkInfo) {
         let block = Block::default()
             .title(" Charge ")
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
-            .border_style(self.0.borders_style());
+            .border_style(self.0.borders_style(theme));
 
         let [keys_area, values_area] =
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
@@ -376,16 +405,29 @@ impl Component for ChargePanelComponent {
         .areas(values_block.inner(values_area));
 
         // Charge level
-        self.render_charge_level(frame, charge_level_key_area, charge_level_value_area, info);
+        self.render_charge_level(
+            frame,
+            charge_level_key_area,
+            charge_level_value_area,
+            theme,
+            info,
+        );
 
         // Max charge limit
-        self.render_max_charge_limit(frame, charge_limit_key_area, charge_limit_value_area, info);
+        self.render_max_charge_limit(
+            frame,
+            charge_limit_key_area,
+            charge_limit_value_area,
+            theme,
+            info,
+        );
 
         // Charger voltage
         self.render_charger_voltage(
             frame,
             charger_voltage_key_area,
             charger_voltage_value_area,
+            theme,
             info,
         );
 
@@ -394,6 +436,7 @@ impl Component for ChargePanelComponent {
             frame,
             charger_current_key_area,
             charger_current_value_area,
+            theme,
             info,
         );
 
@@ -402,6 +445,7 @@ impl Component for ChargePanelComponent {
             frame,
             design_capacity_key_area,
             design_capacity_value_area,
+            theme,
             info,
         );
 
@@ -410,6 +454,7 @@ impl Component for ChargePanelComponent {
             frame,
             last_full_capacity_key_area,
             last_full_capacity_value_area,
+            theme,
             info,
         );
 
@@ -418,17 +463,25 @@ impl Component for ChargePanelComponent {
             frame,
             capacity_loss_key_area,
             capacity_loss_value_area,
+            theme,
             info,
         );
 
         // Cycle count
-        self.render_cycle_count(frame, cycle_count_key_area, cycle_count_value_area, info);
+        self.render_cycle_count(
+            frame,
+            cycle_count_key_area,
+            cycle_count_value_area,
+            theme,
+            info,
+        );
 
         // Capacity loss per cycle
         self.render_capacity_loss_per_cycle(
             frame,
             capacity_loss_per_cycle_key_area,
             capacity_loss_per_cycle_value_area,
+            theme,
             info,
         );
 

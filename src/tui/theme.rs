@@ -29,9 +29,9 @@ impl Theme {
             indication_ok: Color::from_str("#00B16A").unwrap(),
             indication_warning: Color::from_str("#E53935").unwrap(),
             brightness_bar: Color::from_str("#FFD600").unwrap(),
-            charge_bar: Color::from_str("#7957F3").unwrap(),
+            charge_bar: Color::from_str("#9481D8").unwrap(),
             highlighted_text: Color::from_str("#FF7447").unwrap(),
-            informative_text: Color::from_str("#7957F3").unwrap(),
+            informative_text: Color::from_str("#9481D8").unwrap(),
         }
     }
 }

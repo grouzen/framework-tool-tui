@@ -21,11 +21,11 @@ A terminal dashboard for controlling and monitoring your Framework Laptop hardwa
 
 Dashboard
 
-![dashboard](docs/screenshots/dahsboard-mode.png)
+![dashboard](/docs/screenshots/dashboard-mode.png)
 
 Switching between panels and setting values
 
-![adjust-value](docs/screenshots/adjust-value.png)
+![adjust-value](/docs/screenshots/adjust-value.png)
 
 ## Installation
 

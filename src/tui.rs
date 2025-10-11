@@ -4,7 +4,7 @@ pub mod control;
 use ratatui::{
     Terminal,
     crossterm::event::{Event, KeyCode},
-    layout::{Constraint, Layout},
+    layout::{Constraint, Flex, Layout},
     prelude::Backend,
 };
 
@@ -55,9 +55,18 @@ impl Tui {
         info: &FrameworkInfo,
     ) -> color_eyre::Result<()> {
         terminal.draw(|frame| {
+            let area = frame.area();
+            let [area] = Layout::vertical([Constraint::Max(49)])
+                .flex(Flex::Center)
+                .areas(area);
+            let [area] = Layout::horizontal([Constraint::Max(140)])
+                .flex(Flex::Center)
+                .areas(area);
+
             let [title_area, main_area, footer_area] =
-                Layout::vertical([Constraint::Max(3), Constraint::Min(0), Constraint::Max(3)])
-                    .areas(frame.area());
+                Layout::vertical([Constraint::Max(3), Constraint::Max(44), Constraint::Max(3)])
+                    .flex(Flex::Center)
+                    .areas(area);
 
             // Title
             self.title.render(frame, title_area, info);

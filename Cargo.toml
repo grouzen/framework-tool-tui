@@ -1,7 +1,11 @@
 [package]
 name = "framework-tool-tui"
-version = "0.4.2"
+version = "0.5.0"
 edition = "2024"
+description = "TUI for controlling and monitoring Framework Computers hardware built in Rust"
+license = "MIT"
+repository = "https://github.com/grouzen/framework-tool-tui"
+authors = ["Michael Nedokushev <michael.nedokushev@gmail.com>"]
 
 [dependencies]
 ratatui = "0.29"

@@ -1,5 +1,6 @@
 pub mod component;
 pub mod control;
+pub mod theme;
 
 use ratatui::{
     Terminal,
@@ -11,8 +12,11 @@ use ratatui::{
 use crate::{
     app::AppEvent,
     framework::info::FrameworkInfo,
-    tui::component::{
-        Component, footer::FooterComponent, main::MainComponent, title::TitleComponent,
+    tui::{
+        component::{
+            Component, footer::FooterComponent, main::MainComponent, title::TitleComponent,
+        },
+        theme::Theme,
     },
 };
 
@@ -20,6 +24,7 @@ pub struct Tui {
     title: TitleComponent,
     main: MainComponent,
     footer: FooterComponent,
+    theme: Theme,
 }
 
 impl Default for Tui {
@@ -34,6 +39,7 @@ impl Tui {
             title: TitleComponent,
             main: MainComponent::new(),
             footer: FooterComponent,
+            theme: Theme::default(),
         }
     }
 
@@ -69,13 +75,13 @@ impl Tui {
                     .areas(area);
 
             // Title
-            self.title.render(frame, title_area, info);
+            self.title.render(frame, title_area, &self.theme, info);
 
             // Main
-            self.main.render(frame, main_area, info);
+            self.main.render(frame, main_area, &self.theme, info);
 
             // Footer
-            self.footer.render(frame, footer_area, info);
+            self.footer.render(frame, footer_area, &self.theme, info);
         })?;
 
         Ok(())

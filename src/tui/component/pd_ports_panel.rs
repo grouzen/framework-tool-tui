@@ -1,10 +1,11 @@
 use crate::{
     framework::info::{FrameworkInfo, PdPortInfo},
-    tui::component::Component,
+    tui::{component::Component, theme::Theme},
 };
 use ratatui::{
     Frame,
     layout::{Constraint, Flex, Layout, Rect},
+    style::Style,
     widgets::{Block, BorderType, Borders, Paragraph},
 };
 
@@ -212,10 +213,11 @@ impl PdPortsPanelComponent {
 }
 
 impl Component for PdPortsPanelComponent {
-    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, theme: &Theme, info: &FrameworkInfo) {
         let block = Block::default()
             .title(" PD ports ")
             .borders(Borders::ALL)
+            .border_style(Style::default().fg(theme.border))
             .border_type(BorderType::Rounded);
 
         let [left_area, right_area] =

@@ -6,10 +6,13 @@ use ratatui::{
 
 use crate::{
     framework::info::FrameworkInfo,
-    tui::component::{
-        AdjustableComponent, Component, brightness_panel::BrightnessPanelComponent,
-        charge_panel::ChargePanelComponent, pd_ports_panel::PdPortsPanelComponent,
-        privacy_panel::PrivacyPanelComponent, smbios_panel::SmbiosPanelComponent,
+    tui::{
+        component::{
+            AdjustableComponent, Component, brightness_panel::BrightnessPanelComponent,
+            charge_panel::ChargePanelComponent, pd_ports_panel::PdPortsPanelComponent,
+            privacy_panel::PrivacyPanelComponent, smbios_panel::SmbiosPanelComponent,
+        },
+        theme::Theme,
     },
 };
 
@@ -76,7 +79,7 @@ impl Component for MainComponent {
             .find_map(|panel| panel.handle_input(event.clone()))
     }
 
-    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, theme: &Theme, info: &FrameworkInfo) {
         let [top_area, pd_ports_panel_area] =
             Layout::vertical([Constraint::Max(15), Constraint::Min(0)]).areas(area);
         let [charge_panel_area, top_right_area] =
@@ -88,18 +91,21 @@ impl Component for MainComponent {
                 .areas(privacy_and_smbios_panels_area);
 
         // Charge panel
-        self.adjustable_panels[0].render(frame, charge_panel_area, info);
+        self.adjustable_panels[0].render(frame, charge_panel_area, theme, info);
 
         // Brightness panel (top of right_area)
-        self.adjustable_panels[1].render(frame, brightness_panel_area, info);
+        self.adjustable_panels[1].render(frame, brightness_panel_area, theme, info);
 
         // Privacy panel
-        self.privacy_panel.render(frame, privacy_panel_area, info);
+        self.privacy_panel
+            .render(frame, privacy_panel_area, theme, info);
 
         // SMBIOS panel
-        self.smbios_panel.render(frame, smbios_panel_area, info);
+        self.smbios_panel
+            .render(frame, smbios_panel_area, theme, info);
 
         // PD Ports panel (bottom of right_area)
-        self.pd_ports_panel.render(frame, pd_ports_panel_area, info);
+        self.pd_ports_panel
+            .render(frame, pd_ports_panel_area, theme, info);
     }
 }

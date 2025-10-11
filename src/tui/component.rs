@@ -1,7 +1,11 @@
 pub mod pd_ports_panel;
 use ratatui::{Frame, crossterm::event::Event, layout::Rect, prelude::*};
 
-use crate::{app::AppEvent, framework::info::FrameworkInfo, tui::control::AdjustableControl};
+use crate::{
+    app::AppEvent,
+    framework::info::FrameworkInfo,
+    tui::{control::AdjustableControl, theme::Theme},
+};
 
 pub mod brightness_panel;
 pub mod charge_panel;
@@ -16,7 +20,7 @@ pub trait Component {
         None
     }
 
-    fn render(&mut self, _frame: &mut Frame, _area: Rect, _info: &FrameworkInfo) {}
+    fn render(&mut self, _frame: &mut Frame, _area: Rect, _theme: &Theme, _info: &FrameworkInfo) {}
 }
 
 pub trait AdjustableComponent: Component {
@@ -105,11 +109,11 @@ impl AdjustablePanel {
         }
     }
 
-    fn borders_style(&self) -> Style {
+    fn borders_style(&self, theme: &Theme) -> Style {
         if self.selected {
-            Style::new().yellow().bold()
+            Style::default().fg(theme.border_active).bold()
         } else {
-            Style::default()
+            Style::default().fg(theme.border)
         }
     }
 }

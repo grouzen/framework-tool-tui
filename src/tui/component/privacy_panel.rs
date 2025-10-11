@@ -1,11 +1,15 @@
 use ratatui::{
     Frame,
     layout::{Constraint, Layout, Rect},
+    style::Style,
     widgets::{Block, BorderType, Borders},
 };
 use tui_framework_experiment::toggle_switch::{State, ToggleSwitch};
 
-use crate::{framework::info::FrameworkInfo, tui::component::Component};
+use crate::{
+    framework::info::FrameworkInfo,
+    tui::{component::Component, theme::Theme},
+};
 
 pub struct PrivacyPanelComponent;
 
@@ -34,10 +38,11 @@ impl PrivacyPanelComponent {
 }
 
 impl Component for PrivacyPanelComponent {
-    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, theme: &Theme, info: &FrameworkInfo) {
         let block = Block::default()
             .title(" Privacy ")
             .borders(Borders::ALL)
+            .border_style(Style::default().fg(theme.border))
             .border_type(BorderType::Rounded);
 
         let [mic_area, camera_area] =

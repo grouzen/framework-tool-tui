@@ -13,6 +13,7 @@ use crate::{
     tui::{
         component::{AdjustableComponent, AdjustablePanel, Component},
         control::percentage_control,
+        theme::Theme,
     },
 };
 
@@ -41,6 +42,7 @@ impl BrightnessPanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let style = self.0.adjustable_control_style(
@@ -70,7 +72,7 @@ impl BrightnessPanelComponent {
             Some(fp_brightness_percentage) => {
                 let style = self.0.adjustable_control_style(
                     Style::new().gray().on_black(),
-                    Style::new().yellow(),
+                    Style::default().fg(theme.brightness_bar),
                     FINGERPRINT_BRIGHTNESS_CONTROL_INDEX,
                 );
                 let label = if self.0.is_panel_selected_and_control_focused_by_index(
@@ -117,6 +119,7 @@ impl BrightnessPanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let style = self.0.adjustable_control_style(
@@ -146,7 +149,7 @@ impl BrightnessPanelComponent {
             Some(kb_brightness_percentage) => {
                 let style = self.0.adjustable_control_style(
                     Style::new().gray().on_black(),
-                    Style::new().yellow(),
+                    Style::default().fg(theme.brightness_bar),
                     KEYBOARD_BRIGHTNESS_CONTROL_INDEX,
                 );
                 let label = if self.0.is_panel_selected_and_control_focused_by_index(
@@ -220,12 +223,12 @@ impl Component for BrightnessPanelComponent {
         app_event
     }
 
-    fn render(&mut self, frame: &mut Frame, area: Rect, info: &FrameworkInfo) {
+    fn render(&mut self, frame: &mut Frame, area: Rect, theme: &Theme, info: &FrameworkInfo) {
         let block = Block::default()
             .title(" Brightness ")
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
-            .border_style(self.0.borders_style());
+            .border_style(self.0.borders_style(theme));
 
         let [keys_area, values_area] =
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
@@ -251,6 +254,7 @@ impl Component for BrightnessPanelComponent {
             frame,
             fp_brightness_key_area,
             fp_brightness_value_area,
+            theme,
             info,
         );
 
@@ -259,6 +263,7 @@ impl Component for BrightnessPanelComponent {
             frame,
             kb_brightness_key_area,
             kb_brightness_value_area,
+            theme,
             info,
         );
 

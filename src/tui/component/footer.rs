@@ -26,7 +26,10 @@ impl Component for FooterComponent {
                 .horizontal_margin(1)
                 .areas(block.inner(area));
 
-        frame.render_widget(Paragraph::new(FOOTER_HELP), help_area);
+        frame.render_widget(
+            Paragraph::new(FOOTER_HELP).style(Style::default().fg(theme.indication_ok)),
+            help_area,
+        );
         frame.render_widget(
             Paragraph::new(format!("v{}", VERSION))
                 .style(Style::default().fg(theme.highlighted_text))

@@ -7,6 +7,8 @@ use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Flex, Layout},
     prelude::Backend,
+    style::Style,
+    widgets::Block,
 };
 
 use crate::{
@@ -61,6 +63,9 @@ impl Tui {
         info: &FrameworkInfo,
     ) -> color_eyre::Result<()> {
         terminal.draw(|frame| {
+            let block = Block::default().style(Style::default().bg(self.theme.background));
+            frame.render_widget(block, frame.area());
+
             let area = frame.area();
             let [area] = Layout::vertical([Constraint::Max(49)])
                 .flex(Flex::Center)

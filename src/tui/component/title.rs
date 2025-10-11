@@ -40,7 +40,8 @@ impl Component for TitleComponent {
         // BIOS version
         if let Some(smbios_version) = &info.smbios_version {
             frame.render_widget(
-                Paragraph::new(format!("[ v{} ]", smbios_version)),
+                Paragraph::new(format!("[ v{} ]", smbios_version))
+                    .style(Style::default().fg(theme.informative_text)),
                 smbios_version_area,
             );
         }
@@ -70,7 +71,8 @@ impl Component for TitleComponent {
         // Max charge limit
         if let Some(max_charge_limit) = info.max_charge_limit {
             frame.render_widget(
-                Paragraph::new(format!("[ Max: {}% ]", max_charge_limit)),
+                Paragraph::new(format!("[ Max: {}% ]", max_charge_limit))
+                    .style(Style::default().fg(theme.informative_text)),
                 max_charge_limit_area,
             );
         }
@@ -84,7 +86,11 @@ impl Component for TitleComponent {
                 .collect::<Vec<String>>()
                 .join(", ");
 
-            frame.render_widget(Paragraph::new(format!("[ {} ]", text)), fan_speed_area);
+            frame.render_widget(
+                Paragraph::new(format!("[ {} ]", text))
+                    .style(Style::default().fg(theme.informative_text)),
+                fan_speed_area,
+            );
         }
 
         frame.render_widget(block, area);

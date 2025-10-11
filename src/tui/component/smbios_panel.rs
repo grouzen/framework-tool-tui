@@ -18,6 +18,7 @@ impl SmbiosPanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let smbios_version_text = match &info.smbios_version {
@@ -26,7 +27,10 @@ impl SmbiosPanelComponent {
         };
 
         frame.render_widget(Paragraph::new("Version"), key_area);
-        frame.render_widget(Paragraph::new(smbios_version_text), value_area);
+        frame.render_widget(
+            Paragraph::new(smbios_version_text).style(Style::default().fg(theme.informative_text)),
+            value_area,
+        );
     }
 
     fn render_smbios_release_date(
@@ -34,6 +38,7 @@ impl SmbiosPanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let smbios_release_date_text = match &info.smbios_release_date {
@@ -42,7 +47,11 @@ impl SmbiosPanelComponent {
         };
 
         frame.render_widget(Paragraph::new("Release date"), key_area);
-        frame.render_widget(Paragraph::new(smbios_release_date_text), value_area);
+        frame.render_widget(
+            Paragraph::new(smbios_release_date_text)
+                .style(Style::default().fg(theme.informative_text)),
+            value_area,
+        );
     }
 
     fn render_smbios_vendor(
@@ -50,6 +59,7 @@ impl SmbiosPanelComponent {
         frame: &mut Frame,
         key_area: Rect,
         value_area: Rect,
+        theme: &Theme,
         info: &FrameworkInfo,
     ) {
         let smbios_vendor_text = match &info.smbios_vendor {
@@ -58,7 +68,10 @@ impl SmbiosPanelComponent {
         };
 
         frame.render_widget(Paragraph::new("Vendor"), key_area);
-        frame.render_widget(Paragraph::new(smbios_vendor_text), value_area);
+        frame.render_widget(
+            Paragraph::new(smbios_vendor_text).style(Style::default().fg(theme.informative_text)),
+            value_area,
+        );
     }
 }
 
@@ -106,6 +119,7 @@ impl Component for SmbiosPanelComponent {
             frame,
             smbios_vendor_key_area,
             smbios_vendor_value_area,
+            theme,
             info,
         );
 
@@ -114,6 +128,7 @@ impl Component for SmbiosPanelComponent {
             frame,
             smbios_version_key_area,
             smbios_version_value_area,
+            theme,
             info,
         );
 
@@ -122,6 +137,7 @@ impl Component for SmbiosPanelComponent {
             frame,
             smbios_release_date_key_area,
             smbios_release_date_value_area,
+            theme,
             info,
         );
 

@@ -4,6 +4,8 @@
 
 A snappy TUI dashboard for controlling and monitoring your Framework Laptop hardware — charging, privacy, lighting, USB PD ports, and more.
 
+![demo](/docs/screenshots/demo.gif)
+
 ## :octocat: Features
 
 ### Framework Laptop Hardware
@@ -16,16 +18,6 @@ A snappy TUI dashboard for controlling and monitoring your Framework Laptop hard
 - [x] **Fan RPM**
 - [ ] **Thermal info:** CPU/GPU temperatures
 - [x] **System info:** BIOS details
-
-## Screenshots
-
-Dashboard
-
-![dashboard](/docs/screenshots/dashboard-mode.png)
-
-Switching between panels and setting values
-
-![adjust-value](/docs/screenshots/adjust-value.png)
 
 ## Installation
 

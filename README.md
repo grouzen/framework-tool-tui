@@ -49,6 +49,14 @@ sudo emaint -r lamdness sync
 sudo emerge -av app-laptop/framework-tool-tui
 ```
 
+#### Arch linux
+
+It is available via [AUR](https://aur.archlinux.org/packages/framework-tool-tui) or [archlinuxcn](https://github.com/archlinuxcn/repo/tree/master/archlinuxcn/framework-tool-tui)
+
+```sh
+[yay/paru] -S framework-tool-tui # Install from AUR
+sudo pacman -S framework-tool-tui # Install from archlinuxcn
+```
 
 ## :man: Run
 

@@ -1,8 +1,8 @@
 use ratatui::{
-    Frame,
     layout::{Constraint, Layout, Rect},
     prelude::*,
     widgets::{Block, BorderType, Borders, Paragraph},
+    Frame,
 };
 
 use crate::{
@@ -21,21 +21,16 @@ impl Component for TitleComponent {
             .border_style(Style::default().fg(theme.border))
             .border_type(BorderType::Rounded);
 
-        let [
-            smbios_version_area,
-            charging_status_area,
-            charge_percentage_area,
-            max_charge_limit_area,
-            fan_speed_area,
-        ] = Layout::horizontal([
-            Constraint::Max(10),
-            Constraint::Max(15),
-            Constraint::Max(6),
-            Constraint::Max(13),
-            Constraint::Min(18),
-        ])
-        .spacing(1)
-        .areas(block.inner(area));
+        let [smbios_version_area, charging_status_area, charge_percentage_area, max_charge_limit_area, fan_speed_area] =
+            Layout::horizontal([
+                Constraint::Max(10),
+                Constraint::Max(15),
+                Constraint::Max(6),
+                Constraint::Max(13),
+                Constraint::Min(18),
+            ])
+            .spacing(1)
+            .areas(block.inner(area));
 
         // BIOS version
         if let Some(smbios_version) = &info.smbios_version {

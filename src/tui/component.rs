@@ -1,5 +1,5 @@
 pub mod pd_ports_panel;
-use ratatui::{Frame, crossterm::event::Event, layout::Rect, prelude::*};
+use ratatui::{crossterm::event::Event, layout::Rect, prelude::*, Frame};
 
 use crate::{
     app::AppEvent,

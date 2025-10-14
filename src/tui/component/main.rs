@@ -1,16 +1,16 @@
 use ratatui::{
-    Frame,
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout, Rect},
+    Frame,
 };
 
 use crate::{
     framework::info::FrameworkInfo,
     tui::{
         component::{
-            AdjustableComponent, Component, brightness_panel::BrightnessPanelComponent,
-            charge_panel::ChargePanelComponent, pd_ports_panel::PdPortsPanelComponent,
-            privacy_panel::PrivacyPanelComponent, smbios_panel::SmbiosPanelComponent,
+            brightness_panel::BrightnessPanelComponent, charge_panel::ChargePanelComponent,
+            pd_ports_panel::PdPortsPanelComponent, privacy_panel::PrivacyPanelComponent,
+            smbios_panel::SmbiosPanelComponent, AdjustableComponent, Component,
         },
         theme::Theme,
     },
@@ -68,10 +68,10 @@ impl MainComponent {
 
 impl Component for MainComponent {
     fn handle_input(&mut self, event: Event) -> Option<crate::app::AppEvent> {
-        if let Event::Key(key) = event
-            && key.code == KeyCode::Tab
-        {
-            self.switch_panels();
+        if let Event::Key(key) = event {
+            if key.code == KeyCode::Tab {
+                self.switch_panels();
+            }
         }
 
         self.adjustable_panels

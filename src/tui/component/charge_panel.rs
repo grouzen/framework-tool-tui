@@ -1,10 +1,10 @@
 use ratatui::{
-    Frame,
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout, Rect},
     prelude::*,
     style::Styled,
     widgets::{Block, BorderType, Borders, Gauge, Paragraph},
+    Frame,
 };
 
 use crate::{
@@ -83,9 +83,8 @@ impl ChargePanelComponent {
         let max_charge_limit = if self
             .0
             .is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX)
-            && let Some(value) = self.0.get_selected_control().get_percentage_value()
         {
-            Some(value)
+            self.0.get_selected_control().get_percentage_value()
         } else if let Some(value) = info.max_charge_limit {
             self.0.set_percentage_control_by_index(
                 MAX_CHARGE_LIMIT_CONTROL_INDEX,
@@ -304,30 +303,30 @@ impl Component for ChargePanelComponent {
     fn handle_input(&mut self, event: Event) -> Option<crate::app::AppEvent> {
         let mut app_event = None;
 
-        if self.0.is_selected()
-            && let Event::Key(key) = event
-        {
-            match key.code {
-                KeyCode::Down => self.0.cycle_controls_down(),
-                KeyCode::Up => self.0.cycle_controls_up(),
-                KeyCode::Enter => {
-                    match self.0.get_selected_and_focused_control() {
-                        Some(control)
-                            if self.0.selected_control == MAX_CHARGE_LIMIT_CONTROL_INDEX =>
-                        {
-                            if let Some(value) = control.get_percentage_value() {
-                                app_event = Some(AppEvent::SetMaxChargeLimit(value));
+        if self.0.is_selected() {
+            if let Event::Key(key) = event {
+                match key.code {
+                    KeyCode::Down => self.0.cycle_controls_down(),
+                    KeyCode::Up => self.0.cycle_controls_up(),
+                    KeyCode::Enter => {
+                        match self.0.get_selected_and_focused_control() {
+                            Some(control)
+                                if self.0.selected_control == MAX_CHARGE_LIMIT_CONTROL_INDEX =>
+                            {
+                                if let Some(value) = control.get_percentage_value() {
+                                    app_event = Some(AppEvent::SetMaxChargeLimit(value));
+                                }
                             }
+                            _ => {}
                         }
-                        _ => {}
-                    }
 
-                    self.0.toggle_selected_control_focus()
+                        self.0.toggle_selected_control_focus()
+                    }
+                    KeyCode::Left => self.0.adjust_focused_control(-5),
+                    KeyCode::Right => self.0.adjust_focused_control(5),
+                    KeyCode::Esc => self.0.toggle_selected_control_focus(),
+                    _ => {}
                 }
-                KeyCode::Left => self.0.adjust_focused_control(-5),
-                KeyCode::Right => self.0.adjust_focused_control(5),
-                KeyCode::Esc => self.0.toggle_selected_control_focus(),
-                _ => {}
             }
         }
 
@@ -350,59 +349,37 @@ impl Component for ChargePanelComponent {
         let keys_block = Block::default().borders(Borders::NONE);
         let values_block = Block::default().borders(Borders::NONE);
 
-        let [
-            charge_level_key_area,
-            _empty1_key_area,
-            charge_limit_key_area,
-            _empty2_key_area,
-            charger_voltage_key_area,
-            charger_current_key_area,
-            design_capacity_key_area,
-            last_full_capacity_key_area,
-            capacity_loss_key_area,
-            cycle_count_key_area,
-            capacity_loss_per_cycle_key_area,
-        ] = Layout::vertical([
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-        ])
-        .areas(keys_block.inner(keys_area));
-        let [
-            charge_level_value_area,
-            _empty1_value_area,
-            charge_limit_value_area,
-            _empty2_value_area,
-            charger_voltage_value_area,
-            charger_current_value_area,
-            design_capacity_value_area,
-            last_full_capacity_value_area,
-            capacity_loss_value_area,
-            cycle_count_value_area,
-            capacity_loss_per_cycle_value_area,
-        ] = Layout::vertical([
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-        ])
-        .horizontal_margin(1)
-        .areas(values_block.inner(values_area));
+        let [charge_level_key_area, _empty1_key_area, charge_limit_key_area, _empty2_key_area, charger_voltage_key_area, charger_current_key_area, design_capacity_key_area, last_full_capacity_key_area, capacity_loss_key_area, cycle_count_key_area, capacity_loss_per_cycle_key_area] =
+            Layout::vertical([
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+            ])
+            .areas(keys_block.inner(keys_area));
+        let [charge_level_value_area, _empty1_value_area, charge_limit_value_area, _empty2_value_area, charger_voltage_value_area, charger_current_value_area, design_capacity_value_area, last_full_capacity_value_area, capacity_loss_value_area, cycle_count_value_area, capacity_loss_per_cycle_value_area] =
+            Layout::vertical([
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+            ])
+            .horizontal_margin(1)
+            .areas(values_block.inner(values_area));
 
         // Charge level
         self.render_charge_level(
@@ -499,8 +476,8 @@ mod tests {
 
     use crate::tui::{
         component::{
-            Component,
             charge_panel::{ChargePanelComponent, MAX_CHARGE_LIMIT_CONTROL_INDEX},
+            Component,
         },
         control::AdjustableControl,
     };
@@ -529,11 +506,9 @@ mod tests {
 
         assert!(panel.0.is_selected());
         assert!(panel.0.controls.len() == 1);
-        assert!(
-            panel
-                .0
-                .is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX)
-        );
+        assert!(panel
+            .0
+            .is_panel_selected_and_control_focused_by_index(MAX_CHARGE_LIMIT_CONTROL_INDEX));
         assert!(matches!(
             panel.0.get_selected_control(),
             AdjustableControl::Percentage(true, 0)

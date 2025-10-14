@@ -1,8 +1,8 @@
 use ratatui::{
-    Frame,
     layout::{Constraint, Layout, Rect},
     style::Style,
     widgets::{Block, BorderType, Borders, Paragraph},
+    Frame,
 };
 
 use crate::{
@@ -93,26 +93,20 @@ impl Component for SmbiosPanelComponent {
         let keys_block = Block::default().borders(Borders::NONE);
         let values_block = Block::default().borders(Borders::NONE);
 
-        let [
-            smbios_vendor_key_area,
-            smbios_version_key_area,
-            smbios_release_date_key_area,
-        ] = Layout::vertical([
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-        ])
-        .areas(keys_block.inner(keys_area));
-        let [
-            smbios_vendor_value_area,
-            smbios_version_value_area,
-            smbios_release_date_value_area,
-        ] = Layout::vertical([
-            Constraint::Length(1),
-            Constraint::Length(1),
-            Constraint::Length(1),
-        ])
-        .areas(values_block.inner(values_area));
+        let [smbios_vendor_key_area, smbios_version_key_area, smbios_release_date_key_area] =
+            Layout::vertical([
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+            ])
+            .areas(keys_block.inner(keys_area));
+        let [smbios_vendor_value_area, smbios_version_value_area, smbios_release_date_value_area] =
+            Layout::vertical([
+                Constraint::Length(1),
+                Constraint::Length(1),
+                Constraint::Length(1),
+            ])
+            .areas(values_block.inner(values_area));
 
         // Vendor
         self.render_smbios_vendor(

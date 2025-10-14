@@ -3,10 +3,10 @@ use crate::{
     tui::{component::Component, theme::Theme},
 };
 use ratatui::{
-    Frame,
     layout::{Constraint, Flex, Layout, Rect},
     style::Style,
     widgets::{Block, BorderType, Borders, Paragraph},
+    Frame,
 };
 
 pub struct PdPortsPanelComponent;
@@ -45,48 +45,32 @@ impl PdPortsPanelComponent {
             let keys_block = Block::default().borders(Borders::NONE);
             let values_block = Block::default().borders(Borders::NONE);
 
-            let [
-                role_key_area,
-                dualrole_key_area,
-                charging_type_key_area,
-                voltage_now_key_area,
-                voltage_max_key_area,
-                current_limit_key_area,
-                current_max_key_area,
-                max_power_key_area,
-            ] = Layout::vertical([
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-            ])
-            .flex(Flex::Legacy)
-            .areas(keys_block.inner(key_area));
-            let [
-                role_value_area,
-                dualrole_value_area,
-                charging_type_value_area,
-                voltage_now_value_area,
-                voltage_max_value_area,
-                current_limit_value_area,
-                current_max_value_area,
-                max_power_value_area,
-            ] = Layout::vertical([
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-                Constraint::Length(1),
-            ])
-            .flex(Flex::Legacy)
-            .areas(values_block.inner(value_area));
+            let [role_key_area, dualrole_key_area, charging_type_key_area, voltage_now_key_area, voltage_max_key_area, current_limit_key_area, current_max_key_area, max_power_key_area] =
+                Layout::vertical([
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                ])
+                .flex(Flex::Legacy)
+                .areas(keys_block.inner(key_area));
+            let [role_value_area, dualrole_value_area, charging_type_value_area, voltage_now_value_area, voltage_max_value_area, current_limit_value_area, current_max_value_area, max_power_value_area] =
+                Layout::vertical([
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                    Constraint::Length(1),
+                ])
+                .flex(Flex::Legacy)
+                .areas(values_block.inner(value_area));
 
             self.render_role(frame, role_key_area, role_value_area, theme, info);
             self.render_dualrole(frame, dualrole_key_area, dualrole_value_area, theme, info);

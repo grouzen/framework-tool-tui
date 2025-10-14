@@ -3,12 +3,12 @@ pub mod control;
 pub mod theme;
 
 use ratatui::{
-    Terminal,
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Flex, Layout},
     prelude::Backend,
     style::Style,
     widgets::Block,
+    Terminal,
 };
 
 use crate::{
@@ -16,7 +16,7 @@ use crate::{
     framework::info::FrameworkInfo,
     tui::{
         component::{
-            Component, footer::FooterComponent, main::MainComponent, title::TitleComponent,
+            footer::FooterComponent, main::MainComponent, title::TitleComponent, Component,
         },
         theme::Theme,
     },

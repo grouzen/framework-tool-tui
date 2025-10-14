@@ -1,8 +1,8 @@
 use ratatui::{
-    Frame,
     layout::{Constraint, Layout, Rect},
     style::Style,
     widgets::{Block, BorderType, Borders, Paragraph},
+    Frame,
 };
 
 use crate::{

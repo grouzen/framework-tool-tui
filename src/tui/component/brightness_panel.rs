@@ -1,10 +1,10 @@
 use ratatui::{
-    Frame,
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout, Rect},
     prelude::*,
     style::Styled,
     widgets::{Block, BorderType, Borders, Gauge, Paragraph},
+    Frame,
 };
 
 use crate::{
@@ -54,9 +54,8 @@ impl BrightnessPanelComponent {
         let fp_brightness_percentage = if self
             .0
             .is_panel_selected_and_control_focused_by_index(FINGERPRINT_BRIGHTNESS_CONTROL_INDEX)
-            && let Some(value) = self.0.get_selected_control().get_percentage_value()
         {
-            Some(value)
+            self.0.get_selected_control().get_percentage_value()
         } else if let Some(value) = info.fp_brightness_percentage {
             self.0.set_percentage_control_by_index(
                 FINGERPRINT_BRIGHTNESS_CONTROL_INDEX,
@@ -131,9 +130,8 @@ impl BrightnessPanelComponent {
         let kb_brightness_percentage = if self
             .0
             .is_panel_selected_and_control_focused_by_index(KEYBOARD_BRIGHTNESS_CONTROL_INDEX)
-            && let Some(value) = self.0.get_selected_control().get_percentage_value()
         {
-            Some(value)
+            self.0.get_selected_control().get_percentage_value()
         } else if let Some(value) = info.kb_brightness_percentage {
             self.0.set_percentage_control_by_index(
                 KEYBOARD_BRIGHTNESS_CONTROL_INDEX,
@@ -186,37 +184,38 @@ impl Component for BrightnessPanelComponent {
     fn handle_input(&mut self, event: Event) -> Option<crate::app::AppEvent> {
         let mut app_event = None;
 
-        if self.0.is_selected()
-            && let Event::Key(key) = event
-        {
-            match key.code {
-                KeyCode::Down => self.0.cycle_controls_down(),
-                KeyCode::Up => self.0.cycle_controls_up(),
-                KeyCode::Enter => {
-                    match self.0.get_selected_and_focused_control() {
-                        Some(control)
-                            if self.0.selected_control == FINGERPRINT_BRIGHTNESS_CONTROL_INDEX =>
-                        {
-                            if let Some(value) = control.get_percentage_value() {
-                                app_event = Some(AppEvent::SetFingerprintBrightness(value));
+        if self.0.is_selected() {
+            if let Event::Key(key) = event {
+                match key.code {
+                    KeyCode::Down => self.0.cycle_controls_down(),
+                    KeyCode::Up => self.0.cycle_controls_up(),
+                    KeyCode::Enter => {
+                        match self.0.get_selected_and_focused_control() {
+                            Some(control)
+                                if self.0.selected_control
+                                    == FINGERPRINT_BRIGHTNESS_CONTROL_INDEX =>
+                            {
+                                if let Some(value) = control.get_percentage_value() {
+                                    app_event = Some(AppEvent::SetFingerprintBrightness(value));
+                                }
                             }
-                        }
-                        Some(control)
-                            if self.0.selected_control == KEYBOARD_BRIGHTNESS_CONTROL_INDEX =>
-                        {
-                            if let Some(value) = control.get_percentage_value() {
-                                app_event = Some(AppEvent::SetKeyboardBrightness(value));
+                            Some(control)
+                                if self.0.selected_control == KEYBOARD_BRIGHTNESS_CONTROL_INDEX =>
+                            {
+                                if let Some(value) = control.get_percentage_value() {
+                                    app_event = Some(AppEvent::SetKeyboardBrightness(value));
+                                }
                             }
+                            _ => {}
                         }
-                        _ => {}
-                    }
 
-                    self.0.toggle_selected_control_focus()
+                        self.0.toggle_selected_control_focus()
+                    }
+                    KeyCode::Left => self.0.adjust_focused_control(-5),
+                    KeyCode::Right => self.0.adjust_focused_control(5),
+                    KeyCode::Esc => self.0.toggle_selected_control_focus(),
+                    _ => {}
                 }
-                KeyCode::Left => self.0.adjust_focused_control(-5),
-                KeyCode::Right => self.0.adjust_focused_control(5),
-                KeyCode::Esc => self.0.toggle_selected_control_focus(),
-                _ => {}
             }
         }
 

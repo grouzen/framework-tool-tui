@@ -1,10 +1,10 @@
 use framework_lib::chromium_ec::CrosEc;
-use ratatui::{Terminal, prelude::Backend};
+use ratatui::{prelude::Backend, Terminal};
 use std::time::Duration;
 
 use crate::{
     event::{Event, EventLoop},
-    framework::{Framework, info::FrameworkInfo},
+    framework::{info::FrameworkInfo, Framework},
     tui::Tui,
 };
 

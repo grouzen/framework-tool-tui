@@ -16,3 +16,4 @@ smbios-lib = { git = "https://github.com/FrameworkComputer/smbios-lib.git", bran
 color-eyre = "0.6.5"
 tokio = { version = "1.47.1", features = ["full"] }
 futures = "0.3.31"
+uzers = { version = "0.12.1", default-features = false }

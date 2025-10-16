@@ -91,7 +91,7 @@ impl BrightnessPanelComponent {
         };
 
         frame.render_widget(
-            Paragraph::new("Fingerprint brigtness").set_style(style),
+            Paragraph::new("Fingerprint brightness").set_style(style),
             key_area,
         );
         frame.render_widget(gauge, value_area);
@@ -167,7 +167,7 @@ impl BrightnessPanelComponent {
         };
 
         frame.render_widget(
-            Paragraph::new("Keyboard brigtness").set_style(style),
+            Paragraph::new("Keyboard brightness").set_style(style),
             key_area,
         );
         frame.render_widget(gauge, value_area);

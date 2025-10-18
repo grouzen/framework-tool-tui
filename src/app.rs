@@ -1,10 +1,11 @@
-use framework_lib::chromium_ec::CrosEc;
+use color_eyre::eyre::Report;
+use framework_lib::chromium_ec::{CrosEc, EcError, EcResponseStatus};
 use ratatui::{prelude::Backend, Terminal};
 use std::{sync::Arc, time::Duration};
 
 use crate::{
     event::{Event, EventLoop},
-    framework::{fingerprint::Fingerprint, info::FrameworkInfo, Framework},
+    framework::{fingerprint::Fingerprint, info::FrameworkInfo, EcErrorWrapper, Framework},
     tui::Tui,
 };
 
@@ -76,8 +77,25 @@ impl App {
                 self.info.max_charge_limit = Some(value);
             }
             AppEvent::SetFingerprintBrightness(percentage) => {
-                self.framework.set_fp_brightness(percentage)?;
-                self.info.fp_brightness_percentage = Some(percentage);
+                match self.framework.set_fp_brightness(percentage) {
+                    Err(report) => match report.downcast::<EcErrorWrapper>() {
+                        Ok(EcErrorWrapper(EcError::Response(EcResponseStatus::InvalidVersion))) => {
+                            self.tui.set_error(
+                                "Couldn't set fingerprint brightness. Please, update your BIOS."
+                                    .to_string(),
+                            );
+                        }
+                        Ok(error) => {
+                            return Err(Report::from(error));
+                        }
+                        Err(report) => {
+                            return Err(report);
+                        }
+                    },
+                    Ok(_) => {
+                        self.info.fp_brightness_percentage = Some(percentage);
+                    }
+                }
             }
             AppEvent::SetKeyboardBrightness(percentage) => {
                 self.framework.set_kb_brightness(percentage);

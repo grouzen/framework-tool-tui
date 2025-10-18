@@ -9,9 +9,11 @@ use ratatui::{
     layout::{Constraint, Flex, Layout},
     prelude::Backend,
     style::Style,
+    text::Text,
     widgets::Block,
-    Terminal,
+    Frame, Terminal,
 };
+use tui_popup::Popup;
 
 use crate::{
     app::AppEvent,
@@ -29,6 +31,7 @@ pub struct Tui {
     main: MainComponent,
     footer: FooterComponent,
     theme: Theme,
+    error_message: Option<String>,
 }
 
 impl Tui {
@@ -38,6 +41,7 @@ impl Tui {
             main: MainComponent::new(fingerprint),
             footer: FooterComponent,
             theme: Theme::default(),
+            error_message: None,
         }
     }
 
@@ -45,12 +49,19 @@ impl Tui {
         let top_level_event = match event {
             Event::Key(key) => match key.code {
                 KeyCode::Char('q') => Some(AppEvent::Quit),
+                KeyCode::Esc if self.error_message.is_some() => {
+                    self.error_message = None;
+                    None
+                }
                 _ => None,
             },
             _ => None,
         };
 
-        Ok(top_level_event.or(self.main.handle_input(event)))
+        match self.error_message {
+            Some(_) => Ok(top_level_event),
+            None => Ok(top_level_event.or(self.main.handle_input(event))),
+        }
     }
 
     pub fn render<B: Backend>(
@@ -83,9 +94,38 @@ impl Tui {
 
             // Footer
             self.footer.render(frame, footer_area, &self.theme, info);
+
+            // Error popup if error is set
+            self.render_error_popup(frame);
         })?;
 
         Ok(())
+    }
+
+    pub fn set_error(&mut self, message: String) {
+        self.error_message = Some(message);
+    }
+
+    fn render_error_popup(&self, frame: &mut Frame) {
+        if let Some(message) = &self.error_message {
+            let mut text = Text::default();
+            let message = format!(" {} ", message);
+
+            text.push_line("");
+            text.push_line(message.as_str());
+            text.push_line("");
+
+            let popup = Popup::new(text)
+                .title(" Error ")
+                .style(
+                    Style::default()
+                        .bg(self.theme.background)
+                        .fg(self.theme.indication_warning),
+                )
+                .border_style(Style::default().fg(self.theme.border));
+
+            frame.render_widget(&popup, frame.area());
+        }
     }
 }
 

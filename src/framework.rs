@@ -26,7 +26,7 @@ pub struct Framework {
 }
 
 #[derive(Debug)]
-struct EcErrorWrapper(EcError);
+pub struct EcErrorWrapper(pub EcError);
 
 impl std::fmt::Display for EcErrorWrapper {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

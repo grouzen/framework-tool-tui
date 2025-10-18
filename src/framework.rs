@@ -1,11 +1,17 @@
+use std::sync::Arc;
+
 use color_eyre::eyre::Report;
 use framework_lib::chromium_ec::CrosEc;
 use framework_lib::chromium_ec::CrosEcDriver;
 use framework_lib::chromium_ec::EcError;
 use framework_lib::smbios;
 
+use crate::framework::fingerprint::led_brightness_percentage_to_level;
+use crate::framework::fingerprint::Fingerprint;
+use crate::framework::fingerprint::FpLedBrightnessCapability;
 use crate::framework::info::FrameworkInfo;
 
+pub mod fingerprint;
 pub mod info;
 
 // Copied from framework_lib::power
@@ -16,10 +22,11 @@ const EC_FAN_SPEED_NOT_PRESENT: u16 = 0xFFFF;
 
 pub struct Framework {
     ec: CrosEc,
+    fingerprint: Arc<Fingerprint>,
 }
 
 #[derive(Debug)]
-struct EcErrorWrapper(EcError);
+pub struct EcErrorWrapper(pub EcError);
 
 impl std::fmt::Display for EcErrorWrapper {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -30,8 +37,8 @@ impl std::fmt::Display for EcErrorWrapper {
 impl std::error::Error for EcErrorWrapper {}
 
 impl Framework {
-    pub fn new(ec: CrosEc) -> Self {
-        Framework { ec }
+    pub fn new(ec: CrosEc, fingerprint: Arc<Fingerprint>) -> Self {
+        Framework { ec, fingerprint }
     }
 
     pub fn set_max_charge_limit(&self, value: u8) -> color_eyre::Result<()> {
@@ -41,9 +48,16 @@ impl Framework {
     }
 
     pub fn set_fp_brightness(&self, percentage: u8) -> color_eyre::Result<()> {
-        self.ec
-            .set_fp_led_percentage(percentage)
-            .map_err(|error| Report::from(EcErrorWrapper(error)))
+        let result = match self.fingerprint.led_brightness_capability {
+            FpLedBrightnessCapability::Level => {
+                let level = led_brightness_percentage_to_level(percentage);
+
+                self.ec.set_fp_led_level(level)
+            }
+            FpLedBrightnessCapability::Percentage => self.ec.set_fp_led_percentage(percentage),
+        };
+
+        result.map_err(|error| Report::from(EcErrorWrapper(error)))
     }
 
     // NOTE: the underlying ec API is weird

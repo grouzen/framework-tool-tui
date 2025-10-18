@@ -12,7 +12,7 @@ async fn main() -> color_eyre::Result<()> {
     }
 
     let mut terminal = ratatui::init();
-    let mut app = App::new();
+    let mut app = App::new()?;
 
     let result = app.run(&mut terminal).await;
 

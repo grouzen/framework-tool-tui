@@ -2,18 +2,22 @@ pub mod component;
 pub mod control;
 pub mod theme;
 
+use std::sync::Arc;
+
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Flex, Layout},
     prelude::Backend,
     style::Style,
+    text::Text,
     widgets::Block,
-    Terminal,
+    Frame, Terminal,
 };
+use tui_popup::Popup;
 
 use crate::{
     app::AppEvent,
-    framework::info::FrameworkInfo,
+    framework::{fingerprint::Fingerprint, info::FrameworkInfo},
     tui::{
         component::{
             footer::FooterComponent, main::MainComponent, title::TitleComponent, Component,
@@ -27,21 +31,17 @@ pub struct Tui {
     main: MainComponent,
     footer: FooterComponent,
     theme: Theme,
-}
-
-impl Default for Tui {
-    fn default() -> Self {
-        Self::new()
-    }
+    error_message: Option<String>,
 }
 
 impl Tui {
-    pub fn new() -> Self {
+    pub fn new(fingerprint: Arc<Fingerprint>) -> Self {
         Self {
             title: TitleComponent,
-            main: MainComponent::new(),
+            main: MainComponent::new(fingerprint),
             footer: FooterComponent,
             theme: Theme::default(),
+            error_message: None,
         }
     }
 
@@ -49,12 +49,19 @@ impl Tui {
         let top_level_event = match event {
             Event::Key(key) => match key.code {
                 KeyCode::Char('q') => Some(AppEvent::Quit),
+                KeyCode::Esc if self.error_message.is_some() => {
+                    self.error_message = None;
+                    None
+                }
                 _ => None,
             },
             _ => None,
         };
 
-        Ok(top_level_event.or(self.main.handle_input(event)))
+        match self.error_message {
+            Some(_) => Ok(top_level_event),
+            None => Ok(top_level_event.or(self.main.handle_input(event))),
+        }
     }
 
     pub fn render<B: Backend>(
@@ -87,21 +94,55 @@ impl Tui {
 
             // Footer
             self.footer.render(frame, footer_area, &self.theme, info);
+
+            // Error popup if error is set
+            self.render_error_popup(frame);
         })?;
 
         Ok(())
+    }
+
+    pub fn set_error(&mut self, message: String) {
+        self.error_message = Some(message);
+    }
+
+    fn render_error_popup(&self, frame: &mut Frame) {
+        if let Some(message) = &self.error_message {
+            let mut text = Text::default();
+            let message = format!(" {} ", message);
+
+            text.push_line("");
+            text.push_line(message.as_str());
+            text.push_line("");
+
+            let popup = Popup::new(text)
+                .title(" Error ")
+                .style(
+                    Style::default()
+                        .bg(self.theme.background)
+                        .fg(self.theme.indication_warning),
+                )
+                .border_style(Style::default().fg(self.theme.border));
+
+            frame.render_widget(&popup, frame.area());
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use std::sync::Arc;
+
+    use framework_lib::chromium_ec::CrosEc;
     use ratatui::crossterm::event::{Event, KeyCode, KeyEvent};
 
-    use crate::{app::AppEvent, tui::Tui};
+    use crate::{app::AppEvent, framework::fingerprint::Fingerprint, tui::Tui};
 
     #[test]
     fn handle_input_internal_quit_event() {
-        let mut tui = Tui::new();
+        let ec = CrosEc::new();
+        let fingerprint = Arc::new(Fingerprint::new(&ec).unwrap());
+        let mut tui = Tui::new(fingerprint);
         let event = Event::Key(KeyEvent::from(KeyCode::Char('q')));
 
         let app_event = tui.handle_input(event);

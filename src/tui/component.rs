@@ -66,7 +66,7 @@ impl AdjustablePanel {
         self.controls[self.selected_control] = self.get_selected_control().toggle_focus();
     }
 
-    fn adjust_focused_control(&mut self, delta: i8) {
+    fn adjust_focused_percentage_control_by_delta(&mut self, delta: i8) {
         if let Some(AdjustableControl::Percentage(focused, value)) =
             self.get_selected_and_focused_control()
         {

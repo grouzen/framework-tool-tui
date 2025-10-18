@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout, Rect},
@@ -9,10 +11,13 @@ use ratatui::{
 
 use crate::{
     app::AppEvent,
-    framework::info::FrameworkInfo,
+    framework::{
+        fingerprint::{led_brightness_percentage_to_level_name, Fingerprint},
+        info::FrameworkInfo,
+    },
     tui::{
         component::{AdjustableComponent, AdjustablePanel, Component},
-        control::percentage_control,
+        control::{percentage_control, AdjustableControl},
         theme::Theme,
     },
 };
@@ -20,21 +25,20 @@ use crate::{
 const FINGERPRINT_BRIGHTNESS_CONTROL_INDEX: usize = 0;
 const KEYBOARD_BRIGHTNESS_CONTROL_INDEX: usize = 1;
 
-pub struct BrightnessPanelComponent(pub AdjustablePanel);
-
-impl Default for BrightnessPanelComponent {
-    fn default() -> Self {
-        Self::new()
-    }
+pub struct BrightnessPanelComponent {
+    panel: AdjustablePanel,
+    fingerprint: Arc<Fingerprint>,
 }
 
 impl BrightnessPanelComponent {
-    pub fn new() -> Self {
-        Self(AdjustablePanel {
+    pub fn new(fingerprint: Arc<Fingerprint>) -> Self {
+        let panel = AdjustablePanel {
             selected: false,
             controls: vec![percentage_control(0), percentage_control(0)],
             selected_control: FINGERPRINT_BRIGHTNESS_CONTROL_INDEX,
-        })
+        };
+
+        Self { panel, fingerprint }
     }
 
     fn render_fp_brightness(
@@ -45,19 +49,19 @@ impl BrightnessPanelComponent {
         theme: &Theme,
         info: &FrameworkInfo,
     ) {
-        let style = self.0.adjustable_control_style(
+        let style = self.panel.adjustable_control_style(
             Style::new().on_gray().black(),
             Style::default(),
             FINGERPRINT_BRIGHTNESS_CONTROL_INDEX,
         );
 
         let fp_brightness_percentage = if self
-            .0
+            .panel
             .is_panel_selected_and_control_focused_by_index(FINGERPRINT_BRIGHTNESS_CONTROL_INDEX)
         {
-            self.0.get_selected_control().get_percentage_value()
+            self.panel.get_selected_control().get_percentage_value()
         } else if let Some(value) = info.fp_brightness_percentage {
-            self.0.set_percentage_control_by_index(
+            self.panel.set_percentage_control_by_index(
                 FINGERPRINT_BRIGHTNESS_CONTROL_INDEX,
                 percentage_control(value),
             );
@@ -69,17 +73,18 @@ impl BrightnessPanelComponent {
 
         let gauge = match fp_brightness_percentage {
             Some(fp_brightness_percentage) => {
-                let style = self.0.adjustable_control_style(
+                let style = self.panel.adjustable_control_style(
                     Style::new().gray().on_black(),
                     Style::default().fg(theme.brightness_bar),
                     FINGERPRINT_BRIGHTNESS_CONTROL_INDEX,
                 );
-                let label = if self.0.is_panel_selected_and_control_focused_by_index(
+                let level_name = led_brightness_percentage_to_level_name(fp_brightness_percentage);
+                let label = if self.panel.is_panel_selected_and_control_focused_by_index(
                     FINGERPRINT_BRIGHTNESS_CONTROL_INDEX,
                 ) {
-                    format!("◀ {:3}% ▶", fp_brightness_percentage)
+                    format!("◀ {} {:3}% ▶", level_name, fp_brightness_percentage)
                 } else {
-                    format!("{:3}%", fp_brightness_percentage)
+                    format!("{} {:3}%", level_name, fp_brightness_percentage)
                 };
 
                 Gauge::default()
@@ -95,22 +100,6 @@ impl BrightnessPanelComponent {
             key_area,
         );
         frame.render_widget(gauge, value_area);
-
-        // match controls.fp_brightness_level() {
-        //     Some(fp_brightness_level) => {
-        //         let [gauge_area, level_area] =
-        //             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
-        //                 .areas(value_area);
-
-        //         let fp_brightness_level_text = format!("{:?}", fp_brightness_level);
-
-        //         frame.render_widget(gauge, gauge_area);
-        //         frame.render_widget(Paragraph::new(fp_brightness_level_text), level_area);
-        //     }
-        //     None => {
-        //         frame.render_widget(gauge, value_area);
-        //     }
-        // }
     }
 
     fn render_kb_brightness(
@@ -121,19 +110,19 @@ impl BrightnessPanelComponent {
         theme: &Theme,
         info: &FrameworkInfo,
     ) {
-        let style = self.0.adjustable_control_style(
+        let style = self.panel.adjustable_control_style(
             Style::new().on_gray().black(),
             Style::default(),
             KEYBOARD_BRIGHTNESS_CONTROL_INDEX,
         );
 
         let kb_brightness_percentage = if self
-            .0
+            .panel
             .is_panel_selected_and_control_focused_by_index(KEYBOARD_BRIGHTNESS_CONTROL_INDEX)
         {
-            self.0.get_selected_control().get_percentage_value()
+            self.panel.get_selected_control().get_percentage_value()
         } else if let Some(value) = info.kb_brightness_percentage {
-            self.0.set_percentage_control_by_index(
+            self.panel.set_percentage_control_by_index(
                 KEYBOARD_BRIGHTNESS_CONTROL_INDEX,
                 percentage_control(value),
             );
@@ -145,12 +134,12 @@ impl BrightnessPanelComponent {
 
         let gauge = match kb_brightness_percentage {
             Some(kb_brightness_percentage) => {
-                let style = self.0.adjustable_control_style(
+                let style = self.panel.adjustable_control_style(
                     Style::new().gray().on_black(),
                     Style::default().fg(theme.brightness_bar),
                     KEYBOARD_BRIGHTNESS_CONTROL_INDEX,
                 );
-                let label = if self.0.is_panel_selected_and_control_focused_by_index(
+                let label = if self.panel.is_panel_selected_and_control_focused_by_index(
                     KEYBOARD_BRIGHTNESS_CONTROL_INDEX,
                 ) {
                     format!("◀ {:3}% ▶", kb_brightness_percentage)
@@ -172,11 +161,26 @@ impl BrightnessPanelComponent {
         );
         frame.render_widget(gauge, value_area);
     }
+
+    fn adjust_focused_fp_brightness_control(&mut self, delta: i8) {
+        if let Some(AdjustableControl::Percentage(focused, value)) =
+            self.panel.get_selected_and_focused_control()
+        {
+            let new_value = self
+                .fingerprint
+                .adjust_led_brightness_by_delta(*value, delta);
+
+            if (0..=100).contains(&new_value) {
+                self.panel.controls[self.panel.selected_control] =
+                    AdjustableControl::Percentage(*focused, new_value);
+            }
+        }
+    }
 }
 
 impl AdjustableComponent for BrightnessPanelComponent {
     fn panel(&mut self) -> &mut AdjustablePanel {
-        &mut self.0
+        &mut self.panel
     }
 }
 
@@ -184,15 +188,15 @@ impl Component for BrightnessPanelComponent {
     fn handle_input(&mut self, event: Event) -> Option<crate::app::AppEvent> {
         let mut app_event = None;
 
-        if self.0.is_selected() {
+        if self.panel.is_selected() {
             if let Event::Key(key) = event {
                 match key.code {
-                    KeyCode::Down => self.0.cycle_controls_down(),
-                    KeyCode::Up => self.0.cycle_controls_up(),
+                    KeyCode::Down => self.panel.cycle_controls_down(),
+                    KeyCode::Up => self.panel.cycle_controls_up(),
                     KeyCode::Enter => {
-                        match self.0.get_selected_and_focused_control() {
+                        match self.panel.get_selected_and_focused_control() {
                             Some(control)
-                                if self.0.selected_control
+                                if self.panel.selected_control
                                     == FINGERPRINT_BRIGHTNESS_CONTROL_INDEX =>
                             {
                                 if let Some(value) = control.get_percentage_value() {
@@ -200,7 +204,8 @@ impl Component for BrightnessPanelComponent {
                                 }
                             }
                             Some(control)
-                                if self.0.selected_control == KEYBOARD_BRIGHTNESS_CONTROL_INDEX =>
+                                if self.panel.selected_control
+                                    == KEYBOARD_BRIGHTNESS_CONTROL_INDEX =>
                             {
                                 if let Some(value) = control.get_percentage_value() {
                                     app_event = Some(AppEvent::SetKeyboardBrightness(value));
@@ -209,11 +214,23 @@ impl Component for BrightnessPanelComponent {
                             _ => {}
                         }
 
-                        self.0.toggle_selected_control_focus()
+                        self.panel.toggle_selected_control_focus()
                     }
-                    KeyCode::Left => self.0.adjust_focused_control(-5),
-                    KeyCode::Right => self.0.adjust_focused_control(5),
-                    KeyCode::Esc => self.0.toggle_selected_control_focus(),
+                    KeyCode::Left => {
+                        if self.panel.selected_control == KEYBOARD_BRIGHTNESS_CONTROL_INDEX {
+                            self.panel.adjust_focused_percentage_control_by_delta(-5)
+                        } else {
+                            self.adjust_focused_fp_brightness_control(-5);
+                        }
+                    }
+                    KeyCode::Right => {
+                        if self.panel.selected_control == KEYBOARD_BRIGHTNESS_CONTROL_INDEX {
+                            self.panel.adjust_focused_percentage_control_by_delta(5)
+                        } else {
+                            self.adjust_focused_fp_brightness_control(5);
+                        }
+                    }
+                    KeyCode::Esc => self.panel.toggle_selected_control_focus(),
                     _ => {}
                 }
             }
@@ -227,7 +244,7 @@ impl Component for BrightnessPanelComponent {
             .title(" Brightness ")
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
-            .border_style(self.0.borders_style(theme));
+            .border_style(self.panel.borders_style(theme));
 
         let [keys_area, values_area] =
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])

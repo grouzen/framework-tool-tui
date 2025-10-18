@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Layout, Rect},
@@ -5,7 +7,7 @@ use ratatui::{
 };
 
 use crate::{
-    framework::info::FrameworkInfo,
+    framework::{fingerprint::Fingerprint, info::FrameworkInfo},
     tui::{
         component::{
             brightness_panel::BrightnessPanelComponent, charge_panel::ChargePanelComponent,
@@ -24,16 +26,10 @@ pub struct MainComponent {
     selected_panel: Option<usize>,
 }
 
-impl Default for MainComponent {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl MainComponent {
-    pub fn new() -> Self {
+    pub fn new(finterprint: Arc<Fingerprint>) -> Self {
         let charge_panel = Box::new(ChargePanelComponent::new());
-        let brightness_panel = Box::new(BrightnessPanelComponent::new());
+        let brightness_panel = Box::new(BrightnessPanelComponent::new(finterprint));
 
         Self {
             privacy_panel: PrivacyPanelComponent,

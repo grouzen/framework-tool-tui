@@ -48,19 +48,16 @@ impl Framework {
     }
 
     pub fn set_fp_brightness(&self, percentage: u8) -> color_eyre::Result<()> {
-        match self.fingerprint.led_brightness_capability {
+        let result = match self.fingerprint.led_brightness_capability {
             FpLedBrightnessCapability::Level => {
                 let level = led_brightness_percentage_to_level(percentage);
 
-                self.ec
-                    .set_fp_led_level(level)
-                    .map_err(|error| Report::from(EcErrorWrapper(error)))
+                self.ec.set_fp_led_level(level)
             }
-            FpLedBrightnessCapability::Percentage => self
-                .ec
-                .set_fp_led_percentage(percentage)
-                .map_err(|error| Report::from(EcErrorWrapper(error))),
-        }
+            FpLedBrightnessCapability::Percentage => self.ec.set_fp_led_percentage(percentage),
+        };
+
+        result.map_err(|error| Report::from(EcErrorWrapper(error)))
     }
 
     // NOTE: the underlying ec API is weird

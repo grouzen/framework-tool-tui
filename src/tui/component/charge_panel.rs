@@ -322,8 +322,8 @@ impl Component for ChargePanelComponent {
 
                         self.0.toggle_selected_control_focus()
                     }
-                    KeyCode::Left => self.0.adjust_focused_control(-5),
-                    KeyCode::Right => self.0.adjust_focused_control(5),
+                    KeyCode::Left => self.0.adjust_focused_percentage_control_by_delta(-5),
+                    KeyCode::Right => self.0.adjust_focused_percentage_control_by_delta(5),
                     KeyCode::Esc => self.0.toggle_selected_control_focus(),
                     _ => {}
                 }

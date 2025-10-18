@@ -2,6 +2,8 @@ pub mod component;
 pub mod control;
 pub mod theme;
 
+use std::sync::Arc;
+
 use ratatui::{
     crossterm::event::{Event, KeyCode},
     layout::{Constraint, Flex, Layout},
@@ -13,7 +15,7 @@ use ratatui::{
 
 use crate::{
     app::AppEvent,
-    framework::info::FrameworkInfo,
+    framework::{fingerprint::Fingerprint, info::FrameworkInfo},
     tui::{
         component::{
             footer::FooterComponent, main::MainComponent, title::TitleComponent, Component,
@@ -29,17 +31,11 @@ pub struct Tui {
     theme: Theme,
 }
 
-impl Default for Tui {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl Tui {
-    pub fn new() -> Self {
+    pub fn new(fingerprint: Arc<Fingerprint>) -> Self {
         Self {
             title: TitleComponent,
-            main: MainComponent::new(),
+            main: MainComponent::new(fingerprint),
             footer: FooterComponent,
             theme: Theme::default(),
         }
@@ -95,13 +91,18 @@ impl Tui {
 
 #[cfg(test)]
 mod tests {
+    use std::sync::Arc;
+
+    use framework_lib::chromium_ec::CrosEc;
     use ratatui::crossterm::event::{Event, KeyCode, KeyEvent};
 
-    use crate::{app::AppEvent, tui::Tui};
+    use crate::{app::AppEvent, framework::fingerprint::Fingerprint, tui::Tui};
 
     #[test]
     fn handle_input_internal_quit_event() {
-        let mut tui = Tui::new();
+        let ec = CrosEc::new();
+        let fingerprint = Arc::new(Fingerprint::new(&ec).unwrap());
+        let mut tui = Tui::new(fingerprint);
         let event = Event::Key(KeyEvent::from(KeyCode::Char('q')));
 
         let app_event = tui.handle_input(event);

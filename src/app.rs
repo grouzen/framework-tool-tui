@@ -1,10 +1,10 @@
 use framework_lib::chromium_ec::CrosEc;
 use ratatui::{prelude::Backend, Terminal};
-use std::time::Duration;
+use std::{sync::Arc, time::Duration};
 
 use crate::{
     event::{Event, EventLoop},
-    framework::{info::FrameworkInfo, Framework},
+    framework::{fingerprint::Fingerprint, info::FrameworkInfo, Framework},
     tui::Tui,
 };
 
@@ -26,25 +26,20 @@ pub enum AppEvent {
     SetKeyboardBrightness(u8),
 }
 
-impl Default for App {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl App {
-    pub fn new() -> Self {
+    pub fn new() -> color_eyre::Result<Self> {
         let ec = CrosEc::new();
-        let framework = Framework::new(ec);
+        let fingerprint = Arc::new(Fingerprint::new(&ec)?);
+        let framework = Framework::new(ec, fingerprint.clone());
         let info = FrameworkInfo::default();
-        let tui = Tui::new();
+        let tui = Tui::new(fingerprint);
 
-        Self {
+        Ok(Self {
             framework,
             info,
             running: true,
             tui,
-        }
+        })
     }
 
     pub async fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {

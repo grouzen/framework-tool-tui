@@ -22,7 +22,7 @@ async fn main() -> color_eyre::Result<()> {
 }
 
 fn check_permissions() -> bool {
-    #[cfg(target_os = "linux")]
+    #[cfg(any(target_os = "linux", target_os = "freebsd"))]
     let is_admin = get_current_uid() == 0;
 
     is_admin

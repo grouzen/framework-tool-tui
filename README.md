@@ -58,10 +58,10 @@ It is available via [AUR](https://aur.archlinux.org/packages/framework-tool-tui)
 sudo pacman -S framework-tool-tui # Install from archlinuxcn
 ```
 
-### :blowfish: FreeBSD
+### 😈 FreeBSD
 
 
-It is available in [Freshports](https://www.freshports.org/sysutils/framework-tool-tui/)
+It is available in [FreeBSD ports](https://www.freshports.org/sysutils/framework-tool-tui/)
 ```sh
 pkg install framework-tool-tui
 ```

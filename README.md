@@ -58,6 +58,14 @@ It is available via [AUR](https://aur.archlinux.org/packages/framework-tool-tui)
 sudo pacman -S framework-tool-tui # Install from archlinuxcn
 ```
 
+#### :beer: Homebrew for Linux
+
+Available via the [`framework-tool-tui` formula](https://formulae.brew.sh/formula/framework-tool-tui)
+
+```sh
+brew install framework-tool-tui
+```
+
 ### 😈 FreeBSD
 
 

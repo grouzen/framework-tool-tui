@@ -22,8 +22,8 @@ impl Fingerprint {
             .get_fp_led_level()
             .map_err(|error| Report::from(EcErrorWrapper(error)))?
         {
-            (.., Some(..)) => FpLedBrightnessCapability::Percentage,
-            (.., None) => FpLedBrightnessCapability::Level,
+            (_, Some(_)) => FpLedBrightnessCapability::Percentage,
+            (_, None) => FpLedBrightnessCapability::Level,
         };
 
         Ok(Self {

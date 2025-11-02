@@ -17,14 +17,14 @@ impl AdjustableControl {
 
     pub fn is_focused(&self) -> bool {
         match self {
-            AdjustableControl::Percentage(focused, ..) => *focused,
-            AdjustableControl::Range(focused, ..) => *focused,
+            AdjustableControl::Percentage(focused, _) => *focused,
+            AdjustableControl::Range(focused, _, _) => *focused,
         }
     }
 
     pub fn get_percentage_value(&self) -> Option<u8> {
         match self {
-            AdjustableControl::Percentage(.., value) => Some(*value),
+            AdjustableControl::Percentage(_, value) => Some(*value),
             _ => None,
         }
     }

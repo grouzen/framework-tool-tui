@@ -218,11 +218,9 @@ impl ChargePanelComponent {
     ) {
         let capacity_loss_text = match info.capacity_loss_percentage {
             Some(capacity_loss_percentage) => {
-                if capacity_loss_percentage > 0.0 {
-                    format!("-{:.2}%", capacity_loss_percentage)
-                } else {
-                    format!("+{:.2}%", capacity_loss_percentage)
-                }
+                let inverted = -capacity_loss_percentage;
+
+                format!("{:+.2}%", inverted)
             }
             _ => "N/A".to_string(),
         };
@@ -275,13 +273,15 @@ impl ChargePanelComponent {
             None => Style::default(),
         };
         let capacity_loss_per_cycle_text = match capacity_loss_per_cycle {
-            Some(capacity_loss_per_cycle) if capacity_loss_per_cycle > NORMAL_CAPACITY_LOSS_MAX => {
-                format!(
-                    "{:.3}% (normal loss is 0.025-0.048%)",
-                    capacity_loss_per_cycle
-                )
+            Some(capacity_loss_per_cycle) => {
+                let inverted = -capacity_loss_per_cycle;
+
+                if capacity_loss_per_cycle > NORMAL_CAPACITY_LOSS_MAX {
+                    format!("{:+.3}% (expected 0.025-0.048%)", inverted)
+                } else {
+                    format!("{:+.3}%", inverted)
+                }
             }
-            Some(capacity_loss_per_cycle) => format!("{:.3}%", capacity_loss_per_cycle),
             _ => "N/A".to_string(),
         };
 

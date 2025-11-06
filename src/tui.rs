@@ -133,15 +133,13 @@ impl Tui {
 mod tests {
     use std::sync::Arc;
 
-    use framework_lib::chromium_ec::CrosEc;
     use ratatui::crossterm::event::{Event, KeyCode, KeyEvent};
 
     use crate::{app::AppEvent, framework::fingerprint::Fingerprint, tui::Tui};
 
     #[test]
     fn handle_input_internal_quit_event() {
-        let ec = CrosEc::new();
-        let fingerprint = Arc::new(Fingerprint::new(&ec).unwrap());
+        let fingerprint = Arc::new(Fingerprint::percentage());
         let mut tui = Tui::new(fingerprint);
         let event = Event::Key(KeyEvent::from(KeyCode::Char('q')));
 

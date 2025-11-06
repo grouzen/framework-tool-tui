@@ -31,6 +31,18 @@ impl Fingerprint {
         })
     }
 
+    pub fn percentage() -> Self {
+        Self {
+            led_brightness_capability: FpLedBrightnessCapability::Percentage,
+        }
+    }
+
+    pub fn level() -> Self {
+        Self {
+            led_brightness_capability: FpLedBrightnessCapability::Level,
+        }
+    }
+
     pub fn adjust_led_brightness_by_delta(&self, current: u8, delta: i8) -> u8 {
         match self.led_brightness_capability {
             FpLedBrightnessCapability::Level => {
@@ -42,7 +54,12 @@ impl Fingerprint {
             FpLedBrightnessCapability::Percentage => {
                 let new_value = current as i8 + delta;
 
-                new_value as u8
+                // NOTE: disable setting the FP brightness to less than 5%
+                if new_value < 5 {
+                    current
+                } else {
+                    new_value as u8
+                }
             }
         }
     }
@@ -104,5 +121,24 @@ fn adjust_led_brightness_level_by_delta(
             }
         }
         _ => level,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use crate::framework::fingerprint::Fingerprint;
+
+    #[test]
+    fn adjust_led_brightness_by_delta_for_percentage() {
+        let fingerprint = Fingerprint::percentage();
+
+        let result_five = fingerprint.adjust_led_brightness_by_delta(10, -5);
+        let result_six = fingerprint.adjust_led_brightness_by_delta(11, -5);
+        let result_less_than_five = fingerprint.adjust_led_brightness_by_delta(9, -5);
+
+        assert!(result_five == 5);
+        assert!(result_six == 6);
+        assert!(result_less_than_five == 9);
     }
 }

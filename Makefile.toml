@@ -11,9 +11,14 @@ args = ["build"]
 command = "cargo"
 args = ["clippy", "--no-deps", "--all-features", "--all-targets", "--", "-D", "warnings"]
 
+[tasks.test]
+command = "cargo"
+args = ["test"]
+
 [tasks.check-all]
 dependencies = [
     "format",
     "lint",
+    "test",
     "build",
 ]

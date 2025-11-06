@@ -37,6 +37,13 @@ jobs:
       - name: Run Clippy
         run: cargo make lint
 
+      - uses: moonrepo/setup-rust@v1
+        with:
+          bins: cargo-make
+          components: clippy
+      - name: Run tests
+        run: cargo make test
+
   build:
     name: Build
     runs-on: ${{ matrix.os }}

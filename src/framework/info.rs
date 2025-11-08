@@ -4,6 +4,7 @@ use framework_lib::power::UsbChargingType;
 use framework_lib::power::UsbPdPowerInfo;
 use framework_lib::power::UsbPowerRoles;
 use framework_lib::smbios;
+use framework_lib::smbios::Platform;
 use smbioslib::DefinedStruct;
 use smbioslib::SMBiosData;
 
@@ -31,6 +32,7 @@ pub struct FrameworkInfo {
     pub smbios_vendor: Option<String>,
     pub pd_ports: PdPortsInfo,
     pub fan_rpm: Option<Vec<u16>>,
+    pub platform: Option<Platform>,
 }
 
 impl FrameworkInfo {
@@ -44,6 +46,7 @@ impl FrameworkInfo {
         smbios: &Option<SMBiosData>,
         pd_ports: Vec<Option<UsbPdPowerInfo>>,
         fan_rpm: Option<Vec<u16>>,
+        platform: Option<Platform>,
     ) -> Self {
         Self {
             charge_percentage: charge_percentage(power),
@@ -68,6 +71,7 @@ impl FrameworkInfo {
             smbios_vendor: smbios_vendor(smbios),
             pd_ports: pd_ports_info(pd_ports),
             fan_rpm,
+            platform,
         }
     }
 }

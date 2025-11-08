@@ -27,15 +27,23 @@ pub struct MainComponent {
 }
 
 impl MainComponent {
-    pub fn new(finterprint: Arc<Fingerprint>) -> Self {
+    pub fn new(finterprint: Arc<Fingerprint>, info: &FrameworkInfo) -> Self {
+        let mut adjustable_panels: Vec<Box<dyn AdjustableComponent>> = Vec::new();
         let charge_panel = Box::new(ChargePanelComponent::new());
-        let brightness_panel = Box::new(BrightnessPanelComponent::new(finterprint));
+
+        adjustable_panels.push(charge_panel);
+
+        if Self::is_brightness_supported(info) {
+            let brightness_panel = Box::new(BrightnessPanelComponent::new(finterprint));
+
+            adjustable_panels.push(brightness_panel);
+        }
 
         Self {
             privacy_panel: PrivacyPanelComponent,
             smbios_panel: SmbiosPanelComponent,
             pd_ports_panel: PdPortsPanelComponent::new(),
-            adjustable_panels: vec![charge_panel, brightness_panel],
+            adjustable_panels,
             selected_panel: None,
         }
     }
@@ -60,6 +68,30 @@ impl MainComponent {
             self.selected_panel = Some(0);
         }
     }
+
+    fn render_privacy_and_smbios_panels(
+        &mut self,
+        frame: &mut Frame,
+        area: Rect,
+        theme: &Theme,
+        info: &FrameworkInfo,
+    ) {
+        let [privacy_panel_area, smbios_panel_area] =
+            Layout::horizontal([Constraint::Min(0), Constraint::Min(0)]).areas(area);
+
+        // Privacy panel
+        self.privacy_panel
+            .render(frame, privacy_panel_area, theme, info);
+
+        // SMBIOS panel
+        self.smbios_panel
+            .render(frame, smbios_panel_area, theme, info);
+    }
+
+    fn is_brightness_supported(info: &FrameworkInfo) -> bool {
+        // NOTE: modifiying FP and KB brightness is not supported on FW 12
+        info.platform != Some(framework_lib::smbios::Platform::Framework12IntelGen13)
+    }
 }
 
 impl Component for MainComponent {
@@ -80,25 +112,29 @@ impl Component for MainComponent {
             Layout::vertical([Constraint::Max(15), Constraint::Min(0)]).areas(area);
         let [charge_panel_area, top_right_area] =
             Layout::horizontal([Constraint::Min(0), Constraint::Min(0)]).areas(top_area);
-        let [brightness_panel_area, privacy_and_smbios_panels_area] =
-            Layout::vertical([Constraint::Min(7), Constraint::Min(7)]).areas(top_right_area);
-        let [privacy_panel_area, smbios_panel_area] =
-            Layout::horizontal([Constraint::Min(0), Constraint::Min(0)])
-                .areas(privacy_and_smbios_panels_area);
 
         // Charge panel
         self.adjustable_panels[0].render(frame, charge_panel_area, theme, info);
 
-        // Brightness panel (top of right_area)
-        self.adjustable_panels[1].render(frame, brightness_panel_area, theme, info);
+        // Show brightness panel only on supported platforms
+        if Self::is_brightness_supported(info) {
+            let [brightness_panel_area, privacy_and_smbios_panels_area] =
+                Layout::vertical([Constraint::Min(7), Constraint::Min(7)]).areas(top_right_area);
 
-        // Privacy panel
-        self.privacy_panel
-            .render(frame, privacy_panel_area, theme, info);
+            // Brightness panel (top of right_area)
+            self.adjustable_panels[1].render(frame, brightness_panel_area, theme, info);
 
-        // SMBIOS panel
-        self.smbios_panel
-            .render(frame, smbios_panel_area, theme, info);
+            // Privacy and SMBIOS panels
+            self.render_privacy_and_smbios_panels(
+                frame,
+                privacy_and_smbios_panels_area,
+                theme,
+                info,
+            );
+        } else {
+            // Privacy and SMBIOS panels
+            self.render_privacy_and_smbios_panels(frame, top_right_area, theme, info);
+        }
 
         // PD Ports panel (bottom of right_area)
         self.pd_ports_panel

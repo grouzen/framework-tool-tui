@@ -77,6 +77,7 @@ impl Framework {
             .map(Result::ok)
             .collect();
         let fan_rpm = self.get_fan_rpm().ok();
+        let platform = smbios::get_platform();
 
         FrameworkInfo::new(
             &power,
@@ -87,6 +88,7 @@ impl Framework {
             &smbios,
             pd_ports,
             fan_rpm,
+            platform,
         )
     }
 

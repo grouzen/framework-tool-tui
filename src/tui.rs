@@ -35,10 +35,10 @@ pub struct Tui {
 }
 
 impl Tui {
-    pub fn new(fingerprint: Arc<Fingerprint>) -> Self {
+    pub fn new(fingerprint: Arc<Fingerprint>, info: &FrameworkInfo) -> Self {
         Self {
             title: TitleComponent,
-            main: MainComponent::new(fingerprint),
+            main: MainComponent::new(fingerprint, info),
             footer: FooterComponent,
             theme: Theme::default(),
             error_message: None,
@@ -135,12 +135,17 @@ mod tests {
 
     use ratatui::crossterm::event::{Event, KeyCode, KeyEvent};
 
-    use crate::{app::AppEvent, framework::fingerprint::Fingerprint, tui::Tui};
+    use crate::{
+        app::AppEvent,
+        framework::{fingerprint::Fingerprint, info::FrameworkInfo},
+        tui::Tui,
+    };
 
     #[test]
     fn handle_input_internal_quit_event() {
         let fingerprint = Arc::new(Fingerprint::percentage());
-        let mut tui = Tui::new(fingerprint);
+        let info = FrameworkInfo::default();
+        let mut tui = Tui::new(fingerprint, &info);
         let event = Event::Key(KeyEvent::from(KeyCode::Char('q')));
 
         let app_event = tui.handle_input(event);

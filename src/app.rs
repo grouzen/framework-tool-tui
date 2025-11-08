@@ -31,9 +31,10 @@ impl App {
     pub fn new() -> color_eyre::Result<Self> {
         let ec = CrosEc::new();
         let fingerprint = Arc::new(Fingerprint::new(&ec)?);
-        let framework = Framework::new(ec, fingerprint.clone());
-        let info = FrameworkInfo::default();
-        let tui = Tui::new(fingerprint);
+        // Pre-fetch framework info
+        let mut framework = Framework::new(ec, fingerprint.clone());
+        let info = framework.get_info();
+        let tui = Tui::new(fingerprint, &info);
 
         Ok(Self {
             framework,
@@ -45,9 +46,6 @@ impl App {
 
     pub async fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
         let mut event_loop = EventLoop::new();
-
-        // Pre-fetch framework info
-        self.info = self.framework.get_info();
 
         event_loop.run(Duration::from_millis(1000));
 

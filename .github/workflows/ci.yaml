@@ -59,6 +59,10 @@ jobs:
             os: ubuntu-latest
             use-cross: false
             target: x86_64-unknown-freebsd
+          - build: windows
+            os: windows-2025
+            use-cross: false
+            target: x86_64-pc-windows-msvc
           
     steps:
       - name: Checkout

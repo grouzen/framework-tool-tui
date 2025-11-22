@@ -55,6 +55,10 @@ jobs:
             os: ubuntu-latest
             use-cross: false
             target: x86_64-unknown-linux-gnu
+          - build: freebsd
+            os: ubuntu-latest
+            use-cross: true
+            target: x86_64-unknown-freebsd
           
     steps:
       - name: Checkout
@@ -67,7 +71,7 @@ jobs:
         if: matrix.use-cross
         uses: taiki-e/install-action@v2
         with:
-         tool: cross
+          tool: cross
 
       - uses: moonrepo/setup-rust@v1
         with:

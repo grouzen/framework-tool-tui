@@ -58,7 +58,7 @@ jobs:
           - build: windows
             os: windows-2022
             use-cross: false
-            target: x86_64-pc-windows-msvc
+            target: x86_64-pc-windows-gnu
           
     steps:
       - name: Checkout

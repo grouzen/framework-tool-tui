@@ -144,15 +144,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::Alucard,
             text: Color::Black,
-            background: Color::from_str("#FFFBEB").unwrap(), // Background
-            border: Color::from_str("#A34D14").unwrap(),     // Orange
-            border_active: Color::from_str("#846E15").unwrap(), // Yellow
-            indication_ok: Color::from_str("#14710A").unwrap(), // Green
-            indication_warning: Color::from_str("#CB3A2A").unwrap(), // Red
-            brightness_bar: Color::from_str("#846E15").unwrap(), // Yellow
-            charge_bar: Color::from_str("#644AC9").unwrap(), // Purple
-            highlighted_text: Color::from_str("#A34D14").unwrap(), // Orange
-            informative_text: Color::from_str("#644AC9").unwrap(), // Purple
+            background: Color::from_str("#FFFBEB").unwrap(),
+            border: Color::from_str("#A34D14").unwrap(),
+            border_active: Color::from_str("#846E15").unwrap(),
+            indication_ok: Color::from_str("#14710A").unwrap(),
+            indication_warning: Color::from_str("#CB3A2A").unwrap(),
+            brightness_bar: Color::from_str("#846E15").unwrap(),
+            charge_bar: Color::from_str("#644AC9").unwrap(),
+            highlighted_text: Color::from_str("#A34D14").unwrap(),
+            informative_text: Color::from_str("#644AC9").unwrap(),
         }
     }
 
@@ -176,15 +176,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::CatppuccinFrappe,
             text: Color::White,
-            background: Color::from_str("#232634").unwrap(), // Crust
-            border: Color::from_str("#ef9f76").unwrap(),     // Peach
-            border_active: Color::from_str("#e5c890").unwrap(), // Yellow
-            indication_ok: Color::from_str("#a6d189").unwrap(), // Green
-            indication_warning: Color::from_str("#e78284").unwrap(), // Red
-            brightness_bar: Color::from_str("#e5c890").unwrap(), // Yellow
-            charge_bar: Color::from_str("#ca9ee6").unwrap(), // Mauve
-            highlighted_text: Color::from_str("#ef9f76").unwrap(), // Peach
-            informative_text: Color::from_str("#ca9ee6").unwrap(), // Mauve
+            background: Color::from_str("#232634").unwrap(),
+            border: Color::from_str("#ef9f76").unwrap(),
+            border_active: Color::from_str("#e5c890").unwrap(),
+            indication_ok: Color::from_str("#a6d189").unwrap(),
+            indication_warning: Color::from_str("#e78284").unwrap(),
+            brightness_bar: Color::from_str("#e5c890").unwrap(),
+            charge_bar: Color::from_str("#ca9ee6").unwrap(),
+            highlighted_text: Color::from_str("#ef9f76").unwrap(),
+            informative_text: Color::from_str("#ca9ee6").unwrap(),
         }
     }
 
@@ -192,15 +192,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::CatppuccinLatte,
             text: Color::Black,
-            background: Color::from_str("#dce0e8").unwrap(), // Crust
-            border: Color::from_str("#fe640b").unwrap(),     // Peach
-            border_active: Color::from_str("#df8e1d").unwrap(), // Yellow
-            indication_ok: Color::from_str("#40a02b").unwrap(), // Green
-            indication_warning: Color::from_str("#d20f39").unwrap(), // Red
-            brightness_bar: Color::from_str("#df8e1d").unwrap(), // Yellow
-            charge_bar: Color::from_str("#8839ef").unwrap(), // Mauve
-            highlighted_text: Color::from_str("#fe640b").unwrap(), // Peach
-            informative_text: Color::from_str("#8839ef").unwrap(), // Mauve
+            background: Color::from_str("#dce0e8").unwrap(),
+            border: Color::from_str("#fe640b").unwrap(),
+            border_active: Color::from_str("#df8e1d").unwrap(),
+            indication_ok: Color::from_str("#40a02b").unwrap(),
+            indication_warning: Color::from_str("#d20f39").unwrap(),
+            brightness_bar: Color::from_str("#df8e1d").unwrap(),
+            charge_bar: Color::from_str("#8839ef").unwrap(),
+            highlighted_text: Color::from_str("#fe640b").unwrap(),
+            informative_text: Color::from_str("#8839ef").unwrap(),
         }
     }
 
@@ -208,15 +208,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::CatppuccinMacchiato,
             text: Color::White,
-            background: Color::from_str("#181926").unwrap(), // Crust
-            border: Color::from_str("#f5a97f").unwrap(),     // Peach
-            border_active: Color::from_str("#eed49f").unwrap(), // Yellow
-            indication_ok: Color::from_str("#a6da95").unwrap(), // Green
-            indication_warning: Color::from_str("#ed8796").unwrap(), // Red
-            brightness_bar: Color::from_str("#eed49f").unwrap(), // Yellow
-            charge_bar: Color::from_str("#c6a0f6").unwrap(), // Mauve
-            highlighted_text: Color::from_str("#f5a97f").unwrap(), // Peach
-            informative_text: Color::from_str("#c6a0f6").unwrap(), // Mauve
+            background: Color::from_str("#181926").unwrap(),
+            border: Color::from_str("#f5a97f").unwrap(),
+            border_active: Color::from_str("#eed49f").unwrap(),
+            indication_ok: Color::from_str("#a6da95").unwrap(),
+            indication_warning: Color::from_str("#ed8796").unwrap(),
+            brightness_bar: Color::from_str("#eed49f").unwrap(),
+            charge_bar: Color::from_str("#c6a0f6").unwrap(),
+            highlighted_text: Color::from_str("#f5a97f").unwrap(),
+            informative_text: Color::from_str("#c6a0f6").unwrap(),
         }
     }
 
@@ -224,15 +224,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::CatppuccinMocha,
             text: Color::White,
-            background: Color::from_str("#11111b").unwrap(), // Crust
-            border: Color::from_str("#fab387").unwrap(),     // Peach
-            border_active: Color::from_str("#f9e2af").unwrap(), // Yellow
-            indication_ok: Color::from_str("#a6e3a1").unwrap(), // Green
-            indication_warning: Color::from_str("#f38ba8").unwrap(), // Red
-            brightness_bar: Color::from_str("#f9e2af").unwrap(), // Yellow
-            charge_bar: Color::from_str("#cba6f7").unwrap(), // Mauve
-            highlighted_text: Color::from_str("#fab387").unwrap(), // Peach
-            informative_text: Color::from_str("#cba6f7").unwrap(), // Mauve
+            background: Color::from_str("#11111b").unwrap(),
+            border: Color::from_str("#fab387").unwrap(),
+            border_active: Color::from_str("#f9e2af").unwrap(),
+            indication_ok: Color::from_str("#a6e3a1").unwrap(),
+            indication_warning: Color::from_str("#f38ba8").unwrap(),
+            brightness_bar: Color::from_str("#f9e2af").unwrap(),
+            charge_bar: Color::from_str("#cba6f7").unwrap(),
+            highlighted_text: Color::from_str("#fab387").unwrap(),
+            informative_text: Color::from_str("#cba6f7").unwrap(),
         }
     }
 
@@ -240,15 +240,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::GithubDark,
             text: Color::White,
-            background: Color::from_str("#1B1F23").unwrap(), // Black background
-            border: Color::from_str("#FFF8F2").unwrap(),     // Orange non active
-            border_active: Color::from_str("#FFFDEF").unwrap(), // Yellow Active border
-            indication_ok: Color::from_str("#F0FFF4").unwrap(), // Green charged
-            indication_warning: Color::from_str("#FFEEF0").unwrap(), // Red off privacy
-            brightness_bar: Color::from_str("#FFFDEF").unwrap(), // Yellow brightness
-            charge_bar: Color::from_str("#F5F0FF").unwrap(), // Purple max charge
-            highlighted_text: Color::from_str("#FFF8F2").unwrap(), // Orange version tag
-            informative_text: Color::from_str("#F5F0FF").unwrap(), // Purple info text
+            background: Color::from_str("#1B1F23").unwrap(),
+            border: Color::from_str("#FFF8F2").unwrap(),
+            border_active: Color::from_str("#FFFDEF").unwrap(),
+            indication_ok: Color::from_str("#F0FFF4").unwrap(),
+            indication_warning: Color::from_str("#FFEEF0").unwrap(),
+            brightness_bar: Color::from_str("#FFFDEF").unwrap(),
+            charge_bar: Color::from_str("#F5F0FF").unwrap(),
+            highlighted_text: Color::from_str("#FFF8F2").unwrap(),
+            informative_text: Color::from_str("#F5F0FF").unwrap(),
         }
     }
 
@@ -256,15 +256,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::GithubLight,
             text: Color::Black,
-            background: Color::from_str("#FFFFFF").unwrap(), // Black background
-            border: Color::from_str("#A04100").unwrap(),     // Orange non active
-            border_active: Color::from_str("#735C0F").unwrap(), // Yellow Active border
-            indication_ok: Color::from_str("#144620").unwrap(), // Green charged
-            indication_warning: Color::from_str("#86181D").unwrap(), // Red off privacy
-            brightness_bar: Color::from_str("#735C0F").unwrap(), // Yellow brightness
-            charge_bar: Color::from_str("#29134E").unwrap(), // Purple max charge
-            highlighted_text: Color::from_str("#A04100").unwrap(), // Orange version tag
-            informative_text: Color::from_str("#29134E").unwrap(), // Purple info text
+            background: Color::from_str("#FFFFFF").unwrap(),
+            border: Color::from_str("#A04100").unwrap(),
+            border_active: Color::from_str("#735C0F").unwrap(),
+            indication_ok: Color::from_str("#144620").unwrap(),
+            indication_warning: Color::from_str("#86181D").unwrap(),
+            brightness_bar: Color::from_str("#735C0F").unwrap(),
+            charge_bar: Color::from_str("#29134E").unwrap(),
+            highlighted_text: Color::from_str("#A04100").unwrap(),
+            informative_text: Color::from_str("#29134E").unwrap(),
         }
     }
 
@@ -272,15 +272,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::MonokaiProDark,
             text: Color::White,
-            background: Color::from_str("#221F22").unwrap(), // Background
-            border: Color::from_str("#FC9867").unwrap(),     // Orange
-            border_active: Color::from_str("#FFD866").unwrap(), // Yellow
-            indication_ok: Color::from_str("#A9DC76").unwrap(), // Green
-            indication_warning: Color::from_str("#FF6188").unwrap(), // "Red"
-            brightness_bar: Color::from_str("#FFD866").unwrap(), // Yellow
-            charge_bar: Color::from_str("#ab9df2").unwrap(), // Purple
-            highlighted_text: Color::from_str("#FC9867").unwrap(), // Orange
-            informative_text: Color::from_str("#ab9df2").unwrap(), // Purple
+            background: Color::from_str("#221F22").unwrap(),
+            border: Color::from_str("#FC9867").unwrap(),
+            border_active: Color::from_str("#FFD866").unwrap(),
+            indication_ok: Color::from_str("#A9DC76").unwrap(),
+            indication_warning: Color::from_str("#FF6188").unwrap(),
+            brightness_bar: Color::from_str("#FFD866").unwrap(),
+            charge_bar: Color::from_str("#ab9df2").unwrap(),
+            highlighted_text: Color::from_str("#FC9867").unwrap(),
+            informative_text: Color::from_str("#ab9df2").unwrap(),
         }
     }
 
@@ -288,15 +288,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::MonokaiProLight,
             text: Color::Black,
-            background: Color::from_str("#FFFFFF").unwrap(), // Background
-            border: Color::from_str("#FC9768").unwrap(),     // Orange
-            border_active: Color::from_str("#FFD866").unwrap(), // Yellow
-            indication_ok: Color::from_str("#a9dc77").unwrap(), // Green
-            indication_warning: Color::from_str("#ff6189").unwrap(), // "Red"
-            brightness_bar: Color::from_str("#FFD866").unwrap(), // Yellow
-            charge_bar: Color::from_str("#AB9DF2").unwrap(), // Purple
-            highlighted_text: Color::from_str("#FC9768").unwrap(), // Orange
-            informative_text: Color::from_str("#AB9DF2").unwrap(), // Purple
+            background: Color::from_str("#FFFFFF").unwrap(),
+            border: Color::from_str("#FC9768").unwrap(),
+            border_active: Color::from_str("#FFD866").unwrap(),
+            indication_ok: Color::from_str("#a9dc77").unwrap(),
+            indication_warning: Color::from_str("#ff6189").unwrap(),
+            brightness_bar: Color::from_str("#FFD866").unwrap(),
+            charge_bar: Color::from_str("#AB9DF2").unwrap(),
+            highlighted_text: Color::from_str("#FC9768").unwrap(),
+            informative_text: Color::from_str("#AB9DF2").unwrap(),
         }
     }
 }

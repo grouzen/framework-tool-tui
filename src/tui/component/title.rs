@@ -42,7 +42,7 @@ impl Component for TitleComponent {
                 Constraint::Max(6),
                 Constraint::Max(13),
                 Constraint::Min(18),
-                Constraint::Max(15),
+                Constraint::Max(19),
             ])
             .spacing(1)
             .areas(block.inner(area));
@@ -106,7 +106,7 @@ impl Component for TitleComponent {
         // Theme name
         if !self.theme_name.is_empty() {
             frame.render_widget(
-                Paragraph::new(format!("[ {} ]", self.theme_name))
+                Paragraph::new(format!("【←b {} n→】", self.theme_name))
                     .style(Style::default().fg(theme.highlighted_text))
                     .alignment(Alignment::Right),
                 theme_area,

@@ -10,7 +10,7 @@ use crate::{
 };
 
 pub const APP_TITLE: &str = " Framework System ";
-pub const FOOTER_HELP: &str = "[Tab] Switch panels [Up/Down] Scroll [Enter] Edit/Apply [Left/Right] Adjust value [b/n] Switch theme [Esc] Cancel [q] Quit";
+pub const FOOTER_HELP: &str = "[Tab] Switch panels [Up/Down] Scroll [Enter] Edit/Apply [Left/Right] Adjust value [Esc] Cancel [q] Quit";
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub struct App {

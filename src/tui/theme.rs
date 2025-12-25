@@ -16,7 +16,6 @@ pub enum ThemeVariant {
     GithubDark,
     GithubLight,
     MonokaiProDark,
-    MonokaiProLight,
 }
 
 impl FromStr for ThemeVariant {
@@ -34,7 +33,6 @@ impl FromStr for ThemeVariant {
             "github_dark" => Ok(ThemeVariant::GithubDark),
             "github_light" => Ok(ThemeVariant::GithubLight),
             "monokai_pro_dark" => Ok(ThemeVariant::MonokaiProDark),
-            "monokai_pro_light" => Ok(ThemeVariant::MonokaiProLight),
             _ => Err(format!("Unknown theme: {}", s)),
         }
     }
@@ -53,11 +51,10 @@ impl ThemeVariant {
             ThemeVariant::GithubDark => "GitHub Dark",
             ThemeVariant::GithubLight => "GitHub Light",
             ThemeVariant::MonokaiProDark => "Monokai Pro Dark",
-            ThemeVariant::MonokaiProLight => "Monokai Pro Light",
         }
     }
 
-    pub const ALL: [ThemeVariant; 11] = [
+    pub const ALL: [ThemeVariant; 10] = [
         ThemeVariant::Framework,
         ThemeVariant::Alucard,
         ThemeVariant::Dracula,
@@ -68,7 +65,6 @@ impl ThemeVariant {
         ThemeVariant::GithubDark,
         ThemeVariant::GithubLight,
         ThemeVariant::MonokaiProDark,
-        ThemeVariant::MonokaiProLight,
     ];
 
     pub fn next(&self) -> Self {
@@ -120,7 +116,6 @@ impl Theme {
             ThemeVariant::GithubDark => Self::github_dark(),
             ThemeVariant::GithubLight => Self::github_light(),
             ThemeVariant::MonokaiProDark => Self::monokai_pro_dark(),
-            ThemeVariant::MonokaiProLight => Self::monokai_pro_light(),
         }
     }
 
@@ -193,7 +188,7 @@ impl Theme {
             variant: ThemeVariant::CatppuccinLatte,
             text: Color::Black,
             background: Color::from_str("#dce0e8").unwrap(),
-            border: Color::from_str("#fe640b").unwrap(),
+            border: Color::from_str("#d20f39").unwrap(),
             border_active: Color::from_str("#df8e1d").unwrap(),
             indication_ok: Color::from_str("#40a02b").unwrap(),
             indication_warning: Color::from_str("#d20f39").unwrap(),
@@ -284,19 +279,4 @@ impl Theme {
         }
     }
 
-    pub fn monokai_pro_light() -> Self {
-        Self {
-            variant: ThemeVariant::MonokaiProLight,
-            text: Color::Black,
-            background: Color::from_str("#FFFFFF").unwrap(),
-            border: Color::from_str("#FC9768").unwrap(),
-            border_active: Color::from_str("#FFD866").unwrap(),
-            indication_ok: Color::from_str("#a9dc77").unwrap(),
-            indication_warning: Color::from_str("#ff6189").unwrap(),
-            brightness_bar: Color::from_str("#FFD866").unwrap(),
-            charge_bar: Color::from_str("#AB9DF2").unwrap(),
-            highlighted_text: Color::from_str("#FC9768").unwrap(),
-            informative_text: Color::from_str("#AB9DF2").unwrap(),
-        }
-    }
 }

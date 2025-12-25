@@ -15,9 +15,9 @@ pub enum ThemeVariant {
     CatppuccinMocha,
     GithubDark,
     GithubLight,
-    MonokaiProDark,
     MonochromeDark,
     MonochromeLight,
+    MonokaiProDark,
 }
 
 impl FromStr for ThemeVariant {
@@ -34,9 +34,9 @@ impl FromStr for ThemeVariant {
             "catppuccin_mocha" => Ok(ThemeVariant::CatppuccinMocha),
             "github_dark" => Ok(ThemeVariant::GithubDark),
             "github_light" => Ok(ThemeVariant::GithubLight),
-            "monokai_pro_dark" => Ok(ThemeVariant::MonokaiProDark),
             "monochrome_dark" => Ok(ThemeVariant::MonochromeDark),
             "monochrome_light" => Ok(ThemeVariant::MonochromeLight),
+            "monokai_pro_dark" => Ok(ThemeVariant::MonokaiProDark),
             _ => Err(format!("Unknown theme: {}", s)),
         }
     }
@@ -54,9 +54,9 @@ impl ThemeVariant {
             ThemeVariant::CatppuccinMocha => "Catppuccin Mocha",
             ThemeVariant::GithubDark => "GitHub Dark",
             ThemeVariant::GithubLight => "GitHub Light",
-            ThemeVariant::MonokaiProDark => "Monokai Pro Dark",
             ThemeVariant::MonochromeDark => "Monochrome Dark",
             ThemeVariant::MonochromeLight => "Monochrome Light",
+            ThemeVariant::MonokaiProDark => "Monokai Pro Dark",
         }
     }
 
@@ -70,9 +70,9 @@ impl ThemeVariant {
         ThemeVariant::CatppuccinMocha,
         ThemeVariant::GithubDark,
         ThemeVariant::GithubLight,
-        ThemeVariant::MonokaiProDark,
         ThemeVariant::MonochromeDark,
         ThemeVariant::MonochromeLight,
+        ThemeVariant::MonokaiProDark,
     ];
 
     pub fn next(&self) -> Self {
@@ -123,9 +123,9 @@ impl Theme {
             ThemeVariant::CatppuccinMocha => Self::catppuccin_mocha(),
             ThemeVariant::GithubDark => Self::github_dark(),
             ThemeVariant::GithubLight => Self::github_light(),
-            ThemeVariant::MonokaiProDark => Self::monokai_pro_dark(),
             ThemeVariant::MonochromeDark => Self::monochrome_dark(),
             ThemeVariant::MonochromeLight => Self::monochrome_light(),
+            ThemeVariant::MonokaiProDark => Self::monokai_pro_dark(),
         }
     }
 
@@ -273,22 +273,6 @@ impl Theme {
         }
     }
 
-    pub fn monokai_pro_dark() -> Self {
-        Self {
-            variant: ThemeVariant::MonokaiProDark,
-            text: Color::White,
-            background: Color::from_str("#221F22").unwrap(),
-            border: Color::from_str("#FC9867").unwrap(),
-            border_active: Color::from_str("#FFD866").unwrap(),
-            indication_ok: Color::from_str("#A9DC76").unwrap(),
-            indication_warning: Color::from_str("#FF6188").unwrap(),
-            brightness_bar: Color::from_str("#FFD866").unwrap(),
-            charge_bar: Color::from_str("#AB9DF2").unwrap(),
-            highlighted_text: Color::from_str("#FC9867").unwrap(),
-            informative_text: Color::from_str("#AB9DF2").unwrap(),
-        }
-    }
-
     pub fn monochrome_dark() -> Self {
         Self {
             variant: ThemeVariant::MonokaiProDark,
@@ -318,6 +302,22 @@ impl Theme {
             charge_bar: Color::from_str("#000000").unwrap(),
             highlighted_text: Color::from_str("#000000").unwrap(),
             informative_text: Color::from_str("#000000").unwrap(),
+        }
+    }
+
+    pub fn monokai_pro_dark() -> Self {
+        Self {
+            variant: ThemeVariant::MonokaiProDark,
+            text: Color::White,
+            background: Color::from_str("#221F22").unwrap(),
+            border: Color::from_str("#FC9867").unwrap(),
+            border_active: Color::from_str("#FFD866").unwrap(),
+            indication_ok: Color::from_str("#A9DC76").unwrap(),
+            indication_warning: Color::from_str("#FF6188").unwrap(),
+            brightness_bar: Color::from_str("#FFD866").unwrap(),
+            charge_bar: Color::from_str("#AB9DF2").unwrap(),
+            highlighted_text: Color::from_str("#FC9867").unwrap(),
+            informative_text: Color::from_str("#AB9DF2").unwrap(),
         }
     }
 

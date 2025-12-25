@@ -45,7 +45,7 @@ impl Tui {
         let theme = Theme::from_variant(config.theme);
 
         Ok(Self {
-            title: TitleComponent::new(),
+            title: TitleComponent::new(theme.variant),
             main: MainComponent::new(fingerprint, info),
             footer: FooterComponent,
             theme,

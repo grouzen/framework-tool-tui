@@ -8,7 +8,10 @@ use ratatui::{
 use crate::{
     app::APP_TITLE,
     framework::info::FrameworkInfo,
-    tui::{component::Component, theme::Theme},
+    tui::{
+        component::Component,
+        theme::{Theme, ThemeVariant},
+    },
 };
 
 pub struct TitleComponent {
@@ -16,9 +19,9 @@ pub struct TitleComponent {
 }
 
 impl TitleComponent {
-    pub fn new() -> Self {
+    pub fn new(theme: ThemeVariant) -> Self {
         Self {
-            theme_name: String::new(),
+            theme_name: theme.name().to_string(),
         }
     }
 

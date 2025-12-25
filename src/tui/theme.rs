@@ -165,15 +165,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::Dracula,
             text: Color::White,
-            background: Color::from_str("#282a36").unwrap(),
-            border: Color::from_str("#bd93f9").unwrap(),
-            border_active: Color::from_str("#ffb86c").unwrap(),
-            indication_ok: Color::from_str("#50fa7b").unwrap(),
-            indication_warning: Color::from_str("#ff5555").unwrap(),
-            brightness_bar: Color::from_str("#f1fa8c").unwrap(),
-            charge_bar: Color::from_str("#bd93f9").unwrap(),
-            highlighted_text: Color::from_str("#ff79c6").unwrap(),
-            informative_text: Color::from_str("#8be9fd").unwrap(),
+            background: Color::from_str("#282A36").unwrap(),
+            border: Color::from_str("#BD93F9").unwrap(),
+            border_active: Color::from_str("#FFB86C").unwrap(),
+            indication_ok: Color::from_str("#50FA7B").unwrap(),
+            indication_warning: Color::from_str("#FF5555").unwrap(),
+            brightness_bar: Color::from_str("#F1FA8C").unwrap(),
+            charge_bar: Color::from_str("#BD93F9").unwrap(),
+            highlighted_text: Color::from_str("#FF79C6").unwrap(),
+            informative_text: Color::from_str("#8BE9FD").unwrap(),
         }
     }
 
@@ -182,14 +182,14 @@ impl Theme {
             variant: ThemeVariant::CatppuccinFrappe,
             text: Color::White,
             background: Color::from_str("#232634").unwrap(),
-            border: Color::from_str("#ef9f76").unwrap(),
-            border_active: Color::from_str("#e5c890").unwrap(),
-            indication_ok: Color::from_str("#a6d189").unwrap(),
-            indication_warning: Color::from_str("#e78284").unwrap(),
-            brightness_bar: Color::from_str("#e5c890").unwrap(),
-            charge_bar: Color::from_str("#ca9ee6").unwrap(),
-            highlighted_text: Color::from_str("#ef9f76").unwrap(),
-            informative_text: Color::from_str("#ca9ee6").unwrap(),
+            border: Color::from_str("#EF9F76").unwrap(),
+            border_active: Color::from_str("#E5C890").unwrap(),
+            indication_ok: Color::from_str("#A6D189").unwrap(),
+            indication_warning: Color::from_str("#E78284").unwrap(),
+            brightness_bar: Color::from_str("#E5C890").unwrap(),
+            charge_bar: Color::from_str("#CA9EE6").unwrap(),
+            highlighted_text: Color::from_str("#EF9F76").unwrap(),
+            informative_text: Color::from_str("#CA9EE6").unwrap(),
         }
     }
 
@@ -197,15 +197,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::CatppuccinLatte,
             text: Color::Black,
-            background: Color::from_str("#dce0e8").unwrap(),
-            border: Color::from_str("#d20f39").unwrap(),
-            border_active: Color::from_str("#df8e1d").unwrap(),
-            indication_ok: Color::from_str("#40a02b").unwrap(),
-            indication_warning: Color::from_str("#d20f39").unwrap(),
-            brightness_bar: Color::from_str("#df8e1d").unwrap(),
-            charge_bar: Color::from_str("#8839ef").unwrap(),
-            highlighted_text: Color::from_str("#fe640b").unwrap(),
-            informative_text: Color::from_str("#8839ef").unwrap(),
+            background: Color::from_str("#DCE0E8").unwrap(),
+            border: Color::from_str("#D20F39").unwrap(),
+            border_active: Color::from_str("#DF8E1D").unwrap(),
+            indication_ok: Color::from_str("#40A02B").unwrap(),
+            indication_warning: Color::from_str("#D20F39").unwrap(),
+            brightness_bar: Color::from_str("#DF8E1D").unwrap(),
+            charge_bar: Color::from_str("#8839EF").unwrap(),
+            highlighted_text: Color::from_str("#FE640B").unwrap(),
+            informative_text: Color::from_str("#8839EF").unwrap(),
         }
     }
 
@@ -229,15 +229,15 @@ impl Theme {
         Self {
             variant: ThemeVariant::CatppuccinMocha,
             text: Color::White,
-            background: Color::from_str("#11111b").unwrap(),
-            border: Color::from_str("#fab387").unwrap(),
-            border_active: Color::from_str("#f9e2af").unwrap(),
-            indication_ok: Color::from_str("#a6e3a1").unwrap(),
-            indication_warning: Color::from_str("#f38ba8").unwrap(),
-            brightness_bar: Color::from_str("#f9e2af").unwrap(),
-            charge_bar: Color::from_str("#cba6f7").unwrap(),
-            highlighted_text: Color::from_str("#fab387").unwrap(),
-            informative_text: Color::from_str("#cba6f7").unwrap(),
+            background: Color::from_str("#11111B").unwrap(),
+            border: Color::from_str("#FAB387").unwrap(),
+            border_active: Color::from_str("#F9E2AF").unwrap(),
+            indication_ok: Color::from_str("#A6E3A1").unwrap(),
+            indication_warning: Color::from_str("#F38BA8").unwrap(),
+            brightness_bar: Color::from_str("#F9E2AF").unwrap(),
+            charge_bar: Color::from_str("#CBA6F7").unwrap(),
+            highlighted_text: Color::from_str("#FAB387").unwrap(),
+            informative_text: Color::from_str("#CBA6F7").unwrap(),
         }
     }
 
@@ -246,14 +246,14 @@ impl Theme {
             variant: ThemeVariant::GithubDark,
             text: Color::White,
             background: Color::from_str("#1B1F23").unwrap(),
-            border: Color::from_str("#ff8e40").unwrap(),
-            border_active: Color::from_str("#d3fa37").unwrap(),
-            indication_ok: Color::from_str("#5fed83").unwrap(),
-            indication_warning: Color::from_str("#ff8e40").unwrap(),
-            brightness_bar: Color::from_str("#d3fa37").unwrap(),
-            charge_bar: Color::from_str("#5fed83").unwrap(),
-            highlighted_text: Color::from_str("#9eecff").unwrap(),
-            informative_text: Color::from_str("#ff80d2").unwrap(),
+            border: Color::from_str("#FF8E40").unwrap(),
+            border_active: Color::from_str("#D3FA37").unwrap(),
+            indication_ok: Color::from_str("#5fED83").unwrap(),
+            indication_warning: Color::from_str("#FF8E40").unwrap(),
+            brightness_bar: Color::from_str("#D3FA37").unwrap(),
+            charge_bar: Color::from_str("#5FED83").unwrap(),
+            highlighted_text: Color::from_str("#9EECFF").unwrap(),
+            informative_text: Color::from_str("#FF80D2").unwrap(),
         }
     }
 
@@ -263,13 +263,13 @@ impl Theme {
             text: Color::Black,
             background: Color::from_str("#FFFFFF").unwrap(),
             border: Color::from_str("#703100").unwrap(),
-            border_active: Color::from_str("#db9d00").unwrap(),
-            indication_ok: Color::from_str("#074d27").unwrap(),
+            border_active: Color::from_str("#DB9D00").unwrap(),
+            indication_ok: Color::from_str("#074D27").unwrap(),
             indication_warning: Color::from_str("#703100").unwrap(),
-            brightness_bar: Color::from_str("#db9d00").unwrap(),
-            charge_bar: Color::from_str("#074d27").unwrap(),
+            brightness_bar: Color::from_str("#DB9D00").unwrap(),
+            charge_bar: Color::from_str("#074D27").unwrap(),
             highlighted_text: Color::from_str("#212183").unwrap(),
-            informative_text: Color::from_str("#8342fa").unwrap(),
+            informative_text: Color::from_str("#8342FA").unwrap(),
         }
     }
 
@@ -283,9 +283,9 @@ impl Theme {
             indication_ok: Color::from_str("#A9DC76").unwrap(),
             indication_warning: Color::from_str("#FF6188").unwrap(),
             brightness_bar: Color::from_str("#FFD866").unwrap(),
-            charge_bar: Color::from_str("#ab9df2").unwrap(),
+            charge_bar: Color::from_str("#AB9DF2").unwrap(),
             highlighted_text: Color::from_str("#FC9867").unwrap(),
-            informative_text: Color::from_str("#ab9df2").unwrap(),
+            informative_text: Color::from_str("#AB9DF2").unwrap(),
         }
     }
 

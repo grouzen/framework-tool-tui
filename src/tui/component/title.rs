@@ -42,7 +42,7 @@ impl Component for TitleComponent {
                 Constraint::Max(6),
                 Constraint::Max(13),
                 Constraint::Min(18),
-                Constraint::Max(19),
+                Constraint::Max(30),
             ])
             .spacing(1)
             .areas(block.inner(area));

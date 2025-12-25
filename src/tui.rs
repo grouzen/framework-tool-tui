@@ -206,13 +206,34 @@ mod tests {
 
         // Cycle to next theme
         tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::Alucard);
+
+        tui.next_theme();
         assert_eq!(tui.config.theme, ThemeVariant::Dracula);
 
         tui.next_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::Nord);
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinFrappe);
 
         tui.next_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::Gruvbox);
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinLatte);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinMacchiato);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinMocha);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GithubDark);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GithubLight);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProDark);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProLight);
 
         // Should wrap back to Framework
         tui.next_theme();
@@ -231,13 +252,34 @@ mod tests {
 
         // Cycle to previous theme (should wrap to Gruvbox)
         tui.previous_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::Gruvbox);
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProLight);
 
         tui.previous_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::Nord);
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProDark);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GithubLight);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GithubDark);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinMocha);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinMacchiato);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinLatte);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinFrappe);
 
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::Dracula);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::Alucard);
 
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::Framework);
@@ -253,13 +295,13 @@ mod tests {
         assert_eq!(tui.current_theme_name(), "Framework");
 
         tui.next_theme();
+        assert_eq!(tui.current_theme_name(), "Alucard");
+
+        tui.next_theme();
         assert_eq!(tui.current_theme_name(), "Dracula");
 
         tui.next_theme();
-        assert_eq!(tui.current_theme_name(), "Nord");
-
-        tui.next_theme();
-        assert_eq!(tui.current_theme_name(), "Gruvbox");
+        assert_eq!(tui.current_theme_name(), "Catppuccin Frappe");
     }
 
     #[test]
@@ -275,7 +317,7 @@ mod tests {
         let result = tui.handle_input(event);
 
         assert!(matches!(result, Ok(None)));
-        assert_eq!(tui.config.theme, ThemeVariant::Dracula);
+        assert_eq!(tui.config.theme, ThemeVariant::Alucard);
     }
 
     #[test]
@@ -291,7 +333,7 @@ mod tests {
         let result = tui.handle_input(event);
 
         assert!(matches!(result, Ok(None)));
-        assert_eq!(tui.config.theme, ThemeVariant::Gruvbox);
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProLight);
     }
 
     #[test]
@@ -370,12 +412,13 @@ mod tests {
             let result = tui.handle_input(event);
             assert!(matches!(result, Ok(None)));
         }
-        assert_eq!(tui.config.theme, ThemeVariant::Gruvbox);
+        // After 3 next: Framework -> Alucard -> Dracula -> CatppuccinFrappe
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinFrappe);
 
         // Switch backward once with 'b'
         let event = Event::Key(KeyEvent::from(KeyCode::Char('b')));
         let result = tui.handle_input(event);
         assert!(matches!(result, Ok(None)));
-        assert_eq!(tui.config.theme, ThemeVariant::Nord);
+        assert_eq!(tui.config.theme, ThemeVariant::Dracula);
     }
 }

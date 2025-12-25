@@ -37,7 +37,7 @@ pub struct Tui {
 impl Tui {
     pub fn new(fingerprint: Arc<Fingerprint>, info: &FrameworkInfo) -> Self {
         Self {
-            title: TitleComponent,
+            title: TitleComponent::new(),
             main: MainComponent::new(fingerprint, info),
             footer: FooterComponent,
             theme: Theme::default(),
@@ -45,10 +45,30 @@ impl Tui {
         }
     }
 
+    pub fn next_theme(&mut self) {
+        self.theme = Theme::from_variant(self.theme.variant.next());
+    }
+
+    pub fn previous_theme(&mut self) {
+        self.theme = Theme::from_variant(self.theme.variant.previous());
+    }
+
+    pub fn current_theme_name(&self) -> &'static str {
+        self.theme.variant.name()
+    }
+
     pub fn handle_input(&mut self, event: Event) -> color_eyre::Result<Option<AppEvent>> {
-        let top_level_event = match event {
+        let top_level_event = match &event {
             Event::Key(key) => match key.code {
                 KeyCode::Char('q') => Some(AppEvent::Quit),
+                KeyCode::Char('b') => {
+                    self.previous_theme();
+                    None
+                }
+                KeyCode::Char('n') => {
+                    self.next_theme();
+                    None
+                }
                 KeyCode::Esc if self.error_message.is_some() => {
                     self.error_message = None;
                     None
@@ -87,6 +107,7 @@ impl Tui {
                     .areas(area);
 
             // Title
+            self.title.set_theme_name(self.current_theme_name().to_string());
             self.title.render(frame, title_area, &self.theme, info);
 
             // Main
@@ -138,7 +159,7 @@ mod tests {
     use crate::{
         app::AppEvent,
         framework::{fingerprint::Fingerprint, info::FrameworkInfo},
-        tui::Tui,
+        tui::{theme::ThemeVariant, Tui},
     };
 
     #[test]
@@ -151,5 +172,181 @@ mod tests {
         let app_event = tui.handle_input(event);
 
         assert!(matches!(app_event, Ok(Some(AppEvent::Quit))))
+    }
+
+    #[test]
+    fn next_theme_cycles_forward() {
+        let fingerprint = Arc::new(Fingerprint::percentage());
+        let info = FrameworkInfo::default();
+        let mut tui = Tui::new(fingerprint, &info);
+
+        // Default theme should be Framework
+        assert_eq!(tui.theme.variant, ThemeVariant::Framework);
+
+        // Cycle to next theme
+        tui.next_theme();
+        assert_eq!(tui.theme.variant, ThemeVariant::Dracula);
+
+        tui.next_theme();
+        assert_eq!(tui.theme.variant, ThemeVariant::Nord);
+
+        tui.next_theme();
+        assert_eq!(tui.theme.variant, ThemeVariant::Gruvbox);
+
+        // Should wrap back to Framework
+        tui.next_theme();
+        assert_eq!(tui.theme.variant, ThemeVariant::Framework);
+    }
+
+    #[test]
+    fn previous_theme_cycles_backward() {
+        let fingerprint = Arc::new(Fingerprint::percentage());
+        let info = FrameworkInfo::default();
+        let mut tui = Tui::new(fingerprint, &info);
+
+        // Default theme should be Framework
+        assert_eq!(tui.theme.variant, ThemeVariant::Framework);
+
+        // Cycle to previous theme (should wrap to Gruvbox)
+        tui.previous_theme();
+        assert_eq!(tui.theme.variant, ThemeVariant::Gruvbox);
+
+        tui.previous_theme();
+        assert_eq!(tui.theme.variant, ThemeVariant::Nord);
+
+        tui.previous_theme();
+        assert_eq!(tui.theme.variant, ThemeVariant::Dracula);
+
+        tui.previous_theme();
+        assert_eq!(tui.theme.variant, ThemeVariant::Framework);
+    }
+
+    #[test]
+    fn current_theme_name_returns_correct_name() {
+        let fingerprint = Arc::new(Fingerprint::percentage());
+        let info = FrameworkInfo::default();
+        let mut tui = Tui::new(fingerprint, &info);
+
+        assert_eq!(tui.current_theme_name(), "Framework");
+
+        tui.next_theme();
+        assert_eq!(tui.current_theme_name(), "Dracula");
+
+        tui.next_theme();
+        assert_eq!(tui.current_theme_name(), "Nord");
+
+        tui.next_theme();
+        assert_eq!(tui.current_theme_name(), "Gruvbox");
+    }
+
+    #[test]
+    fn handle_input_n_switches_to_next_theme() {
+        let fingerprint = Arc::new(Fingerprint::percentage());
+        let info = FrameworkInfo::default();
+        let mut tui = Tui::new(fingerprint, &info);
+
+        assert_eq!(tui.theme.variant, ThemeVariant::Framework);
+
+        let event = Event::Key(KeyEvent::from(KeyCode::Char('n')));
+        let result = tui.handle_input(event);
+
+        assert!(matches!(result, Ok(None)));
+        assert_eq!(tui.theme.variant, ThemeVariant::Dracula);
+    }
+
+    #[test]
+    fn handle_input_b_switches_to_previous_theme() {
+        let fingerprint = Arc::new(Fingerprint::percentage());
+        let info = FrameworkInfo::default();
+        let mut tui = Tui::new(fingerprint, &info);
+
+        assert_eq!(tui.theme.variant, ThemeVariant::Framework);
+
+        let event = Event::Key(KeyEvent::from(KeyCode::Char('b')));
+        let result = tui.handle_input(event);
+
+        assert!(matches!(result, Ok(None)));
+        assert_eq!(tui.theme.variant, ThemeVariant::Gruvbox);
+    }
+
+    #[test]
+    fn handle_input_left_without_ctrl_does_not_switch_theme() {
+        let fingerprint = Arc::new(Fingerprint::percentage());
+        let info = FrameworkInfo::default();
+        let mut tui = Tui::new(fingerprint, &info);
+
+        let initial_theme = tui.theme.variant;
+        let event = Event::Key(KeyEvent::from(KeyCode::Left));
+        let _result = tui.handle_input(event);
+
+        // Theme should remain unchanged
+        assert_eq!(tui.theme.variant, initial_theme);
+    }
+
+    #[test]
+    fn handle_input_right_without_ctrl_does_not_switch_theme() {
+        let fingerprint = Arc::new(Fingerprint::percentage());
+        let info = FrameworkInfo::default();
+        let mut tui = Tui::new(fingerprint, &info);
+
+        let initial_theme = tui.theme.variant;
+        let event = Event::Key(KeyEvent::from(KeyCode::Right));
+        let _result = tui.handle_input(event);
+
+        // Theme should remain unchanged
+        assert_eq!(tui.theme.variant, initial_theme);
+    }
+
+    #[test]
+    fn theme_switching_does_not_pass_event_to_main_component() {
+        // This test ensures that 'b' and 'n' events are consumed by theme switching
+        // and not passed down to child components
+        let fingerprint = Arc::new(Fingerprint::percentage());
+        let info = FrameworkInfo::default();
+        let mut tui = Tui::new(fingerprint, &info);
+
+        let initial_theme = tui.theme.variant;
+        
+        // Send 'n' event
+        let event = Event::Key(KeyEvent::from(KeyCode::Char('n')));
+        let result = tui.handle_input(event);
+
+        // Should return Ok(None) and change theme
+        assert!(matches!(result, Ok(None)));
+        assert_ne!(tui.theme.variant, initial_theme);
+        
+        // Try switching back with 'b'  
+        let new_theme = tui.theme.variant;
+        let event = Event::Key(KeyEvent::from(KeyCode::Char('b')));
+        let result = tui.handle_input(event);
+
+        // Should return Ok(None) and change theme back
+        assert!(matches!(result, Ok(None)));
+        assert_eq!(tui.theme.variant, initial_theme);
+        assert_ne!(tui.theme.variant, new_theme);
+    }
+
+    #[test]
+    fn multiple_theme_switches_work_correctly() {
+        let fingerprint = Arc::new(Fingerprint::percentage());
+        let info = FrameworkInfo::default();
+        let mut tui = Tui::new(fingerprint, &info);
+
+        // Start at Framework
+        assert_eq!(tui.theme.variant, ThemeVariant::Framework);
+
+        // Switch forward 3 times with 'n'
+        for _ in 0..3 {
+            let event = Event::Key(KeyEvent::from(KeyCode::Char('n')));
+            let result = tui.handle_input(event);
+            assert!(matches!(result, Ok(None)));
+        }
+        assert_eq!(tui.theme.variant, ThemeVariant::Gruvbox);
+
+        // Switch backward once with 'b'
+        let event = Event::Key(KeyEvent::from(KeyCode::Char('b')));
+        let result = tui.handle_input(event);
+        assert!(matches!(result, Ok(None)));
+        assert_eq!(tui.theme.variant, ThemeVariant::Nord);
     }
 }

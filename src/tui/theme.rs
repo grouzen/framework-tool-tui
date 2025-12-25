@@ -320,5 +320,4 @@ impl Theme {
             informative_text: Color::from_str("#AB9DF2").unwrap(),
         }
     }
-
 }

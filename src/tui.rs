@@ -107,7 +107,11 @@ impl Tui {
         info: &FrameworkInfo,
     ) -> color_eyre::Result<()> {
         terminal.draw(|frame| {
-            let block = Block::default().style(Style::default().bg(self.theme.background));
+            let block = Block::default().style(
+                Style::default()
+                    .bg(self.theme.background)
+                    .fg(self.theme.text),
+            );
             frame.render_widget(block, frame.area());
 
             let area = frame.area();

@@ -89,6 +89,7 @@ impl ThemeVariant {
 
 pub struct Theme {
     pub variant: ThemeVariant,
+    pub text: Color,
     pub background: Color,
     pub border: Color,
     pub border_active: Color,
@@ -126,6 +127,7 @@ impl Theme {
     pub fn framework() -> Self {
         Self {
             variant: ThemeVariant::Framework,
+            text: Color::White,
             background: Color::Black,
             border: Color::from_str("#FF7447").unwrap(),
             border_active: Color::from_str("#FFD600").unwrap(),
@@ -141,6 +143,7 @@ impl Theme {
     pub fn alucard() -> Self {
         Self {
             variant: ThemeVariant::Alucard,
+            text: Color::Black,
             background: Color::from_str("#FFFBEB").unwrap(), // Background
             border: Color::from_str("#A34D14").unwrap(),     // Orange
             border_active: Color::from_str("#846E15").unwrap(), // Yellow
@@ -156,6 +159,7 @@ impl Theme {
     pub fn dracula() -> Self {
         Self {
             variant: ThemeVariant::Dracula,
+            text: Color::White,
             background: Color::from_str("#282a36").unwrap(),
             border: Color::from_str("#bd93f9").unwrap(),
             border_active: Color::from_str("#ffb86c").unwrap(),
@@ -171,6 +175,7 @@ impl Theme {
     pub fn catppuccin_frappe() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinFrappe,
+            text: Color::White,
             background: Color::from_str("#232634").unwrap(), // Crust
             border: Color::from_str("#ef9f76").unwrap(),     // Peach
             border_active: Color::from_str("#e5c890").unwrap(), // Yellow
@@ -186,6 +191,7 @@ impl Theme {
     pub fn catppuccin_latte() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinLatte,
+            text: Color::Black,
             background: Color::from_str("#dce0e8").unwrap(), // Crust
             border: Color::from_str("#fe640b").unwrap(),     // Peach
             border_active: Color::from_str("#df8e1d").unwrap(), // Yellow
@@ -201,6 +207,7 @@ impl Theme {
     pub fn catppuccin_macchiato() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinMacchiato,
+            text: Color::White,
             background: Color::from_str("#181926").unwrap(), // Crust
             border: Color::from_str("#f5a97f").unwrap(),     // Peach
             border_active: Color::from_str("#eed49f").unwrap(), // Yellow
@@ -216,6 +223,7 @@ impl Theme {
     pub fn catppuccin_mocha() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinMocha,
+            text: Color::White,
             background: Color::from_str("#11111b").unwrap(), // Crust
             border: Color::from_str("#fab387").unwrap(),     // Peach
             border_active: Color::from_str("#f9e2af").unwrap(), // Yellow
@@ -231,6 +239,7 @@ impl Theme {
     pub fn github_dark() -> Self {
         Self {
             variant: ThemeVariant::GithubDark,
+            text: Color::White,
             background: Color::from_str("#1B1F23").unwrap(), // Black background
             border: Color::from_str("#FFF8F2").unwrap(),     // Orange non active
             border_active: Color::from_str("#FFFDEF").unwrap(), // Yellow Active border
@@ -246,6 +255,7 @@ impl Theme {
     pub fn github_light() -> Self {
         Self {
             variant: ThemeVariant::GithubLight,
+            text: Color::Black,
             background: Color::from_str("#FFFFFF").unwrap(), // Black background
             border: Color::from_str("#A04100").unwrap(),     // Orange non active
             border_active: Color::from_str("#735C0F").unwrap(), // Yellow Active border
@@ -261,6 +271,7 @@ impl Theme {
     pub fn monokai_pro_dark() -> Self {
         Self {
             variant: ThemeVariant::MonokaiProDark,
+            text: Color::White,
             background: Color::from_str("#221F22").unwrap(), // Background
             border: Color::from_str("#FC9867").unwrap(),     // Orange
             border_active: Color::from_str("#FFD866").unwrap(), // Yellow
@@ -276,6 +287,7 @@ impl Theme {
     pub fn monokai_pro_light() -> Self {
         Self {
             variant: ThemeVariant::MonokaiProLight,
+            text: Color::Black,
             background: Color::from_str("#FFFFFF").unwrap(), // Background
             border: Color::from_str("#FC9768").unwrap(),     // Orange
             border_active: Color::from_str("#FFD866").unwrap(), // Yellow
@@ -287,34 +299,4 @@ impl Theme {
             informative_text: Color::from_str("#AB9DF2").unwrap(), // Purple
         }
     }
-
-    // pub fn nord() -> Self {
-    //     Self {
-    //         variant: ThemeVariant::Nord,
-    //         background: Color::from_str("#2e3440").unwrap(),
-    //         border: Color::from_str("#88c0d0").unwrap(),
-    //         border_active: Color::from_str("#ebcb8b").unwrap(),
-    //         indication_ok: Color::from_str("#a3be8c").unwrap(),
-    //         indication_warning: Color::from_str("#bf616a").unwrap(),
-    //         brightness_bar: Color::from_str("#ebcb8b").unwrap(),
-    //         charge_bar: Color::from_str("#b48ead").unwrap(),
-    //         highlighted_text: Color::from_str("#81a1c1").unwrap(),
-    //         informative_text: Color::from_str("#8fbcbb").unwrap(),
-    //     }
-    // }
-
-    // pub fn gruvbox() -> Self {
-    //     Self {
-    //         variant: ThemeVariant::Gruvbox,
-    //         background: Color::from_str("#282828").unwrap(),
-    //         border: Color::from_str("#fe8019").unwrap(),
-    //         border_active: Color::from_str("#fabd2f").unwrap(),
-    //         indication_ok: Color::from_str("#b8bb26").unwrap(),
-    //         indication_warning: Color::from_str("#fb4934").unwrap(),
-    //         brightness_bar: Color::from_str("#fabd2f").unwrap(),
-    //         charge_bar: Color::from_str("#d3869b").unwrap(),
-    //         highlighted_text: Color::from_str("#fe8019").unwrap(),
-    //         informative_text: Color::from_str("#83a598").unwrap(),
-    //     }
-    // }
 }

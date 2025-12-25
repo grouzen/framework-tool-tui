@@ -1,6 +1,6 @@
 [package]
 name = "framework-tool-tui"
-version = "0.5.7"
+version = "0.6.0"
 edition = "2021"
 description = "TUI for controlling and monitoring Framework Computers hardware built in Rust"
 license = "MIT"

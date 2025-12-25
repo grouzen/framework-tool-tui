@@ -16,6 +16,8 @@ pub enum ThemeVariant {
     GithubDark,
     GithubLight,
     MonokaiProDark,
+    MonochromeDark,
+    MonochromeLight,
 }
 
 impl FromStr for ThemeVariant {
@@ -33,6 +35,8 @@ impl FromStr for ThemeVariant {
             "github_dark" => Ok(ThemeVariant::GithubDark),
             "github_light" => Ok(ThemeVariant::GithubLight),
             "monokai_pro_dark" => Ok(ThemeVariant::MonokaiProDark),
+            "monochrome_dark" => Ok(ThemeVariant::MonochromeDark),
+            "monochrome_light" => Ok(ThemeVariant::MonochromeLight),
             _ => Err(format!("Unknown theme: {}", s)),
         }
     }
@@ -51,10 +55,12 @@ impl ThemeVariant {
             ThemeVariant::GithubDark => "GitHub Dark",
             ThemeVariant::GithubLight => "GitHub Light",
             ThemeVariant::MonokaiProDark => "Monokai Pro Dark",
+            ThemeVariant::MonochromeDark => "Monochrome Dark",
+            ThemeVariant::MonochromeLight => "Monochrome Light",
         }
     }
 
-    pub const ALL: [ThemeVariant; 10] = [
+    pub const ALL: [ThemeVariant; 12] = [
         ThemeVariant::Framework,
         ThemeVariant::Alucard,
         ThemeVariant::Dracula,
@@ -65,6 +71,8 @@ impl ThemeVariant {
         ThemeVariant::GithubDark,
         ThemeVariant::GithubLight,
         ThemeVariant::MonokaiProDark,
+        ThemeVariant::MonochromeDark,
+        ThemeVariant::MonochromeLight,
     ];
 
     pub fn next(&self) -> Self {
@@ -116,6 +124,8 @@ impl Theme {
             ThemeVariant::GithubDark => Self::github_dark(),
             ThemeVariant::GithubLight => Self::github_light(),
             ThemeVariant::MonokaiProDark => Self::monokai_pro_dark(),
+            ThemeVariant::MonochromeDark => Self::monochrome_dark(),
+            ThemeVariant::MonochromeLight => Self::monochrome_light(),
         }
     }
 
@@ -276,6 +286,38 @@ impl Theme {
             charge_bar: Color::from_str("#ab9df2").unwrap(),
             highlighted_text: Color::from_str("#FC9867").unwrap(),
             informative_text: Color::from_str("#ab9df2").unwrap(),
+        }
+    }
+
+    pub fn monochrome_dark() -> Self {
+        Self {
+            variant: ThemeVariant::MonokaiProDark,
+            text: Color::White,
+            background: Color::from_str("#000000").unwrap(),
+            border: Color::from_str("#FFFFFF").unwrap(),
+            border_active: Color::from_str("#FFFFFF").unwrap(),
+            indication_ok: Color::from_str("#FFFFFF").unwrap(),
+            indication_warning: Color::from_str("#FFFFFF").unwrap(),
+            brightness_bar: Color::from_str("#FFFFFF").unwrap(),
+            charge_bar: Color::from_str("#FFFFFF").unwrap(),
+            highlighted_text: Color::from_str("#FFFFFF").unwrap(),
+            informative_text: Color::from_str("#FFFFFF").unwrap(),
+        }
+    }
+
+    pub fn monochrome_light() -> Self {
+        Self {
+            variant: ThemeVariant::MonokaiProDark,
+            text: Color::Black,
+            background: Color::from_str("#FFFFFF").unwrap(),
+            border: Color::from_str("#000000").unwrap(),
+            border_active: Color::from_str("#000000").unwrap(),
+            indication_ok: Color::from_str("#000000").unwrap(),
+            indication_warning: Color::from_str("#000000").unwrap(),
+            brightness_bar: Color::from_str("#000000").unwrap(),
+            charge_bar: Color::from_str("#000000").unwrap(),
+            highlighted_text: Color::from_str("#000000").unwrap(),
+            informative_text: Color::from_str("#000000").unwrap(),
         }
     }
 

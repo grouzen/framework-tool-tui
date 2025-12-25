@@ -8,10 +8,27 @@ use ratatui::{
 use crate::{
     app::APP_TITLE,
     framework::info::FrameworkInfo,
-    tui::{component::Component, theme::Theme},
+    tui::{
+        component::Component,
+        theme::{Theme, ThemeVariant},
+    },
 };
 
-pub struct TitleComponent;
+pub struct TitleComponent {
+    theme_name: String,
+}
+
+impl TitleComponent {
+    pub fn new(theme: ThemeVariant) -> Self {
+        Self {
+            theme_name: theme.name().to_string(),
+        }
+    }
+
+    pub fn set_theme_name(&mut self, name: String) {
+        self.theme_name = name;
+    }
+}
 
 impl Component for TitleComponent {
     fn render(&mut self, frame: &mut Frame, area: Rect, theme: &Theme, info: &FrameworkInfo) {
@@ -21,13 +38,14 @@ impl Component for TitleComponent {
             .border_style(Style::default().fg(theme.border))
             .border_type(BorderType::Rounded);
 
-        let [smbios_version_area, charging_status_area, charge_percentage_area, max_charge_limit_area, fan_speed_area] =
+        let [smbios_version_area, charging_status_area, charge_percentage_area, max_charge_limit_area, fan_speed_area, theme_area] =
             Layout::horizontal([
                 Constraint::Max(10),
                 Constraint::Max(15),
                 Constraint::Max(6),
                 Constraint::Max(13),
                 Constraint::Min(18),
+                Constraint::Max(30),
             ])
             .spacing(1)
             .areas(block.inner(area));
@@ -85,6 +103,16 @@ impl Component for TitleComponent {
                 Paragraph::new(format!("[ {} ]", text))
                     .style(Style::default().fg(theme.informative_text)),
                 fan_speed_area,
+            );
+        }
+
+        // Theme name
+        if !self.theme_name.is_empty() {
+            frame.render_widget(
+                Paragraph::new(format!("【←b {} n→】", self.theme_name))
+                    .style(Style::default().fg(theme.highlighted_text))
+                    .alignment(Alignment::Right),
+                theme_area,
             );
         }
 

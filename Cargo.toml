@@ -17,6 +17,9 @@ color-eyre = "0.6.5"
 tokio = { version = "1.47.1", features = ["full"] }
 futures = "0.3.31"
 tui-popup = "0.6.0"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+dirs = "5.0"
 
 [target.'cfg(unix)'.dependencies]
 uzers = { version = "0.12.1", default-features = false }

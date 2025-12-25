@@ -1,13 +1,29 @@
 use std::str::FromStr;
 
 use ratatui::style::Color;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
 pub enum ThemeVariant {
     Framework,
     Dracula,
     Nord,
     Gruvbox,
+}
+
+impl FromStr for ThemeVariant {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "framework" => Ok(ThemeVariant::Framework),
+            "dracula" => Ok(ThemeVariant::Dracula),
+            "nord" => Ok(ThemeVariant::Nord),
+            "gruvbox" => Ok(ThemeVariant::Gruvbox),
+            _ => Err(format!("Unknown theme: {}", s)),
+        }
+    }
 }
 
 impl ThemeVariant {

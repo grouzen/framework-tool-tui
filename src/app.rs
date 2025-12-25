@@ -4,6 +4,7 @@ use ratatui::{prelude::Backend, Terminal};
 use std::{sync::Arc, time::Duration};
 
 use crate::{
+    config::Config,
     event::{Event, EventLoop},
     framework::{fingerprint::Fingerprint, info::FrameworkInfo, EcErrorWrapper, Framework},
     tui::Tui,
@@ -34,7 +35,10 @@ impl App {
         // Pre-fetch framework info
         let mut framework = Framework::new(ec, fingerprint.clone());
         let info = framework.get_info();
-        let tui = Tui::new(fingerprint, &info);
+
+        // Load config (or create default on first startup)
+        let config = Config::load()?;
+        let tui = Tui::new(fingerprint, &info, config)?;
 
         Ok(Self {
             framework,

@@ -234,10 +234,13 @@ mod tests {
         assert_eq!(tui.config.theme, ThemeVariant::GithubLight);
 
         tui.next_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProDark);
+        assert_eq!(tui.config.theme, ThemeVariant::MonochromeDark);
 
         tui.next_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProLight);
+        assert_eq!(tui.config.theme, ThemeVariant::MonochromeLight);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiPro);
 
         // Should wrap back to Framework
         tui.next_theme();
@@ -256,10 +259,13 @@ mod tests {
 
         // Cycle to previous theme (should wrap to Gruvbox)
         tui.previous_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProLight);
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiPro);
 
-        tui.previous_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProDark);
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::MonochromeLight);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::MonochromeDark);
 
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::GithubLight);
@@ -337,7 +343,7 @@ mod tests {
         let result = tui.handle_input(event);
 
         assert!(matches!(result, Ok(None)));
-        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProLight);
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiPro);
     }
 
     #[test]

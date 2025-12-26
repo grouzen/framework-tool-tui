@@ -26,17 +26,37 @@ jobs:
             os: ubuntu-latest
             use-cross: false
             target: x86_64-unknown-linux-gnu
+          - build: freebsd
+            os: ubuntu-latest
+            use-cross: false
+            target: x86_64-unknown-freebsd
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install libudev-dev
-        run: sudo apt-get update && sudo apt-get install -y libudev-dev
-
       - name: Get the release version from the tag
         shell: bash
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Install libudev-dev (Linux)
+        if: matrix.build == 'linux'
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
+      - name: Build FreeBSD
+        if: matrix.build == 'freebsd'
+        uses: vmactions/freebsd-vm@v1
+        with:
+          release: "15.0"
+          arch: x86_64
+          usesh: true
+          mem: 8192
+          sync: rsync
+          prepare: |
+            pkg install -y rust hidapi pkgconf
+          run: |
+            cargo build --release --locked
+            cp target/release/framework-tool-tui framework-tool-tui-freebsd
 
       - name: Install cross
         if: matrix.use-cross
@@ -45,11 +65,12 @@ jobs:
          tool: cross
 
       - uses: moonrepo/setup-rust@v1
+        if: matrix.build != 'freebsd'
         with:
           targets: ${{ matrix.target }}
 
       - name: Build (without cross)
-        if: "!matrix.use-cross"
+        if: matrix.build != 'freebsd' && !matrix.use-cross
         run: cargo build --release --locked --target ${{ matrix.target }}
 
       - name: Build (cross)
@@ -65,6 +86,8 @@ jobs:
           mkdir "$dirname"
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
             mv "target/${{ matrix.target }}/release/$binary_name.exe" "$dirname"
+          elif [ "${{ matrix.build }}" = "freebsd" ]; then
+            mv "$binary_name-freebsd" "$dirname/$binary_name"
           else
             mv "target/${{ matrix.target }}/release/$binary_name" "$dirname"
           fi

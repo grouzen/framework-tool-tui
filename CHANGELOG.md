@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support changing tick interval
+
 ## [0.6.0](https://github.com/grouzen/framework-tool-tui/releases/tag/v0.6.0) - 2025-12-25
 
 ### Added

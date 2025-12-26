@@ -28,9 +28,13 @@ jobs:
             pkg install -y rust hidapi pkgconf
           run: |
             cargo build --release --locked
+            mkdir -p /tmp/artifacts
+            cp target/release/framework-tool-tui /tmp/artifacts/
+          copyback: |
+            cp /tmp/artifacts/framework-tool-tui .
 
       - name: Upload FreeBSD binary as artifact
         uses: actions/upload-artifact@v4
         with:
           name: framework-tool-tui-freebsd
-          path: target/release/framework-tool-tui
+          path: framework-tool-tui

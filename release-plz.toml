@@ -9,5 +9,3 @@ git_release_enable = true
 # Release tag format
 git_tag_name = "v{{ version }}"
 git_release_name = "v{{ version }}"
-
-bump_minor_pre_major = true

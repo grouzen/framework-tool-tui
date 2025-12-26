@@ -16,17 +16,23 @@ use crate::{
 
 pub struct TitleComponent {
     theme_name: String,
+    tick_interval_ms: u64,
 }
 
 impl TitleComponent {
     pub fn new(theme: ThemeVariant) -> Self {
         Self {
             theme_name: theme.name().to_string(),
+            tick_interval_ms: 1000,
         }
     }
 
     pub fn set_theme_name(&mut self, name: String) {
         self.theme_name = name;
+    }
+
+    pub fn set_tick_interval(&mut self, interval_ms: u64) {
+        self.tick_interval_ms = interval_ms;
     }
 }
 
@@ -38,7 +44,7 @@ impl Component for TitleComponent {
             .border_style(Style::default().fg(theme.border))
             .border_type(BorderType::Rounded);
 
-        let [smbios_version_area, charging_status_area, charge_percentage_area, max_charge_limit_area, fan_speed_area, theme_area] =
+        let [smbios_version_area, charging_status_area, charge_percentage_area, max_charge_limit_area, fan_speed_area, theme_area, tick_interval_area] =
             Layout::horizontal([
                 Constraint::Max(10),
                 Constraint::Max(15),
@@ -46,6 +52,7 @@ impl Component for TitleComponent {
                 Constraint::Max(13),
                 Constraint::Min(18),
                 Constraint::Max(30),
+                Constraint::Max(12),
             ])
             .spacing(1)
             .areas(block.inner(area));
@@ -115,6 +122,14 @@ impl Component for TitleComponent {
                 theme_area,
             );
         }
+
+        // Tick interval
+        frame.render_widget(
+            Paragraph::new(format!("- {:4}ms +", self.tick_interval_ms))
+                .style(Style::default().fg(theme.highlighted_text))
+                .alignment(Alignment::Right),
+            tick_interval_area,
+        );
 
         frame.render_widget(block, area);
     }

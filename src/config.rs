@@ -8,12 +8,19 @@ use crate::tui::theme::ThemeVariant;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
     pub theme: ThemeVariant,
+    #[serde(default = "default_tick_interval")]
+    pub tick_interval_ms: u64,
+}
+
+fn default_tick_interval() -> u64 {
+    1000
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
             theme: ThemeVariant::Framework,
+            tick_interval_ms: 1000,
         }
     }
 }
@@ -54,6 +61,12 @@ impl Config {
     /// Update the theme and save
     pub fn set_theme(&mut self, theme: ThemeVariant) -> color_eyre::Result<()> {
         self.theme = theme;
+        self.save()
+    }
+
+    /// Update the tick interval and save
+    pub fn set_tick_interval(&mut self, tick_interval_ms: u64) -> color_eyre::Result<()> {
+        self.tick_interval_ms = tick_interval_ms;
         self.save()
     }
 

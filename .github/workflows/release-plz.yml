@@ -8,10 +8,16 @@ on:
   push:
     branches:
       - main
+
+  pull_request:
+    types:
+      - closed
+
   workflow_dispatch:
 
 jobs:
   release-plz-release:
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     name: Release-plz release
     runs-on: ubuntu-latest
     steps:
@@ -34,11 +40,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release-plz-pr:
+    if: github.event_name == 'push'
     name: Release-plz PR
     runs-on: ubuntu-latest
-    concurrency:
-      group: release-plz-${{ github.ref }}
-      cancel-in-progress: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

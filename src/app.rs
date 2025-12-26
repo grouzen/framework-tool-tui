@@ -37,7 +37,7 @@ impl App {
         let info = framework.get_info();
 
         // Load config (or create default on first startup)
-        let config = Config::load()?;
+        let config = Config::load_or_create()?;
         let tui = Tui::new(fingerprint, &info, config)?;
 
         Ok(Self {

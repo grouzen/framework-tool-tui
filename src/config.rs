@@ -31,18 +31,15 @@ impl Config {
     }
 
     /// Load configuration from file, or create default if it doesn't exist
-    pub fn load() -> color_eyre::Result<Self> {
-        let config_path = Self::config_path()?;
-
-        if config_path.exists() {
-            let content = fs::read_to_string(&config_path)?;
-            let config: Config = toml::from_str(&content)?;
-            Ok(config)
-        } else {
-            // First startup - create default config
-            let config = Config::default();
-            config.save()?;
-            Ok(config)
+    pub fn load_or_create() -> color_eyre::Result<Self> {
+        match Self::load() {
+            Ok(config) => Ok(config),
+            Err(_) => {
+                // First startup or invalid config - create default
+                let config = Config::default();
+                config.save()?;
+                Ok(config)
+            }
         }
     }
 
@@ -58,5 +55,13 @@ impl Config {
     pub fn set_theme(&mut self, theme: ThemeVariant) -> color_eyre::Result<()> {
         self.theme = theme;
         self.save()
+    }
+
+    fn load() -> color_eyre::Result<Self> {
+        let config_path = Self::config_path()?;
+        let content = fs::read_to_string(&config_path)?;
+        let config = toml::from_str::<Config>(&content)?;
+
+        Ok(config)
     }
 }

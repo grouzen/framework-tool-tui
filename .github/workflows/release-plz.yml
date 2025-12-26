@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - fix-release-plz-integration-3
 
   pull_request:
     types:

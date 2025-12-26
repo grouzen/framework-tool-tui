@@ -17,7 +17,7 @@ pub enum ThemeVariant {
     GithubLight,
     MonochromeDark,
     MonochromeLight,
-    MonokaiProDark,
+    MonokaiPro,
 }
 
 impl FromStr for ThemeVariant {
@@ -36,7 +36,7 @@ impl FromStr for ThemeVariant {
             "github_light" => Ok(ThemeVariant::GithubLight),
             "monochrome_dark" => Ok(ThemeVariant::MonochromeDark),
             "monochrome_light" => Ok(ThemeVariant::MonochromeLight),
-            "monokai_pro_dark" => Ok(ThemeVariant::MonokaiProDark),
+            "monokai_pro" => Ok(ThemeVariant::MonokaiPro),
             _ => Err(format!("Unknown theme: {}", s)),
         }
     }
@@ -56,7 +56,7 @@ impl ThemeVariant {
             ThemeVariant::GithubLight => "GitHub Light",
             ThemeVariant::MonochromeDark => "Monochrome Dark",
             ThemeVariant::MonochromeLight => "Monochrome Light",
-            ThemeVariant::MonokaiProDark => "Monokai Pro Dark",
+            ThemeVariant::MonokaiPro => "Monokai Pro",
         }
     }
 
@@ -72,7 +72,7 @@ impl ThemeVariant {
         ThemeVariant::GithubLight,
         ThemeVariant::MonochromeDark,
         ThemeVariant::MonochromeLight,
-        ThemeVariant::MonokaiProDark,
+        ThemeVariant::MonokaiPro,
     ];
 
     pub fn next(&self) -> Self {
@@ -125,7 +125,7 @@ impl Theme {
             ThemeVariant::GithubLight => Self::github_light(),
             ThemeVariant::MonochromeDark => Self::monochrome_dark(),
             ThemeVariant::MonochromeLight => Self::monochrome_light(),
-            ThemeVariant::MonokaiProDark => Self::monokai_pro_dark(),
+            ThemeVariant::MonokaiPro => Self::monokai_pro(),
         }
     }
 
@@ -275,7 +275,7 @@ impl Theme {
 
     pub fn monochrome_dark() -> Self {
         Self {
-            variant: ThemeVariant::MonokaiProDark,
+            variant: ThemeVariant::MonochromeDark,
             text: Color::White,
             background: Color::from_str("#000000").unwrap(),
             border: Color::from_str("#FFFFFF").unwrap(),
@@ -291,7 +291,7 @@ impl Theme {
 
     pub fn monochrome_light() -> Self {
         Self {
-            variant: ThemeVariant::MonokaiProDark,
+            variant: ThemeVariant::MonochromeLight,
             text: Color::Black,
             background: Color::from_str("#FFFFFF").unwrap(),
             border: Color::from_str("#000000").unwrap(),
@@ -305,9 +305,9 @@ impl Theme {
         }
     }
 
-    pub fn monokai_pro_dark() -> Self {
+    pub fn monokai_pro() -> Self {
         Self {
-            variant: ThemeVariant::MonokaiProDark,
+            variant: ThemeVariant::MonokaiPro,
             text: Color::White,
             background: Color::from_str("#221F22").unwrap(),
             border: Color::from_str("#FC9867").unwrap(),

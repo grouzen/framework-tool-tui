@@ -91,6 +91,37 @@ See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for full technical breakdown.
 
 Pull requests welcome! For bug reports or feature requests, see Issues.
 
+### Commit Message Convention
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) for automated versioning and changelog generation. Please format your commit messages as:
+
+```
+<type>: <description>
+
+[optional body]
+```
+
+**Common types:**
+- `feat:` - New feature (triggers minor version bump)
+- `fix:` - Bug fix (triggers patch version bump)
+- `docs:` - Documentation changes
+- `refactor:` - Code refactoring
+- `test:` - Adding or updating tests
+- `chore:` - Maintenance tasks
+- `ci:` - CI/CD changes
+
+**Examples:**
+```
+feat: add thermal monitoring support
+fix: correct battery percentage calculation
+docs: update installation instructions
+```
+
+For breaking changes, add `!` after the type or include `BREAKING CHANGE:` in the footer:
+```
+feat!: redesign UI layout
+```
+
 ### Technical stack
 
 - [ratatui](https://ratatui.rs)

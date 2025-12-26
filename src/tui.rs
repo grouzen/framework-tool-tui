@@ -257,14 +257,14 @@ mod tests {
         // Default theme should be Framework
         assert_eq!(tui.config.theme, ThemeVariant::Framework);
 
-        // Cycle to previous theme (should wrap to Gruvbox)
+        // Cycle to previous theme (should wrap to MonokaiPro)
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::MonokaiPro);
 
-        tui.next_theme();
+        tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::MonochromeLight);
 
-        tui.next_theme();
+        tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::MonochromeDark);
 
         tui.previous_theme();

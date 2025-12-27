@@ -50,11 +50,11 @@ impl ChargePanelComponent {
                 let gauge_style = if charge_percentage < 15 {
                     Style::default()
                         .fg(theme.indication_warning)
-                        .bg(theme.charge_level_background)
+                        .bg(theme.bar_background)
                 } else {
                     Style::default()
                         .fg(theme.indication_ok)
-                        .bg(theme.charge_level_background)
+                        .bg(theme.bar_background)
                 };
                 let label = format!("{} {}%", info.charging_status, charge_percentage);
 
@@ -106,7 +106,7 @@ impl ChargePanelComponent {
                     Style::new().gray().on_black(),
                     Style::default()
                         .fg(theme.charge_bar)
-                        .bg(theme.charge_bar_background),
+                        .bg(theme.bar_background),
                     MAX_CHARGE_LIMIT_CONTROL_INDEX,
                 );
                 let label = if self

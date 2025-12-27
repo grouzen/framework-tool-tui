@@ -75,7 +75,9 @@ impl BrightnessPanelComponent {
             Some(fp_brightness_percentage) => {
                 let style = self.panel.adjustable_control_style(
                     Style::new().gray().on_black(),
-                    Style::default().fg(theme.brightness_bar),
+                    Style::default()
+                        .fg(theme.brightness_bar)
+                        .bg(theme.bar_background),
                     FINGERPRINT_BRIGHTNESS_CONTROL_INDEX,
                 );
                 let level_name = led_brightness_percentage_to_level_name(fp_brightness_percentage);
@@ -136,7 +138,9 @@ impl BrightnessPanelComponent {
             Some(kb_brightness_percentage) => {
                 let style = self.panel.adjustable_control_style(
                     Style::new().gray().on_black(),
-                    Style::default().fg(theme.brightness_bar),
+                    Style::default()
+                        .fg(theme.brightness_bar)
+                        .bg(theme.bar_background),
                     KEYBOARD_BRIGHTNESS_CONTROL_INDEX,
                 );
                 let label = if self.panel.is_panel_selected_and_control_focused_by_index(

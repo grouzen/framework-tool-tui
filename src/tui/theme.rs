@@ -109,8 +109,7 @@ pub struct Theme {
     pub indication_warning: Color,
     pub brightness_bar: Color,
     pub charge_bar: Color,
-    pub charge_bar_background: Color,
-    pub charge_level_background: Color,
+    pub bar_background: Color,
     pub highlighted_text: Color,
     pub informative_text: Color,
 }
@@ -152,8 +151,7 @@ impl Theme {
             indication_warning: Color::from_str("#E53935").unwrap(),
             brightness_bar: Color::from_str("#fdbe54").unwrap(),
             charge_bar: Color::from_str("#9481D8").unwrap(),
-            charge_bar_background: Color::from_str("#363636").unwrap(),
-            charge_level_background: Color::from_str("#363636").unwrap(),
+            bar_background: Color::from_str("#363636").unwrap(),
             highlighted_text: Color::from_str("#FF7447").unwrap(),
             informative_text: Color::from_str("#9481D8").unwrap(),
         }
@@ -170,8 +168,7 @@ impl Theme {
             indication_warning: Color::from_str("#CB3A2A").unwrap(),
             brightness_bar: Color::from_str("#846E15").unwrap(),
             charge_bar: Color::from_str("#644AC9").unwrap(),
-            charge_bar_background: Color::from_str("#CFCFDE").unwrap(),
-            charge_level_background: Color::from_str("#CFCFDE").unwrap(),
+            bar_background: Color::from_str("#CFCFDE").unwrap(),
             highlighted_text: Color::from_str("#A34D14").unwrap(),
             informative_text: Color::from_str("#644AC9").unwrap(),
         }
@@ -188,8 +185,7 @@ impl Theme {
             indication_warning: Color::from_str("#FF5555").unwrap(),
             brightness_bar: Color::from_str("#F1FA8C").unwrap(),
             charge_bar: Color::from_str("#BD93F9").unwrap(),
-            charge_bar_background: Color::from_str("#44475A").unwrap(),
-            charge_level_background: Color::from_str("#44475A").unwrap(),
+            bar_background: Color::from_str("#44475A").unwrap(),
             highlighted_text: Color::from_str("#FF79C6").unwrap(),
             informative_text: Color::from_str("#8BE9FD").unwrap(),
         }
@@ -206,8 +202,7 @@ impl Theme {
             indication_warning: Color::from_str("#E78284").unwrap(),
             brightness_bar: Color::from_str("#E5C890").unwrap(),
             charge_bar: Color::from_str("#8CAAEE").unwrap(),
-            charge_bar_background: Color::from_str("#303446").unwrap(),
-            charge_level_background: Color::from_str("#303446").unwrap(),
+            bar_background: Color::from_str("#303446").unwrap(),
             highlighted_text: Color::from_str("#EF9F76").unwrap(),
             informative_text: Color::from_str("#CA9EE6").unwrap(),
         }
@@ -224,8 +219,7 @@ impl Theme {
             indication_warning: Color::from_str("#D20F39").unwrap(),
             brightness_bar: Color::from_str("#DF8E1D").unwrap(),
             charge_bar: Color::from_str("#1E66F5").unwrap(),
-            charge_bar_background: Color::from_str("#EFF1F5").unwrap(),
-            charge_level_background: Color::from_str("#EFF1F5").unwrap(),
+            bar_background: Color::from_str("#EFF1F5").unwrap(),
             highlighted_text: Color::from_str("#FE640B").unwrap(),
             informative_text: Color::from_str("#8839EF").unwrap(),
         }
@@ -242,8 +236,7 @@ impl Theme {
             indication_warning: Color::from_str("#ED8796").unwrap(),
             brightness_bar: Color::from_str("#EED49F").unwrap(),
             charge_bar: Color::from_str("#8AADF4").unwrap(),
-            charge_bar_background: Color::from_str("#24273A").unwrap(),
-            charge_level_background: Color::from_str("#24273A").unwrap(),
+            bar_background: Color::from_str("#24273A").unwrap(),
             highlighted_text: Color::from_str("#F5A97F").unwrap(),
             informative_text: Color::from_str("#C6A0F6").unwrap(),
         }
@@ -260,8 +253,7 @@ impl Theme {
             indication_warning: Color::from_str("#F38BA8").unwrap(),
             brightness_bar: Color::from_str("#F9E2AF").unwrap(),
             charge_bar: Color::from_str("#89B4FA").unwrap(),
-            charge_bar_background: Color::from_str("#1E1E2E").unwrap(),
-            charge_level_background: Color::from_str("#1E1E2E").unwrap(),
+            bar_background: Color::from_str("#1E1E2E").unwrap(),
             highlighted_text: Color::from_str("#FAB387").unwrap(),
             informative_text: Color::from_str("#CBA6F7").unwrap(),
         }
@@ -278,8 +270,7 @@ impl Theme {
             indication_warning: Color::from_str("#FF8E40").unwrap(),
             brightness_bar: Color::from_str("#D3FA37").unwrap(),
             charge_bar: Color::from_str("#1F6FEB").unwrap(),
-            charge_bar_background: Color::from_str("#262C36").unwrap(),
-            charge_level_background: Color::from_str("#262C36").unwrap(),
+            bar_background: Color::from_str("#262C36").unwrap(),
             highlighted_text: Color::from_str("#9EECFF").unwrap(),
             informative_text: Color::from_str("#FF80D2").unwrap(),
         }
@@ -296,8 +287,7 @@ impl Theme {
             indication_warning: Color::from_str("#703100").unwrap(),
             brightness_bar: Color::from_str("#DB9D00").unwrap(),
             charge_bar: Color::from_str("#0969DA").unwrap(),
-            charge_bar_background: Color::from_str("#F6F8FA").unwrap(),
-            charge_level_background: Color::from_str("#F6F8FA").unwrap(),
+            bar_background: Color::from_str("#F6F8FA").unwrap(),
             highlighted_text: Color::from_str("#212183").unwrap(),
             informative_text: Color::from_str("#8342FA").unwrap(),
         }
@@ -314,8 +304,7 @@ impl Theme {
             indication_warning: Color::from_str("#FE8019").unwrap(),
             brightness_bar: Color::from_str("#FABD2F").unwrap(),
             charge_bar: Color::from_str("#458588").unwrap(),
-            charge_bar_background: Color::from_str("#504945").unwrap(),
-            charge_level_background: Color::from_str("#504945").unwrap(),
+            bar_background: Color::from_str("#504945").unwrap(),
             highlighted_text: Color::from_str("#83A598").unwrap(),
             informative_text: Color::from_str("#D3869B").unwrap(),
         }
@@ -332,8 +321,7 @@ impl Theme {
             indication_warning: Color::from_str("#AF3A03").unwrap(),
             brightness_bar: Color::from_str("#B57614").unwrap(),
             charge_bar: Color::from_str("#458588").unwrap(),
-            charge_bar_background: Color::from_str("#D5C4A1").unwrap(),
-            charge_level_background: Color::from_str("#D5C4A1").unwrap(),
+            bar_background: Color::from_str("#D5C4A1").unwrap(),
             highlighted_text: Color::from_str("#076678").unwrap(),
             informative_text: Color::from_str("#8F3F71").unwrap(),
         }
@@ -350,8 +338,7 @@ impl Theme {
             indication_warning: Color::from_str("#FFFFFF").unwrap(),
             brightness_bar: Color::from_str("#FFFFFF").unwrap(),
             charge_bar: Color::from_str("#FFFFFF").unwrap(),
-            charge_bar_background: Color::from_str("#000000").unwrap(),
-            charge_level_background: Color::from_str("#000000").unwrap(),
+            bar_background: Color::from_str("#000000").unwrap(),
             highlighted_text: Color::from_str("#FFFFFF").unwrap(),
             informative_text: Color::from_str("#FFFFFF").unwrap(),
         }
@@ -368,8 +355,7 @@ impl Theme {
             indication_warning: Color::from_str("#000000").unwrap(),
             brightness_bar: Color::from_str("#000000").unwrap(),
             charge_bar: Color::from_str("#000000").unwrap(),
-            charge_bar_background: Color::from_str("#FFFFFF").unwrap(),
-            charge_level_background: Color::from_str("#FFFFFF").unwrap(),
+            bar_background: Color::from_str("#FFFFFF").unwrap(),
             highlighted_text: Color::from_str("#000000").unwrap(),
             informative_text: Color::from_str("#000000").unwrap(),
         }
@@ -386,8 +372,7 @@ impl Theme {
             indication_warning: Color::from_str("#FF6188").unwrap(),
             brightness_bar: Color::from_str("#FFD866").unwrap(),
             charge_bar: Color::from_str("#AB9DF2").unwrap(),
-            charge_bar_background: Color::from_str("#373138").unwrap(),
-            charge_level_background: Color::from_str("#373138").unwrap(),
+            bar_background: Color::from_str("#373138").unwrap(),
             highlighted_text: Color::from_str("#FC9867").unwrap(),
             informative_text: Color::from_str("#AB9DF2").unwrap(),
         }

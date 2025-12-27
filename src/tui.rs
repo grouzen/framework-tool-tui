@@ -28,12 +28,13 @@ use crate::{
 };
 
 pub struct Tui {
-    title: TitleComponent,
+    pub title: TitleComponent,
     main: MainComponent,
     footer: FooterComponent,
     theme: Theme,
     error_message: Option<String>,
     config: Config,
+    tick_interval_ms: u64,
 }
 
 impl Tui {
@@ -50,6 +51,7 @@ impl Tui {
             footer: FooterComponent,
             theme,
             error_message: None,
+            tick_interval_ms: config.tick_interval_ms,
             config,
         })
     }
@@ -74,6 +76,26 @@ impl Tui {
         self.config.theme.name()
     }
 
+    fn increase_tick_interval(&mut self) -> Option<AppEvent> {
+        let new_interval = (self.tick_interval_ms + 100).min(5000);
+        if new_interval != self.tick_interval_ms {
+            self.tick_interval_ms = new_interval;
+            Some(AppEvent::SetTickInterval(new_interval))
+        } else {
+            None
+        }
+    }
+
+    fn decrease_tick_interval(&mut self) -> Option<AppEvent> {
+        let new_interval = self.tick_interval_ms.saturating_sub(100).max(100);
+        if new_interval != self.tick_interval_ms {
+            self.tick_interval_ms = new_interval;
+            Some(AppEvent::SetTickInterval(new_interval))
+        } else {
+            None
+        }
+    }
+
     pub fn handle_input(&mut self, event: Event) -> color_eyre::Result<Option<AppEvent>> {
         let top_level_event = match &event {
             Event::Key(key) => match key.code {
@@ -86,6 +108,8 @@ impl Tui {
                     self.next_theme();
                     None
                 }
+                KeyCode::Char('+') | KeyCode::Char('=') => self.increase_tick_interval(),
+                KeyCode::Char('-') => self.decrease_tick_interval(),
                 KeyCode::Esc if self.error_message.is_some() => {
                     self.error_message = None;
                     None

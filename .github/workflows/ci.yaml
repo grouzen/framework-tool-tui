@@ -55,13 +55,32 @@ jobs:
             os: ubuntu-latest
             use-cross: false
             target: x86_64-unknown-linux-gnu
+          - build: freebsd
+            os: ubuntu-latest
+            use-cross: false
+            target: x86_64-unknown-freebsd
           
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install libudev-dev
+      - name: Install libudev-dev (Linux)
+        if: matrix.build == 'linux'
         run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
+      - name: Build FreeBSD
+        if: matrix.build == 'freebsd'
+        uses: vmactions/freebsd-vm@v1
+        with:
+          release: "15.0"
+          arch: x86_64
+          usesh: true
+          mem: 8192
+          sync: rsync
+          prepare: |
+            pkg install -y rust hidapi pkgconf
+          run: |
+            cargo build --release --locked
         
       - name: Install cross
         if: matrix.use-cross
@@ -70,11 +89,12 @@ jobs:
          tool: cross
 
       - uses: moonrepo/setup-rust@v1
+        if: matrix.build != 'freebsd'
         with:
           targets: ${{ matrix.target }}
 
       - name: Build (without cross)
-        if: "!matrix.use-cross"
+        if: matrix.build != 'freebsd' && !matrix.use-cross
         run: cargo build --release --locked --target ${{ matrix.target }}
 
       - name: Build (cross)

@@ -19,6 +19,7 @@ pub struct App {
     info: FrameworkInfo,
     running: bool,
     tui: Tui,
+    config: Config,
 }
 
 pub enum AppEvent {
@@ -26,6 +27,7 @@ pub enum AppEvent {
     SetMaxChargeLimit(u8),
     SetFingerprintBrightness(u8),
     SetKeyboardBrightness(u8),
+    SetTickInterval(u64),
 }
 
 impl App {
@@ -37,21 +39,25 @@ impl App {
         let info = framework.get_info();
 
         // Load config (or create default on first startup)
-        let config = Config::load()?;
-        let tui = Tui::new(fingerprint, &info, config)?;
+        let config = Config::load_or_create()?;
+        let tui = Tui::new(fingerprint, &info, config.clone())?;
 
         Ok(Self {
             framework,
             info,
             running: true,
             tui,
+            config,
         })
     }
 
     pub async fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
         let mut event_loop = EventLoop::new();
 
-        event_loop.run(Duration::from_millis(1000));
+        event_loop.run(Duration::from_millis(self.config.tick_interval_ms));
+        self.tui
+            .title
+            .set_tick_interval(self.config.tick_interval_ms);
 
         while self.running {
             self.tui.render(terminal, &self.info)?;
@@ -62,7 +68,7 @@ impl App {
                 }
                 Event::Input(event) => {
                     if let Some(app_event) = self.tui.handle_input(event)? {
-                        self.handle_event(app_event)?;
+                        self.handle_event(app_event, &event_loop)?;
                     }
                 }
             }
@@ -71,7 +77,7 @@ impl App {
         Ok(())
     }
 
-    fn handle_event(&mut self, event: AppEvent) -> color_eyre::Result<()> {
+    fn handle_event(&mut self, event: AppEvent, event_loop: &EventLoop) -> color_eyre::Result<()> {
         match event {
             AppEvent::Quit => self.quit(),
             AppEvent::SetMaxChargeLimit(value) => {
@@ -102,6 +108,11 @@ impl App {
             AppEvent::SetKeyboardBrightness(percentage) => {
                 self.framework.set_kb_brightness(percentage);
                 self.info.kb_brightness_percentage = Some(percentage);
+            }
+            AppEvent::SetTickInterval(interval_ms) => {
+                self.config.set_tick_interval(interval_ms)?;
+                event_loop.set_tick_interval(Duration::from_millis(interval_ms));
+                self.tui.title.set_tick_interval(interval_ms);
             }
         }
 

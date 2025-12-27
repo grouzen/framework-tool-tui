@@ -8,12 +8,19 @@ use crate::tui::theme::ThemeVariant;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
     pub theme: ThemeVariant,
+    #[serde(default = "default_tick_interval")]
+    pub tick_interval_ms: u64,
+}
+
+fn default_tick_interval() -> u64 {
+    1000
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
             theme: ThemeVariant::Framework,
+            tick_interval_ms: 1000,
         }
     }
 }
@@ -31,18 +38,15 @@ impl Config {
     }
 
     /// Load configuration from file, or create default if it doesn't exist
-    pub fn load() -> color_eyre::Result<Self> {
-        let config_path = Self::config_path()?;
-
-        if config_path.exists() {
-            let content = fs::read_to_string(&config_path)?;
-            let config: Config = toml::from_str(&content)?;
-            Ok(config)
-        } else {
-            // First startup - create default config
-            let config = Config::default();
-            config.save()?;
-            Ok(config)
+    pub fn load_or_create() -> color_eyre::Result<Self> {
+        match Self::load() {
+            Ok(config) => Ok(config),
+            Err(_) => {
+                // First startup or invalid config - create default
+                let config = Config::default();
+                config.save()?;
+                Ok(config)
+            }
         }
     }
 
@@ -58,5 +62,19 @@ impl Config {
     pub fn set_theme(&mut self, theme: ThemeVariant) -> color_eyre::Result<()> {
         self.theme = theme;
         self.save()
+    }
+
+    /// Update the tick interval and save
+    pub fn set_tick_interval(&mut self, tick_interval_ms: u64) -> color_eyre::Result<()> {
+        self.tick_interval_ms = tick_interval_ms;
+        self.save()
+    }
+
+    fn load() -> color_eyre::Result<Self> {
+        let config_path = Self::config_path()?;
+        let content = fs::read_to_string(&config_path)?;
+        let config = toml::from_str::<Config>(&content)?;
+
+        Ok(config)
     }
 }

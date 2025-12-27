@@ -152,7 +152,7 @@ impl Theme {
     pub fn alucard() -> Self {
         Self {
             variant: ThemeVariant::Alucard,
-            text: Color::Black,
+            text: Color::from_str("#1F1F1F").unwrap(),
             background: Color::from_str("#FFFBEB").unwrap(),
             border: Color::from_str("#A34D14").unwrap(),
             border_active: Color::from_str("#846E15").unwrap(),
@@ -170,7 +170,7 @@ impl Theme {
     pub fn dracula() -> Self {
         Self {
             variant: ThemeVariant::Dracula,
-            text: Color::White,
+            text: Color::from_str("#F8F8F2").unwrap(),
             background: Color::from_str("#282A36").unwrap(),
             border: Color::from_str("#BD93F9").unwrap(),
             border_active: Color::from_str("#FFB86C").unwrap(),
@@ -278,7 +278,7 @@ impl Theme {
     pub fn github_light() -> Self {
         Self {
             variant: ThemeVariant::GithubLight,
-            text: Color::Black,
+            text: Color::from_str("#000000").unwrap(),
             background: Color::from_str("#FFFFFF").unwrap(),
             border: Color::from_str("#703100").unwrap(),
             border_active: Color::from_str("#DB9D00").unwrap(),
@@ -296,7 +296,7 @@ impl Theme {
     pub fn monochrome_dark() -> Self {
         Self {
             variant: ThemeVariant::MonochromeDark,
-            text: Color::White,
+            text: Color::from_str("#FFFFFF").unwrap(),
             background: Color::from_str("#000000").unwrap(),
             border: Color::from_str("#FFFFFF").unwrap(),
             border_active: Color::from_str("#FFFFFF").unwrap(),
@@ -314,7 +314,7 @@ impl Theme {
     pub fn monochrome_light() -> Self {
         Self {
             variant: ThemeVariant::MonochromeLight,
-            text: Color::Black,
+            text: Color::from_str("#000000").unwrap(),
             background: Color::from_str("#FFFFFF").unwrap(),
             border: Color::from_str("#000000").unwrap(),
             border_active: Color::from_str("#000000").unwrap(),

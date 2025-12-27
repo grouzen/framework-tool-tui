@@ -15,6 +15,8 @@ pub enum ThemeVariant {
     CatppuccinMocha,
     GithubDark,
     GithubLight,
+    GruvboxDark,
+    GruvboxLight,
     MonochromeDark,
     MonochromeLight,
     MonokaiPro,
@@ -34,6 +36,8 @@ impl FromStr for ThemeVariant {
             "catppuccin_mocha" => Ok(ThemeVariant::CatppuccinMocha),
             "github_dark" => Ok(ThemeVariant::GithubDark),
             "github_light" => Ok(ThemeVariant::GithubLight),
+            "gruvbox_dark" => Ok(ThemeVariant::GruvboxDark),
+            "gruvbox_light" => Ok(ThemeVariant::GruvboxLight),
             "monochrome_dark" => Ok(ThemeVariant::MonochromeDark),
             "monochrome_light" => Ok(ThemeVariant::MonochromeLight),
             "monokai_pro" => Ok(ThemeVariant::MonokaiPro),
@@ -54,13 +58,15 @@ impl ThemeVariant {
             ThemeVariant::CatppuccinMocha => "Catppuccin Mocha",
             ThemeVariant::GithubDark => "GitHub Dark",
             ThemeVariant::GithubLight => "GitHub Light",
+            ThemeVariant::GruvboxDark => "Gruvbox Dark",
+            ThemeVariant::GruvboxLight => "Gruvbox Light",
             ThemeVariant::MonochromeDark => "Monochrome Dark",
             ThemeVariant::MonochromeLight => "Monochrome Light",
             ThemeVariant::MonokaiPro => "Monokai Pro",
         }
     }
 
-    pub const ALL: [ThemeVariant; 12] = [
+    pub const ALL: [ThemeVariant; 14] = [
         ThemeVariant::Framework,
         ThemeVariant::Alucard,
         ThemeVariant::Dracula,
@@ -70,6 +76,8 @@ impl ThemeVariant {
         ThemeVariant::CatppuccinMocha,
         ThemeVariant::GithubDark,
         ThemeVariant::GithubLight,
+        ThemeVariant::GruvboxDark,
+        ThemeVariant::GruvboxLight,
         ThemeVariant::MonochromeDark,
         ThemeVariant::MonochromeLight,
         ThemeVariant::MonokaiPro,
@@ -125,6 +133,8 @@ impl Theme {
             ThemeVariant::CatppuccinMocha => Self::catppuccin_mocha(),
             ThemeVariant::GithubDark => Self::github_dark(),
             ThemeVariant::GithubLight => Self::github_light(),
+            ThemeVariant::GruvboxDark => Self::gruvbox_dark(),
+            ThemeVariant::GruvboxLight => Self::gruvbox_light(),
             ThemeVariant::MonochromeDark => Self::monochrome_dark(),
             ThemeVariant::MonochromeLight => Self::monochrome_light(),
             ThemeVariant::MonokaiPro => Self::monokai_pro(),
@@ -290,6 +300,42 @@ impl Theme {
             charge_level_background: Color::from_str("#F6F8FA").unwrap(),
             highlighted_text: Color::from_str("#212183").unwrap(),
             informative_text: Color::from_str("#8342FA").unwrap(),
+        }
+    }
+
+    pub fn gruvbox_dark() -> Self {
+        Self {
+            variant: ThemeVariant::GruvboxDark,
+            text: Color::from_str("#EBDBB2").unwrap(),
+            background: Color::from_str("#282828").unwrap(),
+            border: Color::from_str("#FE8019").unwrap(),
+            border_active: Color::from_str("#FABd2F").unwrap(),
+            indication_ok: Color::from_str("#B8BB26").unwrap(),
+            indication_warning: Color::from_str("#FE8019").unwrap(),
+            brightness_bar: Color::from_str("#FABD2F").unwrap(),
+            charge_bar: Color::from_str("#458588").unwrap(),
+            charge_bar_background: Color::from_str("#504945").unwrap(),
+            charge_level_background: Color::from_str("#504945").unwrap(),
+            highlighted_text: Color::from_str("#83A598").unwrap(),
+            informative_text: Color::from_str("#D3869B").unwrap(),
+        }
+    }
+
+    pub fn gruvbox_light() -> Self {
+        Self {
+            variant: ThemeVariant::GruvboxLight,
+            text: Color::from_str("#3C3836").unwrap(),
+            background: Color::from_str("#FFFFFF").unwrap(),
+            border: Color::from_str("#AF3A03").unwrap(),
+            border_active: Color::from_str("#B57614").unwrap(),
+            indication_ok: Color::from_str("#79740E").unwrap(),
+            indication_warning: Color::from_str("#AF3A03").unwrap(),
+            brightness_bar: Color::from_str("#B57614").unwrap(),
+            charge_bar: Color::from_str("#458588").unwrap(),
+            charge_bar_background: Color::from_str("#D5C4A1").unwrap(),
+            charge_level_background: Color::from_str("#D5C4A1").unwrap(),
+            highlighted_text: Color::from_str("#076678").unwrap(),
+            informative_text: Color::from_str("#8F3F71").unwrap(),
         }
     }
 

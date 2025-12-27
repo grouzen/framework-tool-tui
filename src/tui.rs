@@ -234,6 +234,12 @@ mod tests {
         assert_eq!(tui.config.theme, ThemeVariant::GithubLight);
 
         tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GruvboxDark);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GruvboxLight);
+
+        tui.next_theme();
         assert_eq!(tui.config.theme, ThemeVariant::MonochromeDark);
 
         tui.next_theme();
@@ -272,6 +278,12 @@ mod tests {
 
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::GithubDark);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GruvboxLight);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GruvboxDark);
 
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::CatppuccinMocha);

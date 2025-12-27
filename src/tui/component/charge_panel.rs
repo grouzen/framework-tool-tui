@@ -103,7 +103,7 @@ impl ChargePanelComponent {
         let gauge = match max_charge_limit {
             Some(max_charge_limit) => {
                 let style = self.0.adjustable_control_style(
-                    Style::new().gray().on_black(),
+                    Style::default().fg(theme.text).bg(theme.background),
                     Style::default()
                         .fg(theme.charge_bar)
                         .bg(theme.bar_background),

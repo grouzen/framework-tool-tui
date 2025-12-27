@@ -74,7 +74,7 @@ impl BrightnessPanelComponent {
         let gauge = match fp_brightness_percentage {
             Some(fp_brightness_percentage) => {
                 let style = self.panel.adjustable_control_style(
-                    Style::new().gray().on_black(),
+                    Style::default().fg(theme.text).bg(theme.background),
                     Style::default()
                         .fg(theme.brightness_bar)
                         .bg(theme.bar_background),
@@ -137,7 +137,7 @@ impl BrightnessPanelComponent {
         let gauge = match kb_brightness_percentage {
             Some(kb_brightness_percentage) => {
                 let style = self.panel.adjustable_control_style(
-                    Style::new().gray().on_black(),
+                    Style::default().fg(theme.text).bg(theme.background),
                     Style::default()
                         .fg(theme.brightness_bar)
                         .bg(theme.bar_background),

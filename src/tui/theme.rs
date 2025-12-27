@@ -101,6 +101,8 @@ pub struct Theme {
     pub indication_warning: Color,
     pub brightness_bar: Color,
     pub charge_bar: Color,
+    pub charge_bar_background: Color,
+    pub charge_level_background: Color,
     pub highlighted_text: Color,
     pub informative_text: Color,
 }
@@ -132,14 +134,16 @@ impl Theme {
     pub fn framework() -> Self {
         Self {
             variant: ThemeVariant::Framework,
-            text: Color::White,
-            background: Color::Black,
-            border: Color::from_str("#FF7447").unwrap(),
+            text: Color::from_str("#F5F5F5").unwrap(),
+            background: Color::from_str("#1F1F1F").unwrap(),
+            border: Color::from_str("#F45A27").unwrap(),
             border_active: Color::from_str("#FFD600").unwrap(),
             indication_ok: Color::from_str("#00B16A").unwrap(),
             indication_warning: Color::from_str("#E53935").unwrap(),
-            brightness_bar: Color::from_str("#FFD600").unwrap(),
+            brightness_bar: Color::from_str("#fdbe54").unwrap(),
             charge_bar: Color::from_str("#9481D8").unwrap(),
+            charge_bar_background: Color::from_str("#363636").unwrap(),
+            charge_level_background: Color::from_str("#363636").unwrap(),
             highlighted_text: Color::from_str("#FF7447").unwrap(),
             informative_text: Color::from_str("#9481D8").unwrap(),
         }
@@ -156,6 +160,8 @@ impl Theme {
             indication_warning: Color::from_str("#CB3A2A").unwrap(),
             brightness_bar: Color::from_str("#846E15").unwrap(),
             charge_bar: Color::from_str("#644AC9").unwrap(),
+            charge_bar_background: Color::from_str("#CFCFDE").unwrap(),
+            charge_level_background: Color::from_str("#CFCFDE").unwrap(),
             highlighted_text: Color::from_str("#A34D14").unwrap(),
             informative_text: Color::from_str("#644AC9").unwrap(),
         }
@@ -172,6 +178,8 @@ impl Theme {
             indication_warning: Color::from_str("#FF5555").unwrap(),
             brightness_bar: Color::from_str("#F1FA8C").unwrap(),
             charge_bar: Color::from_str("#BD93F9").unwrap(),
+            charge_bar_background: Color::from_str("#44475A").unwrap(),
+            charge_level_background: Color::from_str("#44475A").unwrap(),
             highlighted_text: Color::from_str("#FF79C6").unwrap(),
             informative_text: Color::from_str("#8BE9FD").unwrap(),
         }
@@ -180,14 +188,16 @@ impl Theme {
     pub fn catppuccin_frappe() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinFrappe,
-            text: Color::White,
+            text: Color::from_str("#c6d0f5").unwrap(),
             background: Color::from_str("#232634").unwrap(),
             border: Color::from_str("#EF9F76").unwrap(),
             border_active: Color::from_str("#E5C890").unwrap(),
             indication_ok: Color::from_str("#A6D189").unwrap(),
             indication_warning: Color::from_str("#E78284").unwrap(),
             brightness_bar: Color::from_str("#E5C890").unwrap(),
-            charge_bar: Color::from_str("#CA9EE6").unwrap(),
+            charge_bar: Color::from_str("#8caaee").unwrap(),
+            charge_bar_background: Color::from_str("#303446").unwrap(),
+            charge_level_background: Color::from_str("#303446").unwrap(),
             highlighted_text: Color::from_str("#EF9F76").unwrap(),
             informative_text: Color::from_str("#CA9EE6").unwrap(),
         }
@@ -196,14 +206,16 @@ impl Theme {
     pub fn catppuccin_latte() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinLatte,
-            text: Color::Black,
-            background: Color::from_str("#DCE0E8").unwrap(),
+            text: Color::from_str("#4c4f69").unwrap(),
+            background: Color::from_str("#dce0e8").unwrap(),
             border: Color::from_str("#D20F39").unwrap(),
             border_active: Color::from_str("#DF8E1D").unwrap(),
             indication_ok: Color::from_str("#40A02B").unwrap(),
             indication_warning: Color::from_str("#D20F39").unwrap(),
             brightness_bar: Color::from_str("#DF8E1D").unwrap(),
-            charge_bar: Color::from_str("#8839EF").unwrap(),
+            charge_bar: Color::from_str("#1e66f5").unwrap(),
+            charge_bar_background: Color::from_str("#eff1f5").unwrap(),
+            charge_level_background: Color::from_str("#eff1f5").unwrap(),
             highlighted_text: Color::from_str("#FE640B").unwrap(),
             informative_text: Color::from_str("#8839EF").unwrap(),
         }
@@ -212,14 +224,16 @@ impl Theme {
     pub fn catppuccin_macchiato() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinMacchiato,
-            text: Color::White,
+            text: Color::from_str("#cad3f5").unwrap(),
             background: Color::from_str("#181926").unwrap(),
             border: Color::from_str("#f5a97f").unwrap(),
             border_active: Color::from_str("#eed49f").unwrap(),
             indication_ok: Color::from_str("#a6da95").unwrap(),
             indication_warning: Color::from_str("#ed8796").unwrap(),
             brightness_bar: Color::from_str("#eed49f").unwrap(),
-            charge_bar: Color::from_str("#c6a0f6").unwrap(),
+            charge_bar: Color::from_str("#8aadf4").unwrap(),
+            charge_bar_background: Color::from_str("#24273a").unwrap(),
+            charge_level_background: Color::from_str("#24273a").unwrap(),
             highlighted_text: Color::from_str("#f5a97f").unwrap(),
             informative_text: Color::from_str("#c6a0f6").unwrap(),
         }
@@ -228,14 +242,16 @@ impl Theme {
     pub fn catppuccin_mocha() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinMocha,
-            text: Color::White,
-            background: Color::from_str("#11111B").unwrap(),
+            text: Color::from_str("#cdd6f4").unwrap(),
+            background: Color::from_str("#11111b").unwrap(),
             border: Color::from_str("#FAB387").unwrap(),
             border_active: Color::from_str("#F9E2AF").unwrap(),
             indication_ok: Color::from_str("#A6E3A1").unwrap(),
             indication_warning: Color::from_str("#F38BA8").unwrap(),
             brightness_bar: Color::from_str("#F9E2AF").unwrap(),
-            charge_bar: Color::from_str("#CBA6F7").unwrap(),
+            charge_bar: Color::from_str("#89b4fa").unwrap(),
+            charge_bar_background: Color::from_str("#1e1e2e").unwrap(),
+            charge_level_background: Color::from_str("#1e1e2e").unwrap(),
             highlighted_text: Color::from_str("#FAB387").unwrap(),
             informative_text: Color::from_str("#CBA6F7").unwrap(),
         }
@@ -244,14 +260,16 @@ impl Theme {
     pub fn github_dark() -> Self {
         Self {
             variant: ThemeVariant::GithubDark,
-            text: Color::White,
-            background: Color::from_str("#1B1F23").unwrap(),
+            text: Color::from_str("#d1d7e0").unwrap(),
+            background: Color::from_str("#212830").unwrap(),
             border: Color::from_str("#FF8E40").unwrap(),
             border_active: Color::from_str("#D3FA37").unwrap(),
             indication_ok: Color::from_str("#5fED83").unwrap(),
             indication_warning: Color::from_str("#FF8E40").unwrap(),
             brightness_bar: Color::from_str("#D3FA37").unwrap(),
-            charge_bar: Color::from_str("#5FED83").unwrap(),
+            charge_bar: Color::from_str("#1f6feb").unwrap(),
+            charge_bar_background: Color::from_str("#262c36").unwrap(),
+            charge_level_background: Color::from_str("#262c36").unwrap(),
             highlighted_text: Color::from_str("#9EECFF").unwrap(),
             informative_text: Color::from_str("#FF80D2").unwrap(),
         }
@@ -264,10 +282,12 @@ impl Theme {
             background: Color::from_str("#FFFFFF").unwrap(),
             border: Color::from_str("#703100").unwrap(),
             border_active: Color::from_str("#DB9D00").unwrap(),
-            indication_ok: Color::from_str("#074D27").unwrap(),
+            indication_ok: Color::from_str("#1f883d").unwrap(),
             indication_warning: Color::from_str("#703100").unwrap(),
             brightness_bar: Color::from_str("#DB9D00").unwrap(),
-            charge_bar: Color::from_str("#074D27").unwrap(),
+            charge_bar: Color::from_str("#0969da").unwrap(),
+            charge_bar_background: Color::from_str("#f6f8fa").unwrap(),
+            charge_level_background: Color::from_str("#f6f8fa").unwrap(),
             highlighted_text: Color::from_str("#212183").unwrap(),
             informative_text: Color::from_str("#8342FA").unwrap(),
         }
@@ -284,6 +304,8 @@ impl Theme {
             indication_warning: Color::from_str("#FFFFFF").unwrap(),
             brightness_bar: Color::from_str("#FFFFFF").unwrap(),
             charge_bar: Color::from_str("#FFFFFF").unwrap(),
+            charge_bar_background: Color::from_str("#000000").unwrap(),
+            charge_level_background: Color::from_str("#000000").unwrap(),
             highlighted_text: Color::from_str("#FFFFFF").unwrap(),
             informative_text: Color::from_str("#FFFFFF").unwrap(),
         }
@@ -300,6 +322,8 @@ impl Theme {
             indication_warning: Color::from_str("#000000").unwrap(),
             brightness_bar: Color::from_str("#000000").unwrap(),
             charge_bar: Color::from_str("#000000").unwrap(),
+            charge_bar_background: Color::from_str("#FFFFFF").unwrap(),
+            charge_level_background: Color::from_str("#FFFFFF").unwrap(),
             highlighted_text: Color::from_str("#000000").unwrap(),
             informative_text: Color::from_str("#000000").unwrap(),
         }
@@ -308,14 +332,16 @@ impl Theme {
     pub fn monokai_pro() -> Self {
         Self {
             variant: ThemeVariant::MonokaiPro,
-            text: Color::White,
-            background: Color::from_str("#221F22").unwrap(),
+            text: Color::from_str("#ffffff").unwrap(),
+            background: Color::from_str("#161517").unwrap(),
             border: Color::from_str("#FC9867").unwrap(),
             border_active: Color::from_str("#FFD866").unwrap(),
             indication_ok: Color::from_str("#A9DC76").unwrap(),
             indication_warning: Color::from_str("#FF6188").unwrap(),
             brightness_bar: Color::from_str("#FFD866").unwrap(),
             charge_bar: Color::from_str("#AB9DF2").unwrap(),
+            charge_bar_background: Color::from_str("#373138").unwrap(),
+            charge_level_background: Color::from_str("#373138").unwrap(),
             highlighted_text: Color::from_str("#FC9867").unwrap(),
             informative_text: Color::from_str("#AB9DF2").unwrap(),
         }

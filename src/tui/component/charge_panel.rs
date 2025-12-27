@@ -79,7 +79,7 @@ impl ChargePanelComponent {
         info: &FrameworkInfo,
     ) {
         let style = self.0.adjustable_control_style(
-            Style::new().on_gray().black(),
+            Style::new().fg(theme.background).bg(theme.text),
             Style::default(),
             MAX_CHARGE_LIMIT_CONTROL_INDEX,
         );

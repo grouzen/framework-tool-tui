@@ -327,7 +327,7 @@ impl Theme {
             text: Color::from_str("#3C3836").unwrap(),
             background: Color::from_str("#FFFFFF").unwrap(),
             border: Color::from_str("#AF3A03").unwrap(),
-            border_active: Color::from_str("#B57614").unwrap(),
+            border_active: Color::from_str("#D79921").unwrap(),
             indication_ok: Color::from_str("#79740E").unwrap(),
             indication_warning: Color::from_str("#AF3A03").unwrap(),
             brightness_bar: Color::from_str("#B57614").unwrap(),

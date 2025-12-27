@@ -50,7 +50,7 @@ impl BrightnessPanelComponent {
         info: &FrameworkInfo,
     ) {
         let style = self.panel.adjustable_control_style(
-            Style::new().on_gray().black(),
+            Style::new().fg(theme.background).bg(theme.text),
             Style::default(),
             FINGERPRINT_BRIGHTNESS_CONTROL_INDEX,
         );
@@ -111,7 +111,7 @@ impl BrightnessPanelComponent {
         info: &FrameworkInfo,
     ) {
         let style = self.panel.adjustable_control_style(
-            Style::new().on_gray().black(),
+            Style::new().fg(theme.background).bg(theme.text),
             Style::default(),
             KEYBOARD_BRIGHTNESS_CONTROL_INDEX,
         );

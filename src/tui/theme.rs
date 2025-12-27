@@ -15,8 +15,11 @@ pub enum ThemeVariant {
     CatppuccinMocha,
     GithubDark,
     GithubLight,
-    MonokaiProDark,
-    MonokaiProLight,
+    GruvboxDark,
+    GruvboxLight,
+    MonochromeDark,
+    MonochromeLight,
+    MonokaiPro,
 }
 
 impl FromStr for ThemeVariant {
@@ -33,8 +36,11 @@ impl FromStr for ThemeVariant {
             "catppuccin_mocha" => Ok(ThemeVariant::CatppuccinMocha),
             "github_dark" => Ok(ThemeVariant::GithubDark),
             "github_light" => Ok(ThemeVariant::GithubLight),
-            "monokai_pro_dark" => Ok(ThemeVariant::MonokaiProDark),
-            "monokai_pro_light" => Ok(ThemeVariant::MonokaiProLight),
+            "gruvbox_dark" => Ok(ThemeVariant::GruvboxDark),
+            "gruvbox_light" => Ok(ThemeVariant::GruvboxLight),
+            "monochrome_dark" => Ok(ThemeVariant::MonochromeDark),
+            "monochrome_light" => Ok(ThemeVariant::MonochromeLight),
+            "monokai_pro" => Ok(ThemeVariant::MonokaiPro),
             _ => Err(format!("Unknown theme: {}", s)),
         }
     }
@@ -52,12 +58,15 @@ impl ThemeVariant {
             ThemeVariant::CatppuccinMocha => "Catppuccin Mocha",
             ThemeVariant::GithubDark => "GitHub Dark",
             ThemeVariant::GithubLight => "GitHub Light",
-            ThemeVariant::MonokaiProDark => "Monokai Pro Dark",
-            ThemeVariant::MonokaiProLight => "Monokai Pro Light",
+            ThemeVariant::GruvboxDark => "Gruvbox Dark",
+            ThemeVariant::GruvboxLight => "Gruvbox Light",
+            ThemeVariant::MonochromeDark => "Monochrome Dark",
+            ThemeVariant::MonochromeLight => "Monochrome Light",
+            ThemeVariant::MonokaiPro => "Monokai Pro",
         }
     }
 
-    pub const ALL: [ThemeVariant; 11] = [
+    pub const ALL: [ThemeVariant; 14] = [
         ThemeVariant::Framework,
         ThemeVariant::Alucard,
         ThemeVariant::Dracula,
@@ -67,8 +76,11 @@ impl ThemeVariant {
         ThemeVariant::CatppuccinMocha,
         ThemeVariant::GithubDark,
         ThemeVariant::GithubLight,
-        ThemeVariant::MonokaiProDark,
-        ThemeVariant::MonokaiProLight,
+        ThemeVariant::GruvboxDark,
+        ThemeVariant::GruvboxLight,
+        ThemeVariant::MonochromeDark,
+        ThemeVariant::MonochromeLight,
+        ThemeVariant::MonokaiPro,
     ];
 
     pub fn next(&self) -> Self {
@@ -97,6 +109,7 @@ pub struct Theme {
     pub indication_warning: Color,
     pub brightness_bar: Color,
     pub charge_bar: Color,
+    pub bar_background: Color,
     pub highlighted_text: Color,
     pub informative_text: Color,
 }
@@ -119,22 +132,26 @@ impl Theme {
             ThemeVariant::CatppuccinMocha => Self::catppuccin_mocha(),
             ThemeVariant::GithubDark => Self::github_dark(),
             ThemeVariant::GithubLight => Self::github_light(),
-            ThemeVariant::MonokaiProDark => Self::monokai_pro_dark(),
-            ThemeVariant::MonokaiProLight => Self::monokai_pro_light(),
+            ThemeVariant::GruvboxDark => Self::gruvbox_dark(),
+            ThemeVariant::GruvboxLight => Self::gruvbox_light(),
+            ThemeVariant::MonochromeDark => Self::monochrome_dark(),
+            ThemeVariant::MonochromeLight => Self::monochrome_light(),
+            ThemeVariant::MonokaiPro => Self::monokai_pro(),
         }
     }
 
     pub fn framework() -> Self {
         Self {
             variant: ThemeVariant::Framework,
-            text: Color::White,
-            background: Color::Black,
-            border: Color::from_str("#FF7447").unwrap(),
+            text: Color::from_str("#F5F5F5").unwrap(),
+            background: Color::from_str("#1F1F1F").unwrap(),
+            border: Color::from_str("#F45A27").unwrap(),
             border_active: Color::from_str("#FFD600").unwrap(),
             indication_ok: Color::from_str("#00B16A").unwrap(),
             indication_warning: Color::from_str("#E53935").unwrap(),
-            brightness_bar: Color::from_str("#FFD600").unwrap(),
+            brightness_bar: Color::from_str("#fdbe54").unwrap(),
             charge_bar: Color::from_str("#9481D8").unwrap(),
+            bar_background: Color::from_str("#363636").unwrap(),
             highlighted_text: Color::from_str("#FF7447").unwrap(),
             informative_text: Color::from_str("#9481D8").unwrap(),
         }
@@ -143,7 +160,7 @@ impl Theme {
     pub fn alucard() -> Self {
         Self {
             variant: ThemeVariant::Alucard,
-            text: Color::Black,
+            text: Color::from_str("#1F1F1F").unwrap(),
             background: Color::from_str("#FFFBEB").unwrap(),
             border: Color::from_str("#A34D14").unwrap(),
             border_active: Color::from_str("#846E15").unwrap(),
@@ -151,6 +168,7 @@ impl Theme {
             indication_warning: Color::from_str("#CB3A2A").unwrap(),
             brightness_bar: Color::from_str("#846E15").unwrap(),
             charge_bar: Color::from_str("#644AC9").unwrap(),
+            bar_background: Color::from_str("#CFCFDE").unwrap(),
             highlighted_text: Color::from_str("#A34D14").unwrap(),
             informative_text: Color::from_str("#644AC9").unwrap(),
         }
@@ -159,143 +177,203 @@ impl Theme {
     pub fn dracula() -> Self {
         Self {
             variant: ThemeVariant::Dracula,
-            text: Color::White,
-            background: Color::from_str("#282a36").unwrap(),
-            border: Color::from_str("#bd93f9").unwrap(),
-            border_active: Color::from_str("#ffb86c").unwrap(),
-            indication_ok: Color::from_str("#50fa7b").unwrap(),
-            indication_warning: Color::from_str("#ff5555").unwrap(),
-            brightness_bar: Color::from_str("#f1fa8c").unwrap(),
-            charge_bar: Color::from_str("#bd93f9").unwrap(),
-            highlighted_text: Color::from_str("#ff79c6").unwrap(),
-            informative_text: Color::from_str("#8be9fd").unwrap(),
+            text: Color::from_str("#F8F8F2").unwrap(),
+            background: Color::from_str("#282A36").unwrap(),
+            border: Color::from_str("#BD93F9").unwrap(),
+            border_active: Color::from_str("#FFB86C").unwrap(),
+            indication_ok: Color::from_str("#50FA7B").unwrap(),
+            indication_warning: Color::from_str("#FF5555").unwrap(),
+            brightness_bar: Color::from_str("#F1FA8C").unwrap(),
+            charge_bar: Color::from_str("#BD93F9").unwrap(),
+            bar_background: Color::from_str("#44475A").unwrap(),
+            highlighted_text: Color::from_str("#FF79C6").unwrap(),
+            informative_text: Color::from_str("#8BE9FD").unwrap(),
         }
     }
 
     pub fn catppuccin_frappe() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinFrappe,
-            text: Color::White,
+            text: Color::from_str("#C6D0F5").unwrap(),
             background: Color::from_str("#232634").unwrap(),
-            border: Color::from_str("#ef9f76").unwrap(),
-            border_active: Color::from_str("#e5c890").unwrap(),
-            indication_ok: Color::from_str("#a6d189").unwrap(),
-            indication_warning: Color::from_str("#e78284").unwrap(),
-            brightness_bar: Color::from_str("#e5c890").unwrap(),
-            charge_bar: Color::from_str("#ca9ee6").unwrap(),
-            highlighted_text: Color::from_str("#ef9f76").unwrap(),
-            informative_text: Color::from_str("#ca9ee6").unwrap(),
+            border: Color::from_str("#EF9F76").unwrap(),
+            border_active: Color::from_str("#E5C890").unwrap(),
+            indication_ok: Color::from_str("#A6D189").unwrap(),
+            indication_warning: Color::from_str("#E78284").unwrap(),
+            brightness_bar: Color::from_str("#E5C890").unwrap(),
+            charge_bar: Color::from_str("#8CAAEE").unwrap(),
+            bar_background: Color::from_str("#303446").unwrap(),
+            highlighted_text: Color::from_str("#EF9F76").unwrap(),
+            informative_text: Color::from_str("#CA9EE6").unwrap(),
         }
     }
 
     pub fn catppuccin_latte() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinLatte,
-            text: Color::Black,
-            background: Color::from_str("#dce0e8").unwrap(),
-            border: Color::from_str("#fe640b").unwrap(),
-            border_active: Color::from_str("#df8e1d").unwrap(),
-            indication_ok: Color::from_str("#40a02b").unwrap(),
-            indication_warning: Color::from_str("#d20f39").unwrap(),
-            brightness_bar: Color::from_str("#df8e1d").unwrap(),
-            charge_bar: Color::from_str("#8839ef").unwrap(),
-            highlighted_text: Color::from_str("#fe640b").unwrap(),
-            informative_text: Color::from_str("#8839ef").unwrap(),
+            text: Color::from_str("#4C4F69").unwrap(),
+            background: Color::from_str("#DCE0E8").unwrap(),
+            border: Color::from_str("#D20F39").unwrap(),
+            border_active: Color::from_str("#DF8E1D").unwrap(),
+            indication_ok: Color::from_str("#40A02B").unwrap(),
+            indication_warning: Color::from_str("#D20F39").unwrap(),
+            brightness_bar: Color::from_str("#DF8E1D").unwrap(),
+            charge_bar: Color::from_str("#1E66F5").unwrap(),
+            bar_background: Color::from_str("#EFF1F5").unwrap(),
+            highlighted_text: Color::from_str("#FE640B").unwrap(),
+            informative_text: Color::from_str("#8839EF").unwrap(),
         }
     }
 
     pub fn catppuccin_macchiato() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinMacchiato,
-            text: Color::White,
+            text: Color::from_str("#CAD3F5").unwrap(),
             background: Color::from_str("#181926").unwrap(),
-            border: Color::from_str("#f5a97f").unwrap(),
-            border_active: Color::from_str("#eed49f").unwrap(),
-            indication_ok: Color::from_str("#a6da95").unwrap(),
-            indication_warning: Color::from_str("#ed8796").unwrap(),
-            brightness_bar: Color::from_str("#eed49f").unwrap(),
-            charge_bar: Color::from_str("#c6a0f6").unwrap(),
-            highlighted_text: Color::from_str("#f5a97f").unwrap(),
-            informative_text: Color::from_str("#c6a0f6").unwrap(),
+            border: Color::from_str("#F5A97F").unwrap(),
+            border_active: Color::from_str("#EED49F").unwrap(),
+            indication_ok: Color::from_str("#A6DA95").unwrap(),
+            indication_warning: Color::from_str("#ED8796").unwrap(),
+            brightness_bar: Color::from_str("#EED49F").unwrap(),
+            charge_bar: Color::from_str("#8AADF4").unwrap(),
+            bar_background: Color::from_str("#24273A").unwrap(),
+            highlighted_text: Color::from_str("#F5A97F").unwrap(),
+            informative_text: Color::from_str("#C6A0F6").unwrap(),
         }
     }
 
     pub fn catppuccin_mocha() -> Self {
         Self {
             variant: ThemeVariant::CatppuccinMocha,
-            text: Color::White,
-            background: Color::from_str("#11111b").unwrap(),
-            border: Color::from_str("#fab387").unwrap(),
-            border_active: Color::from_str("#f9e2af").unwrap(),
-            indication_ok: Color::from_str("#a6e3a1").unwrap(),
-            indication_warning: Color::from_str("#f38ba8").unwrap(),
-            brightness_bar: Color::from_str("#f9e2af").unwrap(),
-            charge_bar: Color::from_str("#cba6f7").unwrap(),
-            highlighted_text: Color::from_str("#fab387").unwrap(),
-            informative_text: Color::from_str("#cba6f7").unwrap(),
+            text: Color::from_str("#CDD6F4").unwrap(),
+            background: Color::from_str("#11111B").unwrap(),
+            border: Color::from_str("#FAB387").unwrap(),
+            border_active: Color::from_str("#F9E2AF").unwrap(),
+            indication_ok: Color::from_str("#A6E3A1").unwrap(),
+            indication_warning: Color::from_str("#F38BA8").unwrap(),
+            brightness_bar: Color::from_str("#F9E2AF").unwrap(),
+            charge_bar: Color::from_str("#89B4FA").unwrap(),
+            bar_background: Color::from_str("#1E1E2E").unwrap(),
+            highlighted_text: Color::from_str("#FAB387").unwrap(),
+            informative_text: Color::from_str("#CBA6F7").unwrap(),
         }
     }
 
     pub fn github_dark() -> Self {
         Self {
             variant: ThemeVariant::GithubDark,
-            text: Color::White,
-            background: Color::from_str("#1B1F23").unwrap(),
-            border: Color::from_str("#FFF8F2").unwrap(),
-            border_active: Color::from_str("#FFFDEF").unwrap(),
-            indication_ok: Color::from_str("#F0FFF4").unwrap(),
-            indication_warning: Color::from_str("#FFEEF0").unwrap(),
-            brightness_bar: Color::from_str("#FFFDEF").unwrap(),
-            charge_bar: Color::from_str("#F5F0FF").unwrap(),
-            highlighted_text: Color::from_str("#FFF8F2").unwrap(),
-            informative_text: Color::from_str("#F5F0FF").unwrap(),
+            text: Color::from_str("#D1D7E0").unwrap(),
+            background: Color::from_str("#212830").unwrap(),
+            border: Color::from_str("#FF8E40").unwrap(),
+            border_active: Color::from_str("#D3FA37").unwrap(),
+            indication_ok: Color::from_str("#5fED83").unwrap(),
+            indication_warning: Color::from_str("#FF8E40").unwrap(),
+            brightness_bar: Color::from_str("#D3FA37").unwrap(),
+            charge_bar: Color::from_str("#1F6FEB").unwrap(),
+            bar_background: Color::from_str("#262C36").unwrap(),
+            highlighted_text: Color::from_str("#9EECFF").unwrap(),
+            informative_text: Color::from_str("#FF80D2").unwrap(),
         }
     }
 
     pub fn github_light() -> Self {
         Self {
             variant: ThemeVariant::GithubLight,
-            text: Color::Black,
+            text: Color::from_str("#000000").unwrap(),
             background: Color::from_str("#FFFFFF").unwrap(),
-            border: Color::from_str("#A04100").unwrap(),
-            border_active: Color::from_str("#735C0F").unwrap(),
-            indication_ok: Color::from_str("#144620").unwrap(),
-            indication_warning: Color::from_str("#86181D").unwrap(),
-            brightness_bar: Color::from_str("#735C0F").unwrap(),
-            charge_bar: Color::from_str("#29134E").unwrap(),
-            highlighted_text: Color::from_str("#A04100").unwrap(),
-            informative_text: Color::from_str("#29134E").unwrap(),
+            border: Color::from_str("#703100").unwrap(),
+            border_active: Color::from_str("#DB9D00").unwrap(),
+            indication_ok: Color::from_str("#1f883D").unwrap(),
+            indication_warning: Color::from_str("#703100").unwrap(),
+            brightness_bar: Color::from_str("#DB9D00").unwrap(),
+            charge_bar: Color::from_str("#0969DA").unwrap(),
+            bar_background: Color::from_str("#F6F8FA").unwrap(),
+            highlighted_text: Color::from_str("#212183").unwrap(),
+            informative_text: Color::from_str("#8342FA").unwrap(),
         }
     }
 
-    pub fn monokai_pro_dark() -> Self {
+    pub fn gruvbox_dark() -> Self {
         Self {
-            variant: ThemeVariant::MonokaiProDark,
-            text: Color::White,
-            background: Color::from_str("#221F22").unwrap(),
+            variant: ThemeVariant::GruvboxDark,
+            text: Color::from_str("#EBDBB2").unwrap(),
+            background: Color::from_str("#282828").unwrap(),
+            border: Color::from_str("#FE8019").unwrap(),
+            border_active: Color::from_str("#FABd2F").unwrap(),
+            indication_ok: Color::from_str("#B8BB26").unwrap(),
+            indication_warning: Color::from_str("#FE8019").unwrap(),
+            brightness_bar: Color::from_str("#FABD2F").unwrap(),
+            charge_bar: Color::from_str("#458588").unwrap(),
+            bar_background: Color::from_str("#504945").unwrap(),
+            highlighted_text: Color::from_str("#83A598").unwrap(),
+            informative_text: Color::from_str("#D3869B").unwrap(),
+        }
+    }
+
+    pub fn gruvbox_light() -> Self {
+        Self {
+            variant: ThemeVariant::GruvboxLight,
+            text: Color::from_str("#3C3836").unwrap(),
+            background: Color::from_str("#FFFFFF").unwrap(),
+            border: Color::from_str("#AF3A03").unwrap(),
+            border_active: Color::from_str("#D79921").unwrap(),
+            indication_ok: Color::from_str("#79740E").unwrap(),
+            indication_warning: Color::from_str("#AF3A03").unwrap(),
+            brightness_bar: Color::from_str("#B57614").unwrap(),
+            charge_bar: Color::from_str("#458588").unwrap(),
+            bar_background: Color::from_str("#D5C4A1").unwrap(),
+            highlighted_text: Color::from_str("#076678").unwrap(),
+            informative_text: Color::from_str("#8F3F71").unwrap(),
+        }
+    }
+
+    pub fn monochrome_dark() -> Self {
+        Self {
+            variant: ThemeVariant::MonochromeDark,
+            text: Color::from_str("#FFFFFF").unwrap(),
+            background: Color::from_str("#000000").unwrap(),
+            border: Color::from_str("#FFFFFF").unwrap(),
+            border_active: Color::from_str("#FFFFFF").unwrap(),
+            indication_ok: Color::from_str("#FFFFFF").unwrap(),
+            indication_warning: Color::from_str("#FFFFFF").unwrap(),
+            brightness_bar: Color::from_str("#FFFFFF").unwrap(),
+            charge_bar: Color::from_str("#FFFFFF").unwrap(),
+            bar_background: Color::from_str("#000000").unwrap(),
+            highlighted_text: Color::from_str("#FFFFFF").unwrap(),
+            informative_text: Color::from_str("#FFFFFF").unwrap(),
+        }
+    }
+
+    pub fn monochrome_light() -> Self {
+        Self {
+            variant: ThemeVariant::MonochromeLight,
+            text: Color::from_str("#000000").unwrap(),
+            background: Color::from_str("#FFFFFF").unwrap(),
+            border: Color::from_str("#000000").unwrap(),
+            border_active: Color::from_str("#000000").unwrap(),
+            indication_ok: Color::from_str("#000000").unwrap(),
+            indication_warning: Color::from_str("#000000").unwrap(),
+            brightness_bar: Color::from_str("#000000").unwrap(),
+            charge_bar: Color::from_str("#000000").unwrap(),
+            bar_background: Color::from_str("#FFFFFF").unwrap(),
+            highlighted_text: Color::from_str("#000000").unwrap(),
+            informative_text: Color::from_str("#000000").unwrap(),
+        }
+    }
+
+    pub fn monokai_pro() -> Self {
+        Self {
+            variant: ThemeVariant::MonokaiPro,
+            text: Color::from_str("#FFFFFF").unwrap(),
+            background: Color::from_str("#161517").unwrap(),
             border: Color::from_str("#FC9867").unwrap(),
             border_active: Color::from_str("#FFD866").unwrap(),
             indication_ok: Color::from_str("#A9DC76").unwrap(),
             indication_warning: Color::from_str("#FF6188").unwrap(),
             brightness_bar: Color::from_str("#FFD866").unwrap(),
-            charge_bar: Color::from_str("#ab9df2").unwrap(),
-            highlighted_text: Color::from_str("#FC9867").unwrap(),
-            informative_text: Color::from_str("#ab9df2").unwrap(),
-        }
-    }
-
-    pub fn monokai_pro_light() -> Self {
-        Self {
-            variant: ThemeVariant::MonokaiProLight,
-            text: Color::Black,
-            background: Color::from_str("#FFFFFF").unwrap(),
-            border: Color::from_str("#FC9768").unwrap(),
-            border_active: Color::from_str("#FFD866").unwrap(),
-            indication_ok: Color::from_str("#a9dc77").unwrap(),
-            indication_warning: Color::from_str("#ff6189").unwrap(),
-            brightness_bar: Color::from_str("#FFD866").unwrap(),
             charge_bar: Color::from_str("#AB9DF2").unwrap(),
-            highlighted_text: Color::from_str("#FC9768").unwrap(),
+            bar_background: Color::from_str("#373138").unwrap(),
+            highlighted_text: Color::from_str("#FC9867").unwrap(),
             informative_text: Color::from_str("#AB9DF2").unwrap(),
         }
     }

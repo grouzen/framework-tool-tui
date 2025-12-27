@@ -258,10 +258,19 @@ mod tests {
         assert_eq!(tui.config.theme, ThemeVariant::GithubLight);
 
         tui.next_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProDark);
+        assert_eq!(tui.config.theme, ThemeVariant::GruvboxDark);
 
         tui.next_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProLight);
+        assert_eq!(tui.config.theme, ThemeVariant::GruvboxLight);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::MonochromeDark);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::MonochromeLight);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiPro);
 
         // Should wrap back to Framework
         tui.next_theme();
@@ -278,12 +287,21 @@ mod tests {
         // Default theme should be Framework
         assert_eq!(tui.config.theme, ThemeVariant::Framework);
 
-        // Cycle to previous theme (should wrap to Gruvbox)
+        // Cycle to previous theme (should wrap to MonokaiPro)
         tui.previous_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProLight);
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiPro);
 
         tui.previous_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProDark);
+        assert_eq!(tui.config.theme, ThemeVariant::MonochromeLight);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::MonochromeDark);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GruvboxLight);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GruvboxDark);
 
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::GithubLight);
@@ -361,7 +379,7 @@ mod tests {
         let result = tui.handle_input(event);
 
         assert!(matches!(result, Ok(None)));
-        assert_eq!(tui.config.theme, ThemeVariant::MonokaiProLight);
+        assert_eq!(tui.config.theme, ThemeVariant::MonokaiPro);
     }
 
     #[test]

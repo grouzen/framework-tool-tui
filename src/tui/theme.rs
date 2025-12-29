@@ -152,7 +152,7 @@ impl Theme {
             brightness_bar: Color::from_str("#fdbe54").unwrap(),
             charge_bar: Color::from_str("#9481D8").unwrap(),
             bar_background: Color::from_str("#363636").unwrap(),
-            highlighted_text: Color::from_str("#FF7447").unwrap(),
+            highlighted_text: Color::from_str("#AEC2C9").unwrap(),
             informative_text: Color::from_str("#9481D8").unwrap(),
         }
     }
@@ -169,7 +169,7 @@ impl Theme {
             brightness_bar: Color::from_str("#846E15").unwrap(),
             charge_bar: Color::from_str("#644AC9").unwrap(),
             bar_background: Color::from_str("#CFCFDE").unwrap(),
-            highlighted_text: Color::from_str("#A34D14").unwrap(),
+            highlighted_text: Color::from_str("#036A96").unwrap(),
             informative_text: Color::from_str("#644AC9").unwrap(),
         }
     }
@@ -179,15 +179,15 @@ impl Theme {
             variant: ThemeVariant::Dracula,
             text: Color::from_str("#F8F8F2").unwrap(),
             background: Color::from_str("#282A36").unwrap(),
-            border: Color::from_str("#BD93F9").unwrap(),
+            border: Color::from_str("#FFB86C").unwrap(),
             border_active: Color::from_str("#FFB86C").unwrap(),
             indication_ok: Color::from_str("#50FA7B").unwrap(),
             indication_warning: Color::from_str("#FF5555").unwrap(),
             brightness_bar: Color::from_str("#F1FA8C").unwrap(),
-            charge_bar: Color::from_str("#BD93F9").unwrap(),
+            charge_bar: Color::from_str("#8BE9FD").unwrap(),
             bar_background: Color::from_str("#44475A").unwrap(),
-            highlighted_text: Color::from_str("#FF79C6").unwrap(),
-            informative_text: Color::from_str("#8BE9FD").unwrap(),
+            highlighted_text: Color::from_str("#8BE9FD").unwrap(),
+            informative_text: Color::from_str("#BD93F9").unwrap(),
         }
     }
 
@@ -203,7 +203,7 @@ impl Theme {
             brightness_bar: Color::from_str("#E5C890").unwrap(),
             charge_bar: Color::from_str("#8CAAEE").unwrap(),
             bar_background: Color::from_str("#303446").unwrap(),
-            highlighted_text: Color::from_str("#EF9F76").unwrap(),
+            highlighted_text: Color::from_str("#8caaee").unwrap(),
             informative_text: Color::from_str("#CA9EE6").unwrap(),
         }
     }
@@ -220,7 +220,7 @@ impl Theme {
             brightness_bar: Color::from_str("#DF8E1D").unwrap(),
             charge_bar: Color::from_str("#1E66F5").unwrap(),
             bar_background: Color::from_str("#EFF1F5").unwrap(),
-            highlighted_text: Color::from_str("#FE640B").unwrap(),
+            highlighted_text: Color::from_str("#1e66f5").unwrap(),
             informative_text: Color::from_str("#8839EF").unwrap(),
         }
     }
@@ -237,7 +237,7 @@ impl Theme {
             brightness_bar: Color::from_str("#EED49F").unwrap(),
             charge_bar: Color::from_str("#8AADF4").unwrap(),
             bar_background: Color::from_str("#24273A").unwrap(),
-            highlighted_text: Color::from_str("#F5A97F").unwrap(),
+            highlighted_text: Color::from_str("#8aadf4").unwrap(),
             informative_text: Color::from_str("#C6A0F6").unwrap(),
         }
     }
@@ -254,8 +254,8 @@ impl Theme {
             brightness_bar: Color::from_str("#F9E2AF").unwrap(),
             charge_bar: Color::from_str("#89B4FA").unwrap(),
             bar_background: Color::from_str("#1E1E2E").unwrap(),
-            highlighted_text: Color::from_str("#FAB387").unwrap(),
-            informative_text: Color::from_str("#CBA6F7").unwrap(),
+            highlighted_text: Color::from_str("#89b4fa").unwrap(),
+            informative_text: Color::from_str("#CBA6f7").unwrap(),
         }
     }
 
@@ -373,7 +373,7 @@ impl Theme {
             brightness_bar: Color::from_str("#FFD866").unwrap(),
             charge_bar: Color::from_str("#AB9DF2").unwrap(),
             bar_background: Color::from_str("#373138").unwrap(),
-            highlighted_text: Color::from_str("#FC9867").unwrap(),
+            highlighted_text: Color::from_str("#77DCE8").unwrap(),
             informative_text: Color::from_str("#AB9DF2").unwrap(),
         }
     }

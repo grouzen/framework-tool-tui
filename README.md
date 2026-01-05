@@ -4,7 +4,7 @@
 
 A snappy TUI dashboard for controlling and monitoring your Framework Laptop hardware — charging, privacy, lighting, USB PD ports, and more.
 
-![demo](/docs/screenshots/demo.gif)
+![demo](/docs/screenshots/demo-v0.7.2.gif)
 
 ## :octocat: Features
 

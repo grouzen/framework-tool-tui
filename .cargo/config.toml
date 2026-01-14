@@ -1,0 +1,11 @@
+# TODO: Remove this workaround when framework_lib updates to built v0.8+ with gix feature.
+# Issue: libgit2-sys v0.14.x has a bug on Windows where it doesn't link advapi32.lib.
+# The built crate (used by framework_lib) depends on git2 which pulls in the buggy libgit2-sys.
+# See: https://github.com/rust-lang/git2-rs/issues/1016
+#
+# Note: This config only works for local builds without --target flag.
+# CI uses RUSTFLAGS env var directly (see .github/workflows/ci.yaml).
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "link-arg=advapi32.lib"]
+[host.x86_64-pc-windows-msvc]
+rustflags = ["-C", "link-arg=advapi32.lib"]

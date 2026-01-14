@@ -1,5 +1,5 @@
 use ratatui::{
-    crossterm::event::{Event, KeyCode},
+    crossterm::event::{Event, KeyCode, KeyEventKind},
     layout::{Constraint, Layout, Rect},
     prelude::*,
     style::Styled,
@@ -311,27 +311,30 @@ impl Component for ChargePanelComponent {
 
         if self.0.is_selected() {
             if let Event::Key(key) = event {
-                match key.code {
-                    KeyCode::Down => self.0.cycle_controls_down(),
-                    KeyCode::Up => self.0.cycle_controls_up(),
-                    KeyCode::Enter => {
-                        match self.0.get_selected_and_focused_control() {
-                            Some(control)
-                                if self.0.selected_control == MAX_CHARGE_LIMIT_CONTROL_INDEX =>
-                            {
-                                if let Some(value) = control.get_percentage_value() {
-                                    app_event = Some(AppEvent::SetMaxChargeLimit(value));
+                if key.kind == KeyEventKind::Press {
+                    match key.code {
+                        KeyCode::Down => self.0.cycle_controls_down(),
+                        KeyCode::Up => self.0.cycle_controls_up(),
+                        KeyCode::Enter => {
+                            match self.0.get_selected_and_focused_control() {
+                                Some(control)
+                                    if self.0.selected_control
+                                        == MAX_CHARGE_LIMIT_CONTROL_INDEX =>
+                                {
+                                    if let Some(value) = control.get_percentage_value() {
+                                        app_event = Some(AppEvent::SetMaxChargeLimit(value));
+                                    }
                                 }
+                                _ => {}
                             }
-                            _ => {}
-                        }
 
-                        self.0.toggle_selected_control_focus()
+                            self.0.toggle_selected_control_focus()
+                        }
+                        KeyCode::Left => self.0.adjust_focused_percentage_control_by_delta(-5),
+                        KeyCode::Right => self.0.adjust_focused_percentage_control_by_delta(5),
+                        KeyCode::Esc => self.0.toggle_selected_control_focus(),
+                        _ => {}
                     }
-                    KeyCode::Left => self.0.adjust_focused_percentage_control_by_delta(-5),
-                    KeyCode::Right => self.0.adjust_focused_percentage_control_by_delta(5),
-                    KeyCode::Esc => self.0.toggle_selected_control_focus(),
-                    _ => {}
                 }
             }
         }

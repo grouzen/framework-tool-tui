@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use ratatui::{
-    crossterm::event::{Event, KeyCode},
+    crossterm::event::{Event, KeyCode, KeyEventKind},
     layout::{Constraint, Layout, Rect},
     Frame,
 };
@@ -96,8 +96,8 @@ impl MainComponent {
 
 impl Component for MainComponent {
     fn handle_input(&mut self, event: Event) -> Option<crate::app::AppEvent> {
-        if let Event::Key(key) = event {
-            if key.code == KeyCode::Tab {
+        if let Event::Key(key) = &event {
+            if key.kind == KeyEventKind::Press && key.code == KeyCode::Tab {
                 self.switch_panels();
             }
         }

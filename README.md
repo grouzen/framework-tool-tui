@@ -23,7 +23,7 @@ A snappy TUI dashboard for controlling and monitoring your Framework Laptop hard
 
 ### :dvd: Binaries
 
-The pre-compiled binaries for Linux are available for download on the [Releases](https://github.com/grouzen/framework-tool-tui/releases) page
+The pre-compiled binaries for Linux, Windows, and FreeBSD are available for download on the [Releases](https://github.com/grouzen/framework-tool-tui/releases) page
 
 ### :memo: From source
 
@@ -73,6 +73,10 @@ It is available in [FreeBSD ports](https://www.freshports.org/sysutils/framework
 ```sh
 pkg install framework-tool-tui
 ```
+
+### Windows
+
+For now, you can install it [From Source](#memo-from-source) or [From Pre-built Binaries](#dvd-binaries)
 
 ## :man: Run
 

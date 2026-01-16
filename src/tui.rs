@@ -5,7 +5,7 @@ pub mod theme;
 use std::sync::Arc;
 
 use ratatui::{
-    crossterm::event::{Event, KeyCode},
+    crossterm::event::{Event, KeyCode, KeyEventKind},
     layout::{Constraint, Flex, Layout},
     prelude::Backend,
     style::Style,
@@ -98,7 +98,7 @@ impl Tui {
 
     pub fn handle_input(&mut self, event: Event) -> color_eyre::Result<Option<AppEvent>> {
         let top_level_event = match &event {
-            Event::Key(key) => match key.code {
+            Event::Key(key) if key.kind == KeyEventKind::Press => match key.code {
                 KeyCode::Char('q') => Some(AppEvent::Quit),
                 KeyCode::Char('b') => {
                     self.previous_theme();

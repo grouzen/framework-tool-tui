@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use ratatui::{
-    crossterm::event::{Event, KeyCode},
+    crossterm::event::{Event, KeyCode, KeyEventKind},
     layout::{Constraint, Layout, Rect},
     prelude::*,
     style::Styled,
@@ -194,48 +194,50 @@ impl Component for BrightnessPanelComponent {
 
         if self.panel.is_selected() {
             if let Event::Key(key) = event {
-                match key.code {
-                    KeyCode::Down => self.panel.cycle_controls_down(),
-                    KeyCode::Up => self.panel.cycle_controls_up(),
-                    KeyCode::Enter => {
-                        match self.panel.get_selected_and_focused_control() {
-                            Some(control)
-                                if self.panel.selected_control
-                                    == FINGERPRINT_BRIGHTNESS_CONTROL_INDEX =>
-                            {
-                                if let Some(value) = control.get_percentage_value() {
-                                    app_event = Some(AppEvent::SetFingerprintBrightness(value));
+                if key.kind == KeyEventKind::Press {
+                    match key.code {
+                        KeyCode::Down => self.panel.cycle_controls_down(),
+                        KeyCode::Up => self.panel.cycle_controls_up(),
+                        KeyCode::Enter => {
+                            match self.panel.get_selected_and_focused_control() {
+                                Some(control)
+                                    if self.panel.selected_control
+                                        == FINGERPRINT_BRIGHTNESS_CONTROL_INDEX =>
+                                {
+                                    if let Some(value) = control.get_percentage_value() {
+                                        app_event = Some(AppEvent::SetFingerprintBrightness(value));
+                                    }
                                 }
-                            }
-                            Some(control)
-                                if self.panel.selected_control
-                                    == KEYBOARD_BRIGHTNESS_CONTROL_INDEX =>
-                            {
-                                if let Some(value) = control.get_percentage_value() {
-                                    app_event = Some(AppEvent::SetKeyboardBrightness(value));
+                                Some(control)
+                                    if self.panel.selected_control
+                                        == KEYBOARD_BRIGHTNESS_CONTROL_INDEX =>
+                                {
+                                    if let Some(value) = control.get_percentage_value() {
+                                        app_event = Some(AppEvent::SetKeyboardBrightness(value));
+                                    }
                                 }
+                                _ => {}
                             }
-                            _ => {}
-                        }
 
-                        self.panel.toggle_selected_control_focus()
-                    }
-                    KeyCode::Left => {
-                        if self.panel.selected_control == KEYBOARD_BRIGHTNESS_CONTROL_INDEX {
-                            self.panel.adjust_focused_percentage_control_by_delta(-5)
-                        } else {
-                            self.adjust_focused_fp_brightness_control(-5);
+                            self.panel.toggle_selected_control_focus()
                         }
-                    }
-                    KeyCode::Right => {
-                        if self.panel.selected_control == KEYBOARD_BRIGHTNESS_CONTROL_INDEX {
-                            self.panel.adjust_focused_percentage_control_by_delta(5)
-                        } else {
-                            self.adjust_focused_fp_brightness_control(5);
+                        KeyCode::Left => {
+                            if self.panel.selected_control == KEYBOARD_BRIGHTNESS_CONTROL_INDEX {
+                                self.panel.adjust_focused_percentage_control_by_delta(-5)
+                            } else {
+                                self.adjust_focused_fp_brightness_control(-5);
+                            }
                         }
+                        KeyCode::Right => {
+                            if self.panel.selected_control == KEYBOARD_BRIGHTNESS_CONTROL_INDEX {
+                                self.panel.adjust_focused_percentage_control_by_delta(5)
+                            } else {
+                                self.adjust_focused_fp_brightness_control(5);
+                            }
+                        }
+                        KeyCode::Esc => self.panel.toggle_selected_control_focus(),
+                        _ => {}
                     }
-                    KeyCode::Esc => self.panel.toggle_selected_control_focus(),
-                    _ => {}
                 }
             }
         }

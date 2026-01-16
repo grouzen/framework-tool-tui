@@ -27,6 +27,14 @@ jobs:
             os: ubuntu-latest
             use-cross: false
             target: x86_64-unknown-freebsd
+          - build: windows
+            os: windows-2025
+            use-cross: false
+            target: x86_64-pc-windows-msvc
+            # TODO: Remove rustflags workaround when framework_lib updates to built v0.8+ with gix feature.
+            # Issue: libgit2-sys v0.14.x doesn't link advapi32.lib on Windows.
+            # See: https://github.com/rust-lang/git2-rs/issues/1016
+            rustflags: "-C link-arg=advapi32.lib"
 
     steps:
       - name: Checkout
@@ -68,7 +76,9 @@ jobs:
 
       - name: Build (without cross)
         if: matrix.build != 'freebsd' && !matrix.use-cross
-        run: cargo build --release --locked --target ${{ matrix.target }}
+        run: cargo build --release --locked
+        env:
+          RUSTFLAGS: ${{ matrix.rustflags }}
 
       - name: Build (cross)
         if: matrix.use-cross
@@ -81,7 +91,7 @@ jobs:
 
           dirname="$binary_name-${{ env.VERSION }}-${{ matrix.target }}"
           mkdir "$dirname"
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          if [ "${{ matrix.build }}" = "windows" ]; then
             mv "target/${{ matrix.target }}/release/$binary_name.exe" "$dirname"
           elif [ "${{ matrix.build }}" = "freebsd" ]; then
             mv "$binary_name-freebsd" "$dirname/$binary_name"
@@ -89,7 +99,7 @@ jobs:
             mv "target/${{ matrix.target }}/release/$binary_name" "$dirname"
           fi
 
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          if [ "${{ matrix.build }}" = "windows" ]; then
             7z a "$dirname.zip" "$dirname"
             echo "ASSET=$dirname.zip" >> $GITHUB_ENV
           else

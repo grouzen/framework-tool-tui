@@ -597,7 +597,7 @@ dependencies = [
 
 [[package]]
 name = "framework-tool-tui"
-version = "0.7.2"
+version = "0.7.3"
 dependencies = [
  "anyhow",
  "color-eyre",

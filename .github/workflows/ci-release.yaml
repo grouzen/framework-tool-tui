@@ -76,7 +76,7 @@ jobs:
 
       - name: Build (without cross)
         if: matrix.build != 'freebsd' && !matrix.use-cross
-        run: cargo build --release --locked
+        run: cargo build --release --locked --target ${{ matrix.target }}
         env:
           RUSTFLAGS: ${{ matrix.rustflags }}
 

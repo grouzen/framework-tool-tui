@@ -76,7 +76,7 @@ jobs:
 
       - name: Build (without cross)
         if: matrix.build != 'freebsd' && !matrix.use-cross
-        run: cargo build --release --locked --target ${{ matrix.target }}
+        run: cargo build --release --locked
         env:
           RUSTFLAGS: ${{ matrix.rustflags }}
 
@@ -92,11 +92,11 @@ jobs:
           dirname="$binary_name-${{ env.VERSION }}-${{ matrix.target }}"
           mkdir "$dirname"
           if [ "${{ matrix.build }}" = "windows" ]; then
-            mv "target/${{ matrix.target }}/release/$binary_name.exe" "$dirname"
+            mv "target/release/$binary_name.exe" "$dirname"
           elif [ "${{ matrix.build }}" = "freebsd" ]; then
             mv "$binary_name-freebsd" "$dirname/$binary_name"
           else
-            mv "target/${{ matrix.target }}/release/$binary_name" "$dirname"
+            mv "target/release/$binary_name" "$dirname"
           fi
 
           if [ "${{ matrix.build }}" = "windows" ]; then

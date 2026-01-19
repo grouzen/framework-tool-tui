@@ -13,6 +13,7 @@ pub enum ThemeVariant {
     CatppuccinLatte,
     CatppuccinMacchiato,
     CatppuccinMocha,
+    GameBoy,
     GithubDark,
     GithubLight,
     GruvboxDark,
@@ -34,6 +35,7 @@ impl FromStr for ThemeVariant {
             "catppuccin_latte" => Ok(ThemeVariant::CatppuccinLatte),
             "catppuccin_macchiato" => Ok(ThemeVariant::CatppuccinMacchiato),
             "catppuccin_mocha" => Ok(ThemeVariant::CatppuccinMocha),
+            "gameboy" => Ok(ThemeVariant::GameBoy),
             "github_dark" => Ok(ThemeVariant::GithubDark),
             "github_light" => Ok(ThemeVariant::GithubLight),
             "gruvbox_dark" => Ok(ThemeVariant::GruvboxDark),
@@ -56,6 +58,7 @@ impl ThemeVariant {
             ThemeVariant::CatppuccinLatte => "Catppuccin Latte",
             ThemeVariant::CatppuccinMacchiato => "Catppuccin Macchiato",
             ThemeVariant::CatppuccinMocha => "Catppuccin Mocha",
+            ThemeVariant::GameBoy => "Game Boy",
             ThemeVariant::GithubDark => "GitHub Dark",
             ThemeVariant::GithubLight => "GitHub Light",
             ThemeVariant::GruvboxDark => "Gruvbox Dark",
@@ -66,7 +69,7 @@ impl ThemeVariant {
         }
     }
 
-    pub const ALL: [ThemeVariant; 14] = [
+    pub const ALL: [ThemeVariant; 15] = [
         ThemeVariant::Framework,
         ThemeVariant::Alucard,
         ThemeVariant::Dracula,
@@ -74,6 +77,7 @@ impl ThemeVariant {
         ThemeVariant::CatppuccinLatte,
         ThemeVariant::CatppuccinMacchiato,
         ThemeVariant::CatppuccinMocha,
+        ThemeVariant::GameBoy,
         ThemeVariant::GithubDark,
         ThemeVariant::GithubLight,
         ThemeVariant::GruvboxDark,
@@ -130,6 +134,7 @@ impl Theme {
             ThemeVariant::CatppuccinLatte => Self::catppuccin_latte(),
             ThemeVariant::CatppuccinMacchiato => Self::catppuccin_macchiato(),
             ThemeVariant::CatppuccinMocha => Self::catppuccin_mocha(),
+            ThemeVariant::GameBoy => Self::gameboy(),
             ThemeVariant::GithubDark => Self::github_dark(),
             ThemeVariant::GithubLight => Self::github_light(),
             ThemeVariant::GruvboxDark => Self::gruvbox_dark(),
@@ -256,6 +261,23 @@ impl Theme {
             bar_background: Color::from_str("#1E1E2E").unwrap(),
             highlighted_text: Color::from_str("#89b4fa").unwrap(),
             informative_text: Color::from_str("#CBA6f7").unwrap(),
+        }
+    }
+
+    pub fn gameboy() -> Self {
+        Self {
+            variant: ThemeVariant::GameBoy,
+            text: Color::from_str("#9A9E3F").unwrap(),
+            background: Color::from_str("#1B2A09").unwrap(),
+            border: Color::from_str("#496B22").unwrap(),
+            border_active: Color::from_str("#9A9E3F").unwrap(),
+            indication_ok: Color::from_str("#9A9E3F").unwrap(),
+            indication_warning: Color::from_str("#9A9E3F").unwrap(),
+            brightness_bar: Color::from_str("#9A9E3F").unwrap(),
+            charge_bar: Color::from_str("#9A9E3F").unwrap(),
+            bar_background: Color::from_str("#0E450B").unwrap(),
+            highlighted_text: Color::from_str("#9A9E3F").unwrap(),
+            informative_text: Color::from_str("#9A9E3F").unwrap(),
         }
     }
 

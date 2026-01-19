@@ -252,6 +252,9 @@ mod tests {
         assert_eq!(tui.config.theme, ThemeVariant::CatppuccinMocha);
 
         tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GameBoy);
+
+        tui.next_theme();
         assert_eq!(tui.config.theme, ThemeVariant::GithubDark);
 
         tui.next_theme();
@@ -308,6 +311,9 @@ mod tests {
 
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::GithubDark);
+
+        tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::GameBoy);
 
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::CatppuccinMocha);

@@ -237,9 +237,6 @@ mod tests {
         assert_eq!(tui.config.theme, ThemeVariant::Alucard);
 
         tui.next_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::Dracula);
-
-        tui.next_theme();
         assert_eq!(tui.config.theme, ThemeVariant::CatppuccinFrappe);
 
         tui.next_theme();
@@ -250,6 +247,9 @@ mod tests {
 
         tui.next_theme();
         assert_eq!(tui.config.theme, ThemeVariant::CatppuccinMocha);
+
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::Dracula);
 
         tui.next_theme();
         assert_eq!(tui.config.theme, ThemeVariant::GameBoy);
@@ -316,6 +316,9 @@ mod tests {
         assert_eq!(tui.config.theme, ThemeVariant::GameBoy);
 
         tui.previous_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::Dracula);
+
+        tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::CatppuccinMocha);
 
         tui.previous_theme();
@@ -326,9 +329,6 @@ mod tests {
 
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::CatppuccinFrappe);
-
-        tui.previous_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::Dracula);
 
         tui.previous_theme();
         assert_eq!(tui.config.theme, ThemeVariant::Alucard);
@@ -350,10 +350,10 @@ mod tests {
         assert_eq!(tui.current_theme_name(), "Alucard");
 
         tui.next_theme();
-        assert_eq!(tui.current_theme_name(), "Dracula");
+        assert_eq!(tui.current_theme_name(), "Catppuccin Frappe");
 
         tui.next_theme();
-        assert_eq!(tui.current_theme_name(), "Catppuccin Frappe");
+        assert_eq!(tui.current_theme_name(), "Catppuccin Latte");
     }
 
     #[test]
@@ -464,13 +464,13 @@ mod tests {
             let result = tui.handle_input(event);
             assert!(matches!(result, Ok(None)));
         }
-        // After 3 next: Framework -> Alucard -> Dracula -> CatppuccinFrappe
-        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinFrappe);
+        // After 3 next: Framework -> Alucard -> CatppuccinFrappe -> CatppuccinLatte
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinLatte);
 
         // Switch backward once with 'b'
         let event = Event::Key(KeyEvent::from(KeyCode::Char('b')));
         let result = tui.handle_input(event);
         assert!(matches!(result, Ok(None)));
-        assert_eq!(tui.config.theme, ThemeVariant::Dracula);
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinFrappe);
     }
 }

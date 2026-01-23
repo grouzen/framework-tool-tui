@@ -8,11 +8,12 @@ use serde::{Deserialize, Serialize};
 pub enum ThemeVariant {
     Framework,
     Alucard,
-    Dracula,
     CatppuccinFrappe,
     CatppuccinLatte,
     CatppuccinMacchiato,
     CatppuccinMocha,
+    Dracula,
+    GameBoy,
     GithubDark,
     GithubLight,
     GruvboxDark,
@@ -29,11 +30,12 @@ impl FromStr for ThemeVariant {
         match s.to_lowercase().as_str() {
             "framework" => Ok(ThemeVariant::Framework),
             "alucard" => Ok(ThemeVariant::Alucard),
-            "dracula" => Ok(ThemeVariant::Dracula),
             "catppuccin_frappe" => Ok(ThemeVariant::CatppuccinFrappe),
             "catppuccin_latte" => Ok(ThemeVariant::CatppuccinLatte),
             "catppuccin_macchiato" => Ok(ThemeVariant::CatppuccinMacchiato),
             "catppuccin_mocha" => Ok(ThemeVariant::CatppuccinMocha),
+            "dracula" => Ok(ThemeVariant::Dracula),
+            "gameboy" => Ok(ThemeVariant::GameBoy),
             "github_dark" => Ok(ThemeVariant::GithubDark),
             "github_light" => Ok(ThemeVariant::GithubLight),
             "gruvbox_dark" => Ok(ThemeVariant::GruvboxDark),
@@ -51,11 +53,12 @@ impl ThemeVariant {
         match self {
             ThemeVariant::Framework => "Framework",
             ThemeVariant::Alucard => "Alucard",
-            ThemeVariant::Dracula => "Dracula",
             ThemeVariant::CatppuccinFrappe => "Catppuccin Frappe",
             ThemeVariant::CatppuccinLatte => "Catppuccin Latte",
             ThemeVariant::CatppuccinMacchiato => "Catppuccin Macchiato",
             ThemeVariant::CatppuccinMocha => "Catppuccin Mocha",
+            ThemeVariant::Dracula => "Dracula",
+            ThemeVariant::GameBoy => "Game Boy",
             ThemeVariant::GithubDark => "GitHub Dark",
             ThemeVariant::GithubLight => "GitHub Light",
             ThemeVariant::GruvboxDark => "Gruvbox Dark",
@@ -66,14 +69,15 @@ impl ThemeVariant {
         }
     }
 
-    pub const ALL: [ThemeVariant; 14] = [
+    pub const ALL: [ThemeVariant; 15] = [
         ThemeVariant::Framework,
         ThemeVariant::Alucard,
-        ThemeVariant::Dracula,
         ThemeVariant::CatppuccinFrappe,
         ThemeVariant::CatppuccinLatte,
         ThemeVariant::CatppuccinMacchiato,
         ThemeVariant::CatppuccinMocha,
+        ThemeVariant::Dracula,
+        ThemeVariant::GameBoy,
         ThemeVariant::GithubDark,
         ThemeVariant::GithubLight,
         ThemeVariant::GruvboxDark,
@@ -125,11 +129,12 @@ impl Theme {
         match variant {
             ThemeVariant::Framework => Self::framework(),
             ThemeVariant::Alucard => Self::alucard(),
-            ThemeVariant::Dracula => Self::dracula(),
             ThemeVariant::CatppuccinFrappe => Self::catppuccin_frappe(),
             ThemeVariant::CatppuccinLatte => Self::catppuccin_latte(),
             ThemeVariant::CatppuccinMacchiato => Self::catppuccin_macchiato(),
             ThemeVariant::CatppuccinMocha => Self::catppuccin_mocha(),
+            ThemeVariant::Dracula => Self::dracula(),
+            ThemeVariant::GameBoy => Self::gameboy(),
             ThemeVariant::GithubDark => Self::github_dark(),
             ThemeVariant::GithubLight => Self::github_light(),
             ThemeVariant::GruvboxDark => Self::gruvbox_dark(),
@@ -171,23 +176,6 @@ impl Theme {
             bar_background: Color::from_str("#CFCFDE").unwrap(),
             highlighted_text: Color::from_str("#036A96").unwrap(),
             informative_text: Color::from_str("#644AC9").unwrap(),
-        }
-    }
-
-    pub fn dracula() -> Self {
-        Self {
-            variant: ThemeVariant::Dracula,
-            text: Color::from_str("#F8F8F2").unwrap(),
-            background: Color::from_str("#282A36").unwrap(),
-            border: Color::from_str("#FFB86C").unwrap(),
-            border_active: Color::from_str("#FFB86C").unwrap(),
-            indication_ok: Color::from_str("#50FA7B").unwrap(),
-            indication_warning: Color::from_str("#FF5555").unwrap(),
-            brightness_bar: Color::from_str("#F1FA8C").unwrap(),
-            charge_bar: Color::from_str("#8BE9FD").unwrap(),
-            bar_background: Color::from_str("#44475A").unwrap(),
-            highlighted_text: Color::from_str("#8BE9FD").unwrap(),
-            informative_text: Color::from_str("#BD93F9").unwrap(),
         }
     }
 
@@ -256,6 +244,40 @@ impl Theme {
             bar_background: Color::from_str("#1E1E2E").unwrap(),
             highlighted_text: Color::from_str("#89b4fa").unwrap(),
             informative_text: Color::from_str("#CBA6f7").unwrap(),
+        }
+    }
+
+    pub fn dracula() -> Self {
+        Self {
+            variant: ThemeVariant::Dracula,
+            text: Color::from_str("#F8F8F2").unwrap(),
+            background: Color::from_str("#282A36").unwrap(),
+            border: Color::from_str("#FFB86C").unwrap(),
+            border_active: Color::from_str("#FFB86C").unwrap(),
+            indication_ok: Color::from_str("#50FA7B").unwrap(),
+            indication_warning: Color::from_str("#FF5555").unwrap(),
+            brightness_bar: Color::from_str("#F1FA8C").unwrap(),
+            charge_bar: Color::from_str("#8BE9FD").unwrap(),
+            bar_background: Color::from_str("#44475A").unwrap(),
+            highlighted_text: Color::from_str("#8BE9FD").unwrap(),
+            informative_text: Color::from_str("#BD93F9").unwrap(),
+        }
+    }
+
+    pub fn gameboy() -> Self {
+        Self {
+            variant: ThemeVariant::GameBoy,
+            text: Color::from_str("#9A9E3F").unwrap(),
+            background: Color::from_str("#1B2A09").unwrap(),
+            border: Color::from_str("#496B22").unwrap(),
+            border_active: Color::from_str("#9A9E3F").unwrap(),
+            indication_ok: Color::from_str("#9A9E3F").unwrap(),
+            indication_warning: Color::from_str("#9A9E3F").unwrap(),
+            brightness_bar: Color::from_str("#9A9E3F").unwrap(),
+            charge_bar: Color::from_str("#9A9E3F").unwrap(),
+            bar_background: Color::from_str("#0E450B").unwrap(),
+            highlighted_text: Color::from_str("#9A9E3F").unwrap(),
+            informative_text: Color::from_str("#9A9E3F").unwrap(),
         }
     }
 

@@ -11,6 +11,7 @@ authors = ["Michael Nedokushev <michael.nedokushev@gmail.com>"]
 ratatui = "0.29"
 crossterm = { version = "0.28.1", features = ["event-stream"] }
 anyhow = "1.0"
+bgraph = { git = "https://github.com/5ocworkshop/bgraph.git" }
 framework_lib = { git = "https://github.com/FrameworkComputer/framework-system.git", package = "framework_lib" }
 smbios-lib = { git = "https://github.com/FrameworkComputer/smbios-lib.git", branch = "no-std", default-features = false }
 color-eyre = "0.6.5"

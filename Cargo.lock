@@ -125,6 +125,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "bgraph"
+version = "0.1.0"
+source = "git+https://github.com/5ocworkshop/bgraph.git#0fdbcd9456e38d3e0204428d464c6bd59b7b59e9"
+dependencies = [
+ "ratatui",
+ "unicode-width 0.1.14",
+]
+
+[[package]]
 name = "bit_field"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -600,6 +609,7 @@ name = "framework-tool-tui"
 version = "0.7.6"
 dependencies = [
  "anyhow",
+ "bgraph",
  "color-eyre",
  "crossterm",
  "dirs",

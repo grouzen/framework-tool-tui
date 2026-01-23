@@ -8,7 +8,9 @@ use crate::{
 };
 
 pub mod brightness_panel;
+pub mod charge_graph_panel;
 pub mod charge_panel;
+pub mod charge_panels;
 pub mod footer;
 pub mod main;
 pub mod privacy_panel;

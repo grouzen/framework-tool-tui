@@ -1,6 +1,8 @@
 use ratatui::{
     crossterm::event::Event,
     layout::{Constraint, Layout, Rect},
+    style::Style,
+    widgets::{Block, BorderType, Borders},
     Frame,
 };
 
@@ -9,8 +11,8 @@ use crate::{
     framework::info::FrameworkInfo,
     tui::{
         component::{
-            charge_graph_panel::ChargeGraphPanelComponent,
-            charge_panel::ChargePanelComponent, AdjustableComponent, AdjustablePanel, Component,
+            charge_graph_panel::ChargeGraphPanelComponent, charge_panel::ChargePanelComponent,
+            AdjustableComponent, AdjustablePanel, Component,
         },
         theme::Theme,
     },
@@ -43,15 +45,25 @@ impl Component for ChargePanelsComponent {
     }
 
     fn render(&mut self, frame: &mut Frame, area: Rect, theme: &Theme, info: &FrameworkInfo) {
+        let block = Block::default()
+            .borders(Borders::ALL)
+            .border_type(BorderType::Rounded)
+            .border_style(Style::default().fg(theme.border))
+            .style(Style::default().bg(theme.background));
+
+        let inner_area = block.inner(area);
+        frame.render_widget(block, area);
+
         // Split horizontally: graph on left (fill), charge panel on right (fixed width)
         let [graph_area, charge_panel_area] =
-            Layout::horizontal([Constraint::Fill(1), Constraint::Max(55)]).areas(area);
+            Layout::horizontal([Constraint::Percentage(50), Constraint::Max(55)]).areas(inner_area);
 
         // Render graph panel on the left
         self.graph_panel.render(frame, graph_area, theme, info);
 
         // Render charge panel on the right
-        self.charge_panel.render(frame, charge_panel_area, theme, info);
+        self.charge_panel
+            .render(frame, charge_panel_area, theme, info);
     }
 }
 

@@ -343,6 +343,9 @@ impl Component for ChargePanelComponent {
     }
 
     fn render(&mut self, frame: &mut Frame, area: Rect, theme: &Theme, info: &FrameworkInfo) {
+        let [area] = Layout::vertical([Constraint::Max(15)])
+            .flex(layout::Flex::Center)
+            .areas(area);
         let block = Block::default()
             .title(" Charge ")
             .borders(Borders::ALL)

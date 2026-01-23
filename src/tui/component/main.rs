@@ -108,23 +108,26 @@ impl Component for MainComponent {
     }
 
     fn render(&mut self, frame: &mut Frame, area: Rect, theme: &Theme, info: &FrameworkInfo) {
-        // Split main area: left content area and right panels column
-        let [left_area, right_panels_area] =
-            Layout::horizontal([Constraint::Fill(1), Constraint::Max(60)]).areas(area);
+        let [top_area, bottom_area] =
+            Layout::vertical([Constraint::Min(17), Constraint::Min(0)]).areas(area);
 
-        // Render charge panels (graph + charge panel) in the left area
-        self.adjustable_panels[0].render(frame, left_area, theme, info);
+        let [charge_panels_area, top_right_area] =
+            Layout::horizontal([Constraint::Percentage(60), Constraint::Percentage(40)]).areas(top_area);
+
+        let [pd_ports_panel_area] = Layout::vertical([Constraint::Min(0)]).areas(bottom_area);
+
+        // Render charge panels (graph + charge panel) in the top left area
+        self.adjustable_panels[0].render(frame, charge_panels_area, theme, info);
+
+        // PD Ports panel (bottom left area)
+        self.pd_ports_panel
+            .render(frame, pd_ports_panel_area, theme, info);
 
         // Split right panels area vertically
         // Show brightness panel only on supported platforms
         if Self::is_brightness_supported(info) {
-            let [brightness_panel_area, privacy_and_smbios_panels_area, pd_ports_panel_area] =
-                Layout::vertical([
-                    Constraint::Min(7),
-                    Constraint::Min(7),
-                    Constraint::Fill(1),
-                ])
-                .areas(right_panels_area);
+            let [brightness_panel_area, privacy_and_smbios_panels_area] =
+                Layout::vertical([Constraint::Min(7), Constraint::Min(7)]).areas(top_right_area);
 
             // Brightness panel (top of right_area)
             self.adjustable_panels[1].render(frame, brightness_panel_area, theme, info);
@@ -136,26 +139,9 @@ impl Component for MainComponent {
                 theme,
                 info,
             );
-
-            // PD Ports panel (bottom of right_area)
-            self.pd_ports_panel
-                .render(frame, pd_ports_panel_area, theme, info);
         } else {
-            let [privacy_and_smbios_panels_area, pd_ports_panel_area] =
-                Layout::vertical([Constraint::Min(14), Constraint::Fill(1)])
-                    .areas(right_panels_area);
-
             // Privacy and SMBIOS panels
-            self.render_privacy_and_smbios_panels(
-                frame,
-                privacy_and_smbios_panels_area,
-                theme,
-                info,
-            );
-
-            // PD Ports panel (bottom of right_area)
-            self.pd_ports_panel
-                .render(frame, pd_ports_panel_area, theme, info);
+            self.render_privacy_and_smbios_panels(frame, top_right_area, theme, info);
         }
     }
 }

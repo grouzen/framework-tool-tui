@@ -1,6 +1,6 @@
-use bgraph::{Graph, ColorGradient, GradientMode, TimeSeriesState};
+use bgraph::{ColorGradient, GradientMode, Graph, TimeSeriesState};
 use ratatui::{
-    layout::{Constraint, Layout, Rect},
+    layout::{Constraint, Flex, Layout, Rect},
     style::Style,
     widgets::{Block, BorderType, Borders},
     Frame,
@@ -56,10 +56,13 @@ impl Component for ChargeGraphPanelComponent {
         // Update series with current data
         self.update_history(info);
 
+        let [area] = Layout::vertical([Constraint::Min(0)])
+            .flex(Flex::Center)
+            .areas(area);
+
         // Create block with border
         let block = Block::default()
-            .title(" Charge Graph ")
-            .borders(Borders::ALL)
+            .borders(Borders::NONE)
             .border_type(BorderType::Rounded)
             .border_style(Style::default().fg(theme.border))
             .style(Style::default().bg(theme.background));

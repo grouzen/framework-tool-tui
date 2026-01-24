@@ -18,6 +18,7 @@ use crate::{
 };
 
 const NORMAL_CAPACITY_LOSS_MAX: f32 = 0.048;
+
 const MAX_CHARGE_LIMIT_CONTROL_INDEX: usize = 0;
 
 pub struct ChargePanelComponent(AdjustablePanel);
@@ -66,7 +67,7 @@ impl ChargePanelComponent {
             None => Gauge::default().percent(0).label("N/A"),
         };
 
-        frame.render_widget(Paragraph::new("Charge level"), key_area);
+        frame.render_widget(Paragraph::new("  Charge level"), key_area);
         frame.render_widget(gauge, value_area);
     }
 
@@ -127,7 +128,7 @@ impl ChargePanelComponent {
         };
 
         frame.render_widget(
-            Paragraph::new("Max charge limit").set_style(style),
+            Paragraph::new("  Max charge limit").set_style(style),
             key_area,
         );
         frame.render_widget(gauge, value_area);
@@ -146,7 +147,7 @@ impl ChargePanelComponent {
             None => "N/A".to_string(),
         };
 
-        frame.render_widget(Paragraph::new("Charger voltage"), key_area);
+        frame.render_widget(Paragraph::new("▼ Charger voltage"), key_area);
         frame.render_widget(
             Paragraph::new(charger_voltage_text).style(Style::default().fg(theme.informative_text)),
             value_area,
@@ -166,7 +167,7 @@ impl ChargePanelComponent {
             None => "N/A".to_string(),
         };
 
-        frame.render_widget(Paragraph::new("Charger current"), key_area);
+        frame.render_widget(Paragraph::new("▲ Charger current"), key_area);
         frame.render_widget(
             Paragraph::new(charger_current_text).style(Style::default().fg(theme.informative_text)),
             value_area,
@@ -186,7 +187,7 @@ impl ChargePanelComponent {
             None => "N/A".to_string(),
         };
 
-        frame.render_widget(Paragraph::new("Design capacity"), key_area);
+        frame.render_widget(Paragraph::new("  Design capacity"), key_area);
         frame.render_widget(
             Paragraph::new(design_capacity_text).style(Style::default().fg(theme.informative_text)),
             value_area,
@@ -206,7 +207,7 @@ impl ChargePanelComponent {
             None => "N/A".to_string(),
         };
 
-        frame.render_widget(Paragraph::new("Last full capacity"), key_area);
+        frame.render_widget(Paragraph::new("  Last full capacity"), key_area);
         frame.render_widget(
             Paragraph::new(last_full_charge_capacity_text)
                 .style(Style::default().fg(theme.informative_text)),
@@ -231,7 +232,7 @@ impl ChargePanelComponent {
             _ => "N/A".to_string(),
         };
 
-        frame.render_widget(Paragraph::new("Capacity loss"), key_area);
+        frame.render_widget(Paragraph::new("  Capacity loss"), key_area);
         frame.render_widget(
             Paragraph::new(capacity_loss_text).style(Style::default().fg(theme.informative_text)),
             value_area,
@@ -251,7 +252,7 @@ impl ChargePanelComponent {
             None => "N/A".to_string(),
         };
 
-        frame.render_widget(Paragraph::new("Cycle count"), key_area);
+        frame.render_widget(Paragraph::new("  Cycle count"), key_area);
         frame.render_widget(
             Paragraph::new(cycle_count_text).style(Style::default().fg(theme.informative_text)),
             value_area,
@@ -291,7 +292,7 @@ impl ChargePanelComponent {
             _ => "N/A".to_string(),
         };
 
-        frame.render_widget(Paragraph::new("Capacity loss per cycle"), key_area);
+        frame.render_widget(Paragraph::new("  Capacity loss per cycle"), key_area);
         frame.render_widget(
             Paragraph::new(capacity_loss_per_cycle_text).style(capacity_loss_per_cycle_style),
             value_area,
@@ -354,7 +355,6 @@ impl Component for ChargePanelComponent {
 
         let [keys_area, values_area] =
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
-                .horizontal_margin(2)
                 .vertical_margin(1)
                 .areas(block.inner(area));
 

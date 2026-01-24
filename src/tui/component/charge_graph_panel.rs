@@ -1,8 +1,7 @@
 use bgraph::{ColorGradient, GradientMode, Graph, TimeSeriesState};
 use ratatui::{
     layout::{Constraint, Flex, Layout, Rect},
-    style::Style,
-    widgets::{Block, BorderType, Borders},
+    widgets::{Block, Borders},
     Frame,
 };
 
@@ -60,14 +59,9 @@ impl Component for ChargeGraphPanelComponent {
             .flex(Flex::Center)
             .areas(area);
 
-        // Create block with border
-        let block = Block::default()
-            .borders(Borders::NONE)
-            .border_type(BorderType::Rounded)
-            .border_style(Style::default().fg(theme.border))
-            .style(Style::default().bg(theme.background));
-
+        let block = Block::default().borders(Borders::NONE);
         let inner_area = block.inner(area);
+
         frame.render_widget(block, area);
 
         // Split area for voltage (top) and current (bottom) graphs
@@ -75,28 +69,31 @@ impl Component for ChargeGraphPanelComponent {
             Layout::vertical([Constraint::Percentage(50), Constraint::Percentage(50)])
                 .areas(inner_area);
 
-        // Create gradient (blue → orange → red)
-        let gradient = ColorGradient::three_point(
-            ratatui::style::Color::Blue,
-            ratatui::style::Color::Rgb(255, 165, 0), // Orange
-            ratatui::style::Color::Red,
+        let voltage_gradient = ColorGradient::two_point(
+            theme.charge_voltage_graph_light,
+            theme.charge_voltage_graph_dark,
+        );
+        let current_gradient = ColorGradient::two_point(
+            theme.charge_current_graph_dark,
+            theme.charge_current_graph_light,
         );
 
         // Render voltage graph (top)
         let voltage_graph = Graph::new(&self.voltage_series)
             .x_range(0.0, 1.0)
             .y_range(0.0, 20.0)
-            .gradient(gradient.clone())
+            .gradient(voltage_gradient)
             .gradient_mode(GradientMode::Position);
-        frame.render_widget(voltage_graph, voltage_area);
 
         // Render current graph (bottom, mirrored using invert_y)
         let current_graph = Graph::new(&self.current_series)
             .x_range(0.0, 1.0)
             .y_range(0.0, 5.0)
-            .gradient(gradient)
+            .gradient(current_gradient)
             .gradient_mode(GradientMode::Position)
             .invert_y(true);
+
+        frame.render_widget(voltage_graph, voltage_area);
         frame.render_widget(current_graph, current_area);
     }
 }

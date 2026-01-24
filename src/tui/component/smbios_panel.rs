@@ -85,7 +85,7 @@ impl Component for SmbiosPanelComponent {
 
         let [keys_area, values_area] =
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)])
-                .horizontal_margin(2)
+                .horizontal_margin(1)
                 .spacing(1)
                 .vertical_margin(1)
                 .areas(block.inner(area));

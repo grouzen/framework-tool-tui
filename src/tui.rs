@@ -140,9 +140,12 @@ impl Tui {
 
             let area = frame.area();
 
-            let [title_area, main_area, footer_area] =
-                Layout::vertical([Constraint::Length(3), Constraint::Fill(1), Constraint::Length(3)])
-                    .areas(area);
+            let [title_area, main_area, footer_area] = Layout::vertical([
+                Constraint::Length(3),
+                Constraint::Fill(1),
+                Constraint::Length(3),
+            ])
+            .areas(area);
 
             // Title
             self.title

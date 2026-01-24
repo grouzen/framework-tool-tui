@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use ratatui::{
     crossterm::event::{Event, KeyCode, KeyEventKind},
-    layout::{Constraint, Layout, Rect},
+    layout::{Constraint, Flex, Layout, Rect},
     Frame,
 };
 
@@ -112,7 +112,11 @@ impl Component for MainComponent {
             Layout::vertical([Constraint::Min(17), Constraint::Min(0)]).areas(area);
 
         let [charge_panels_area, top_right_area] =
-            Layout::horizontal([Constraint::Percentage(60), Constraint::Percentage(40)]).areas(top_area);
+            Layout::horizontal([Constraint::Percentage(60), Constraint::Percentage(40)])
+                .areas(top_area);
+        let [top_right_area] = Layout::vertical([Constraint::Max(15)])
+            .flex(Flex::Center)
+            .areas(top_right_area);
 
         let [pd_ports_panel_area] = Layout::vertical([Constraint::Min(0)]).areas(bottom_area);
 
@@ -127,7 +131,7 @@ impl Component for MainComponent {
         // Show brightness panel only on supported platforms
         if Self::is_brightness_supported(info) {
             let [brightness_panel_area, privacy_and_smbios_panels_area] =
-                Layout::vertical([Constraint::Min(7), Constraint::Min(7)]).areas(top_right_area);
+                Layout::vertical([Constraint::Max(7), Constraint::Max(8)]).areas(top_right_area);
 
             // Brightness panel (top of right_area)
             self.adjustable_panels[1].render(frame, brightness_panel_area, theme, info);

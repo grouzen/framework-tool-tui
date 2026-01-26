@@ -5,8 +5,35 @@ use framework_lib::power::UsbPdPowerInfo;
 use framework_lib::power::UsbPowerRoles;
 use framework_lib::smbios;
 use framework_lib::smbios::Platform;
+use framework_lib::smbios::PlatformFamily;
 use smbioslib::DefinedStruct;
 use smbioslib::SMBiosData;
+
+#[derive(Debug, Clone)]
+pub struct TempSensorInfo {
+    pub name: String,
+    /// Temperature in Celsius, None if sensor is not present/error/not powered/not calibrated
+    pub temp_celsius: Option<i16>,
+    /// Raw value from EC memory
+    pub raw_value: u8,
+}
+
+impl TempSensorInfo {
+    fn new(name: &str, raw_value: u8) -> Self {
+        let temp_celsius = match raw_value {
+            0xFF => None, // Not present
+            0xFE => None, // Error
+            0xFD => None, // Not powered
+            0xFC => None, // Not calibrated
+            t => Some(t as i16 - 73),
+        };
+        Self {
+            name: name.to_string(),
+            temp_celsius,
+            raw_value,
+        }
+    }
+}
 
 #[derive(Default)]
 pub struct FrameworkInfo {
@@ -33,6 +60,7 @@ pub struct FrameworkInfo {
     pub pd_ports: PdPortsInfo,
     pub fan_rpm: Option<Vec<u16>>,
     pub platform: Option<Platform>,
+    pub temp_sensors: Vec<TempSensorInfo>,
 }
 
 impl FrameworkInfo {
@@ -47,7 +75,9 @@ impl FrameworkInfo {
         pd_ports: Vec<Option<UsbPdPowerInfo>>,
         fan_rpm: Option<Vec<u16>>,
         platform: Option<Platform>,
+        temps: Option<Vec<u8>>,
     ) -> Self {
+        let family = platform.and_then(|p| p.which_family());
         Self {
             charge_percentage: charge_percentage(power),
             charger_voltage: charger_voltage(power),
@@ -72,6 +102,7 @@ impl FrameworkInfo {
             pd_ports: pd_ports_info(pd_ports),
             fan_rpm,
             platform,
+            temp_sensors: temp_sensors_info(temps.as_deref(), platform, family),
         }
     }
 }
@@ -273,6 +304,141 @@ fn pd_ports_info(pd_ports: Vec<Option<UsbPdPowerInfo>>) -> PdPortsInfo {
         right_back,
         right_front,
     }
+}
+
+pub fn temp_sensors_info(
+    temps: Option<&[u8]>,
+    platform: Option<Platform>,
+    _family: Option<PlatformFamily>,
+) -> Vec<TempSensorInfo> {
+    let Some(temps) = temps else {
+        return Vec::new();
+    };
+
+    let mut sensors = Vec::new();
+
+    match platform {
+        Some(Platform::IntelGen11) | Some(Platform::IntelGen12) | Some(Platform::IntelGen13) => {
+            if let Some(&t) = temps.get(0) {
+                sensors.push(TempSensorInfo::new("F75303_Local", t));
+            }
+            if let Some(&t) = temps.get(1) {
+                sensors.push(TempSensorInfo::new("F75303_CPU", t));
+            }
+            if let Some(&t) = temps.get(2) {
+                sensors.push(TempSensorInfo::new("F75303_DDR", t));
+            }
+            if let Some(&t) = temps.get(3) {
+                sensors.push(TempSensorInfo::new("Battery", t));
+            }
+            if let Some(&t) = temps.get(4) {
+                sensors.push(TempSensorInfo::new("PECI", t));
+            }
+            if matches!(
+                platform,
+                Some(Platform::IntelGen12) | Some(Platform::IntelGen13)
+            ) {
+                if let Some(&t) = temps.get(5) {
+                    sensors.push(TempSensorInfo::new("F57397_VCCGT", t));
+                }
+            }
+        }
+
+        Some(Platform::IntelCoreUltra1) => {
+            if let Some(&t) = temps.get(0) {
+                sensors.push(TempSensorInfo::new("F75303_Local", t));
+            }
+            if let Some(&t) = temps.get(1) {
+                sensors.push(TempSensorInfo::new("F75303_CPU", t));
+            }
+            if let Some(&t) = temps.get(2) {
+                sensors.push(TempSensorInfo::new("Battery", t));
+            }
+            if let Some(&t) = temps.get(3) {
+                sensors.push(TempSensorInfo::new("F75303_DDR", t));
+            }
+            if let Some(&t) = temps.get(4) {
+                sensors.push(TempSensorInfo::new("PECI", t));
+            }
+        }
+
+        Some(Platform::Framework12IntelGen13) => {
+            if let Some(&t) = temps.get(0) {
+                sensors.push(TempSensorInfo::new("F75303_CPU", t));
+            }
+            if let Some(&t) = temps.get(1) {
+                sensors.push(TempSensorInfo::new("F75303_Skin", t));
+            }
+            if let Some(&t) = temps.get(2) {
+                sensors.push(TempSensorInfo::new("F75303_Local", t));
+            }
+            if let Some(&t) = temps.get(3) {
+                sensors.push(TempSensorInfo::new("Battery", t));
+            }
+            if let Some(&t) = temps.get(4) {
+                sensors.push(TempSensorInfo::new("PECI", t));
+            }
+            if let Some(&t) = temps.get(5) {
+                sensors.push(TempSensorInfo::new("Charger IC", t));
+            }
+        }
+
+        Some(
+            Platform::Framework13Amd7080
+            | Platform::Framework13AmdAi300
+            | Platform::Framework16Amd7080,
+        ) => {
+            if let Some(&t) = temps.get(0) {
+                sensors.push(TempSensorInfo::new("F75303_Local", t));
+            }
+            if let Some(&t) = temps.get(1) {
+                sensors.push(TempSensorInfo::new("F75303_CPU", t));
+            }
+            if let Some(&t) = temps.get(2) {
+                sensors.push(TempSensorInfo::new("F75303_DDR", t));
+            }
+            if let Some(&t) = temps.get(3) {
+                sensors.push(TempSensorInfo::new("APU", t));
+            }
+            if matches!(platform, Some(Platform::Framework16Amd7080)) {
+                if let Some(&t) = temps.get(4) {
+                    sensors.push(TempSensorInfo::new("dGPU VR", t));
+                }
+                if let Some(&t) = temps.get(5) {
+                    sensors.push(TempSensorInfo::new("dGPU VRAM", t));
+                }
+                if let Some(&t) = temps.get(6) {
+                    sensors.push(TempSensorInfo::new("dGPU AMB", t));
+                }
+                if let Some(&t) = temps.get(7) {
+                    sensors.push(TempSensorInfo::new("dGPU temp", t));
+                }
+            }
+        }
+
+        Some(Platform::FrameworkDesktopAmdAiMax300) => {
+            if let Some(&t) = temps.get(0) {
+                sensors.push(TempSensorInfo::new("F75303_APU", t));
+            }
+            if let Some(&t) = temps.get(1) {
+                sensors.push(TempSensorInfo::new("F75303_DDR", t));
+            }
+            if let Some(&t) = temps.get(2) {
+                sensors.push(TempSensorInfo::new("F75303_AMB", t));
+            }
+            if let Some(&t) = temps.get(3) {
+                sensors.push(TempSensorInfo::new("APU", t));
+            }
+        }
+
+        _ => {
+            for (i, &t) in temps.iter().enumerate().take(8) {
+                sensors.push(TempSensorInfo::new(&format!("Temp {}", i), t));
+            }
+        }
+    }
+
+    sensors
 }
 
 fn pd_port_info(pd_port: &UsbPdPowerInfo) -> PdPortInfo {

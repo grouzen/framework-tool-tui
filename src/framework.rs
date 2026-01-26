@@ -20,6 +20,8 @@ const EC_FAN_SPEED_ENTRIES: usize = 4;
 /// Used on old EC firmware (before 2023)
 const EC_FAN_SPEED_NOT_PRESENT: u16 = 0xFFFF;
 
+const EC_MEMMAP_TEMP_SENSOR: u16 = 0x00;
+
 pub struct Framework {
     ec: CrosEc,
     fingerprint: Arc<Fingerprint>,
@@ -78,6 +80,7 @@ impl Framework {
             .collect();
         let fan_rpm = self.get_fan_rpm().ok();
         let platform = smbios::get_platform();
+        let temps = self.get_temps().ok();
 
         FrameworkInfo::new(
             &power,
@@ -89,6 +92,7 @@ impl Framework {
             pd_ports,
             fan_rpm,
             platform,
+            temps,
         )
     }
 
@@ -110,5 +114,14 @@ impl Framework {
         }
 
         Ok(rpms)
+    }
+
+    fn get_temps(&self) -> color_eyre::Result<Vec<u8>> {
+        let temps = self
+            .ec
+            .read_memory(EC_MEMMAP_TEMP_SENSOR, 0x08)
+            .ok_or(Report::msg("Couldn't read temperature sensor info"))?;
+
+        Ok(temps)
     }
 }

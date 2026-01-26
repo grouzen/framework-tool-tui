@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use ratatui::{
     crossterm::event::{Event, KeyCode, KeyEventKind},
-    layout::{Constraint, Flex, Layout},
+    layout::{Constraint, Layout},
     prelude::Backend,
     style::Style,
     text::Text,
@@ -139,17 +139,13 @@ impl Tui {
             frame.render_widget(block, frame.area());
 
             let area = frame.area();
-            let [area] = Layout::vertical([Constraint::Max(49)])
-                .flex(Flex::Center)
-                .areas(area);
-            let [area] = Layout::horizontal([Constraint::Max(140)])
-                .flex(Flex::Center)
-                .areas(area);
 
-            let [title_area, main_area, footer_area] =
-                Layout::vertical([Constraint::Max(3), Constraint::Max(44), Constraint::Max(3)])
-                    .flex(Flex::Center)
-                    .areas(area);
+            let [title_area, main_area, footer_area] = Layout::vertical([
+                Constraint::Length(3),
+                Constraint::Fill(1),
+                Constraint::Length(3),
+            ])
+            .areas(area);
 
             // Title
             self.title

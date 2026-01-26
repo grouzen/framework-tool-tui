@@ -116,6 +116,12 @@ pub struct Theme {
     pub bar_background: Color,
     pub highlighted_text: Color,
     pub informative_text: Color,
+    pub charge_voltage_graph_light: Color,
+    pub charge_voltage_graph_dark: Color,
+    pub charge_current_graph_light: Color,
+    pub charge_current_graph_dark: Color,
+    pub thermal_graph_light: Color,
+    pub thermal_graph_dark: Color,
 }
 
 impl Default for Theme {
@@ -154,11 +160,17 @@ impl Theme {
             border_active: Color::from_str("#FFD600").unwrap(),
             indication_ok: Color::from_str("#00B16A").unwrap(),
             indication_warning: Color::from_str("#E53935").unwrap(),
-            brightness_bar: Color::from_str("#fdbe54").unwrap(),
+            brightness_bar: Color::from_str("#FDBE54").unwrap(),
             charge_bar: Color::from_str("#9481D8").unwrap(),
             bar_background: Color::from_str("#363636").unwrap(),
             highlighted_text: Color::from_str("#AEC2C9").unwrap(),
             informative_text: Color::from_str("#9481D8").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#9481D8").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#6B5BA0").unwrap(),
+            charge_current_graph_light: Color::from_str("#FDBE54").unwrap(),
+            charge_current_graph_dark: Color::from_str("#C9983F").unwrap(),
+            thermal_graph_light: Color::from_str("#FF7043").unwrap(),
+            thermal_graph_dark: Color::from_str("#BF360C").unwrap(),
         }
     }
 
@@ -176,6 +188,12 @@ impl Theme {
             bar_background: Color::from_str("#CFCFDE").unwrap(),
             highlighted_text: Color::from_str("#036A96").unwrap(),
             informative_text: Color::from_str("#644AC9").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#644AC9").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#4E3A9E").unwrap(),
+            charge_current_graph_light: Color::from_str("#846E15").unwrap(),
+            charge_current_graph_dark: Color::from_str("#635210").unwrap(),
+            thermal_graph_light: Color::from_str("#CB3A2A").unwrap(),
+            thermal_graph_dark: Color::from_str("#A02E22").unwrap(),
         }
     }
 
@@ -191,8 +209,14 @@ impl Theme {
             brightness_bar: Color::from_str("#E5C890").unwrap(),
             charge_bar: Color::from_str("#8CAAEE").unwrap(),
             bar_background: Color::from_str("#303446").unwrap(),
-            highlighted_text: Color::from_str("#8caaee").unwrap(),
+            highlighted_text: Color::from_str("#8CAAEE").unwrap(),
             informative_text: Color::from_str("#CA9EE6").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#8CAAEE").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#6A88BE").unwrap(),
+            charge_current_graph_light: Color::from_str("#E5C890").unwrap(),
+            charge_current_graph_dark: Color::from_str("#B79E70").unwrap(),
+            thermal_graph_light: Color::from_str("#EF9F76").unwrap(),
+            thermal_graph_dark: Color::from_str("#BF7F5E").unwrap(),
         }
     }
 
@@ -210,6 +234,12 @@ impl Theme {
             bar_background: Color::from_str("#EFF1F5").unwrap(),
             highlighted_text: Color::from_str("#1e66f5").unwrap(),
             informative_text: Color::from_str("#8839EF").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#1E66F5").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#1850C4").unwrap(),
+            charge_current_graph_light: Color::from_str("#DF8E1D").unwrap(),
+            charge_current_graph_dark: Color::from_str("#B27217").unwrap(),
+            thermal_graph_light: Color::from_str("#D20F39").unwrap(),
+            thermal_graph_dark: Color::from_str("#A80C2E").unwrap(),
         }
     }
 
@@ -225,8 +255,14 @@ impl Theme {
             brightness_bar: Color::from_str("#EED49F").unwrap(),
             charge_bar: Color::from_str("#8AADF4").unwrap(),
             bar_background: Color::from_str("#24273A").unwrap(),
-            highlighted_text: Color::from_str("#8aadf4").unwrap(),
+            highlighted_text: Color::from_str("#8AADF4").unwrap(),
             informative_text: Color::from_str("#C6A0F6").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#8AADF4").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#6A8AC3").unwrap(),
+            charge_current_graph_light: Color::from_str("#EED49F").unwrap(),
+            charge_current_graph_dark: Color::from_str("#BEAA7F").unwrap(),
+            thermal_graph_light: Color::from_str("#F5A97F").unwrap(),
+            thermal_graph_dark: Color::from_str("#C48766").unwrap(),
         }
     }
 
@@ -242,8 +278,14 @@ impl Theme {
             brightness_bar: Color::from_str("#F9E2AF").unwrap(),
             charge_bar: Color::from_str("#89B4FA").unwrap(),
             bar_background: Color::from_str("#1E1E2E").unwrap(),
-            highlighted_text: Color::from_str("#89b4fa").unwrap(),
-            informative_text: Color::from_str("#CBA6f7").unwrap(),
+            highlighted_text: Color::from_str("#89B4FA").unwrap(),
+            informative_text: Color::from_str("#CBA6F7").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#89B4FA").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#6A90C8").unwrap(),
+            charge_current_graph_light: Color::from_str("#F9E2AF").unwrap(),
+            charge_current_graph_dark: Color::from_str("#C7B58C").unwrap(),
+            thermal_graph_light: Color::from_str("#FAB387").unwrap(),
+            thermal_graph_dark: Color::from_str("#C88F6C").unwrap(),
         }
     }
 
@@ -261,6 +303,12 @@ impl Theme {
             bar_background: Color::from_str("#44475A").unwrap(),
             highlighted_text: Color::from_str("#8BE9FD").unwrap(),
             informative_text: Color::from_str("#BD93F9").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#8BE9FD").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#6FBACA").unwrap(),
+            charge_current_graph_light: Color::from_str("#F1FA8C").unwrap(),
+            charge_current_graph_dark: Color::from_str("#C1C870").unwrap(),
+            thermal_graph_light: Color::from_str("#FF5555").unwrap(),
+            thermal_graph_dark: Color::from_str("#CC4444").unwrap(),
         }
     }
 
@@ -278,6 +326,12 @@ impl Theme {
             bar_background: Color::from_str("#0E450B").unwrap(),
             highlighted_text: Color::from_str("#9A9E3F").unwrap(),
             informative_text: Color::from_str("#9A9E3F").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#9A9E3F").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#7B7E32").unwrap(),
+            charge_current_graph_light: Color::from_str("#9A9E3F").unwrap(),
+            charge_current_graph_dark: Color::from_str("#7B7E32").unwrap(),
+            thermal_graph_light: Color::from_str("#9A9E3F").unwrap(),
+            thermal_graph_dark: Color::from_str("#7B7E32").unwrap(),
         }
     }
 
@@ -295,6 +349,12 @@ impl Theme {
             bar_background: Color::from_str("#262C36").unwrap(),
             highlighted_text: Color::from_str("#9EECFF").unwrap(),
             informative_text: Color::from_str("#FF80D2").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#1F6FEB").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#1858BC").unwrap(),
+            charge_current_graph_light: Color::from_str("#D3FA37").unwrap(),
+            charge_current_graph_dark: Color::from_str("#A9C82C").unwrap(),
+            thermal_graph_light: Color::from_str("#FF8E40").unwrap(),
+            thermal_graph_dark: Color::from_str("#CC7133").unwrap(),
         }
     }
 
@@ -312,6 +372,12 @@ impl Theme {
             bar_background: Color::from_str("#F6F8FA").unwrap(),
             highlighted_text: Color::from_str("#212183").unwrap(),
             informative_text: Color::from_str("#8342FA").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#0969DA").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#0754AE").unwrap(),
+            charge_current_graph_light: Color::from_str("#DB9D00").unwrap(),
+            charge_current_graph_dark: Color::from_str("#AF7E00").unwrap(),
+            thermal_graph_light: Color::from_str("#703100").unwrap(),
+            thermal_graph_dark: Color::from_str("#5A2700").unwrap(),
         }
     }
 
@@ -329,6 +395,12 @@ impl Theme {
             bar_background: Color::from_str("#504945").unwrap(),
             highlighted_text: Color::from_str("#83A598").unwrap(),
             informative_text: Color::from_str("#D3869B").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#458588").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#376A6D").unwrap(),
+            charge_current_graph_light: Color::from_str("#FABD2F").unwrap(),
+            charge_current_graph_dark: Color::from_str("#C89726").unwrap(),
+            thermal_graph_light: Color::from_str("#FE8019").unwrap(),
+            thermal_graph_dark: Color::from_str("#CB6614").unwrap(),
         }
     }
 
@@ -346,6 +418,12 @@ impl Theme {
             bar_background: Color::from_str("#D5C4A1").unwrap(),
             highlighted_text: Color::from_str("#076678").unwrap(),
             informative_text: Color::from_str("#8F3F71").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#458588").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#376A6D").unwrap(),
+            charge_current_graph_light: Color::from_str("#B57614").unwrap(),
+            charge_current_graph_dark: Color::from_str("#915E10").unwrap(),
+            thermal_graph_light: Color::from_str("#AF3A03").unwrap(),
+            thermal_graph_dark: Color::from_str("#8C2E02").unwrap(),
         }
     }
 
@@ -363,6 +441,12 @@ impl Theme {
             bar_background: Color::from_str("#000000").unwrap(),
             highlighted_text: Color::from_str("#FFFFFF").unwrap(),
             informative_text: Color::from_str("#FFFFFF").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#FFFFFF").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#CCCCCC").unwrap(),
+            charge_current_graph_light: Color::from_str("#FFFFFF").unwrap(),
+            charge_current_graph_dark: Color::from_str("#CCCCCC").unwrap(),
+            thermal_graph_light: Color::from_str("#FFFFFF").unwrap(),
+            thermal_graph_dark: Color::from_str("#CCCCCC").unwrap(),
         }
     }
 
@@ -380,6 +464,12 @@ impl Theme {
             bar_background: Color::from_str("#FFFFFF").unwrap(),
             highlighted_text: Color::from_str("#000000").unwrap(),
             informative_text: Color::from_str("#000000").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#000000").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#333333").unwrap(),
+            charge_current_graph_light: Color::from_str("#000000").unwrap(),
+            charge_current_graph_dark: Color::from_str("#333333").unwrap(),
+            thermal_graph_light: Color::from_str("#000000").unwrap(),
+            thermal_graph_dark: Color::from_str("#333333").unwrap(),
         }
     }
 
@@ -397,6 +487,12 @@ impl Theme {
             bar_background: Color::from_str("#373138").unwrap(),
             highlighted_text: Color::from_str("#77DCE8").unwrap(),
             informative_text: Color::from_str("#AB9DF2").unwrap(),
+            charge_voltage_graph_light: Color::from_str("#AB9DF2").unwrap(),
+            charge_voltage_graph_dark: Color::from_str("#897EC2").unwrap(),
+            charge_current_graph_light: Color::from_str("#FFD866").unwrap(),
+            charge_current_graph_dark: Color::from_str("#CCAD52").unwrap(),
+            thermal_graph_light: Color::from_str("#FF6188").unwrap(),
+            thermal_graph_dark: Color::from_str("#CC4E6D").unwrap(),
         }
     }
 }

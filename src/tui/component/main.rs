@@ -12,7 +12,8 @@ use crate::{
         component::{
             brightness_panel::BrightnessPanelComponent, charge_panels::ChargePanelsComponent,
             pd_ports_panel::PdPortsPanelComponent, privacy_panel::PrivacyPanelComponent,
-            smbios_panel::SmbiosPanelComponent, AdjustableComponent, Component,
+            smbios_panel::SmbiosPanelComponent, thermal_panels::ThermalPanelsComponent,
+            AdjustableComponent, Component,
         },
         theme::Theme,
     },
@@ -21,6 +22,7 @@ use crate::{
 pub struct MainComponent {
     privacy_panel: PrivacyPanelComponent,
     smbios_panel: SmbiosPanelComponent,
+    thermal_panels: ThermalPanelsComponent,
     pd_ports_panel: PdPortsPanelComponent,
     adjustable_panels: Vec<Box<dyn AdjustableComponent>>,
     selected_panel: Option<usize>,
@@ -42,6 +44,7 @@ impl MainComponent {
         Self {
             privacy_panel: PrivacyPanelComponent,
             smbios_panel: SmbiosPanelComponent,
+            thermal_panels: ThermalPanelsComponent::new(),
             pd_ports_panel: PdPortsPanelComponent::new(),
             adjustable_panels,
             selected_panel: None,
@@ -118,12 +121,19 @@ impl Component for MainComponent {
             .flex(Flex::Center)
             .areas(top_right_area);
 
-        let [pd_ports_panel_area] = Layout::vertical([Constraint::Min(0)]).areas(bottom_area);
+        // Split bottom area: thermal panels (40%) | PD ports (60%)
+        let [thermal_panels_area, pd_ports_panel_area] =
+            Layout::horizontal([Constraint::Percentage(40), Constraint::Percentage(60)])
+                .areas(bottom_area);
 
         // Render charge panels (graph + charge panel) in the top left area
         self.adjustable_panels[0].render(frame, charge_panels_area, theme, info);
 
-        // PD Ports panel (bottom left area)
+        // Thermal panels (bottom left area)
+        self.thermal_panels
+            .render(frame, thermal_panels_area, theme, info);
+
+        // PD Ports panel (bottom right area)
         self.pd_ports_panel
             .render(frame, pd_ports_panel_area, theme, info);
 

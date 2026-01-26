@@ -12,6 +12,10 @@ use crate::{
 
 const HISTORY_SIZE: usize = 200;
 
+const VOLTAGE_MAX: f32 = 20.0; // Max voltage in volts
+
+const CURRENT_MAX: f32 = 5.0; // Max current in amps
+
 pub struct ChargeGraphPanelComponent {
     voltage_series: TimeSeriesState,
     current_series: TimeSeriesState,
@@ -26,8 +30,8 @@ impl Default for ChargeGraphPanelComponent {
 impl ChargeGraphPanelComponent {
     pub fn new() -> Self {
         Self {
-            voltage_series: TimeSeriesState::with_range(HISTORY_SIZE, 0.0, 20.0),
-            current_series: TimeSeriesState::with_range(HISTORY_SIZE, 0.0, 5.0),
+            voltage_series: TimeSeriesState::with_range(HISTORY_SIZE, 0.0, VOLTAGE_MAX),
+            current_series: TimeSeriesState::with_range(HISTORY_SIZE, 0.0, CURRENT_MAX),
         }
     }
 
@@ -81,14 +85,14 @@ impl Component for ChargeGraphPanelComponent {
         // Render voltage graph (top)
         let voltage_graph = Graph::new(&self.voltage_series)
             .x_range(0.0, 1.0)
-            .y_range(0.0, 20.0)
+            .y_range(0.0, VOLTAGE_MAX)
             .gradient(voltage_gradient)
             .gradient_mode(GradientMode::Position);
 
         // Render current graph (bottom, mirrored using invert_y)
         let current_graph = Graph::new(&self.current_series)
             .x_range(0.0, 1.0)
-            .y_range(0.0, 5.0)
+            .y_range(0.0, CURRENT_MAX)
             .gradient(current_gradient)
             .gradient_mode(GradientMode::Position)
             .invert_y(true);

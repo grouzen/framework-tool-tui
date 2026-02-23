@@ -41,9 +41,13 @@ cargo install --path .
 
 #### Gentoo linux
 
-It is available via `lamdness` overlay
+It is available via official [Gentoo packages](https://packages.gentoo.org/packages/app-laptop/framework-tool-tui) or the [lamdness](https://github.com/grouzen/lamdness-overlay/tree/main/app-laptop/framework-tool-tui) overlay
 
 ```sh
+# Official gentoo repository
+sudo emerge -av app-laptop/framework-tool-tui
+
+# or via lamdness overlay
 sudo eselect repository enable lamdness
 sudo emaint -r lamdness sync
 sudo emerge -av app-laptop/framework-tool-tui
@@ -56,6 +60,16 @@ It is available via [AUR](https://aur.archlinux.org/packages/framework-tool-tui)
 ```sh
 [yay/paru] -S framework-tool-tui # Install from AUR
 sudo pacman -S framework-tool-tui # Install from archlinuxcn
+```
+
+#### NixOS linux
+
+It is available via official [NixOS packages](https://search.nixos.org/packages?query=framework-tool-tui):
+
+```sh
+nix-shell -p framework-tool-tui # Install temporarily
+
+# Add to the NixOS configuration or use nix profile to install permanently
 ```
 
 #### :beer: Homebrew for Linux

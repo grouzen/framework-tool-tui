@@ -109,6 +109,16 @@ See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for full technical breakdown.
 
 Pull requests welcome! For bug reports or feature requests, see Issues.
 
+### Check your code before pushing
+
+It is recommended to run `cargo make check-all` before commiting and pushing to your feature branch.
+
+This requires [cargo make](https://github.com/sagiegurari/cargo-make) runner to be installed on your system:
+
+```sh
+cargo install --force cargo-make
+```
+
 ### Commit Message Convention
 
 This project uses [Conventional Commits](https://www.conventionalcommits.org/) for automated versioning and changelog generation. Please format your commit messages as:

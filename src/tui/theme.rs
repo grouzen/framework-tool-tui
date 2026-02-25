@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ThemeVariant {
+    Default,
     Framework,
     Alucard,
     CatppuccinFrappe,
@@ -28,6 +29,7 @@ impl FromStr for ThemeVariant {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
+            "default" => Ok(ThemeVariant::Default),
             "framework" => Ok(ThemeVariant::Framework),
             "alucard" => Ok(ThemeVariant::Alucard),
             "catppuccin_frappe" => Ok(ThemeVariant::CatppuccinFrappe),
@@ -51,6 +53,7 @@ impl FromStr for ThemeVariant {
 impl ThemeVariant {
     pub fn name(&self) -> &'static str {
         match self {
+            ThemeVariant::Default => "Default",
             ThemeVariant::Framework => "Framework",
             ThemeVariant::Alucard => "Alucard",
             ThemeVariant::CatppuccinFrappe => "Catppuccin Frappe",
@@ -69,7 +72,8 @@ impl ThemeVariant {
         }
     }
 
-    pub const ALL: [ThemeVariant; 15] = [
+    pub const ALL: [ThemeVariant; 16] = [
+        ThemeVariant::Default,
         ThemeVariant::Framework,
         ThemeVariant::Alucard,
         ThemeVariant::CatppuccinFrappe,
@@ -120,13 +124,14 @@ pub struct Theme {
 
 impl Default for Theme {
     fn default() -> Self {
-        Theme::from_variant(ThemeVariant::Framework)
+        Theme::from_variant(ThemeVariant::Default)
     }
 }
 
 impl Theme {
     pub fn from_variant(variant: ThemeVariant) -> Self {
         match variant {
+            ThemeVariant::Default => Self::default0(),
             ThemeVariant::Framework => Self::framework(),
             ThemeVariant::Alucard => Self::alucard(),
             ThemeVariant::CatppuccinFrappe => Self::catppuccin_frappe(),
@@ -142,6 +147,23 @@ impl Theme {
             ThemeVariant::MonochromeDark => Self::monochrome_dark(),
             ThemeVariant::MonochromeLight => Self::monochrome_light(),
             ThemeVariant::MonokaiPro => Self::monokai_pro(),
+        }
+    }
+
+    pub fn default0() -> Self {
+        Self {
+            variant: ThemeVariant::Default,
+            text: Color::Indexed(7),
+            background: Color::Indexed(0),
+            border: Color::Indexed(15),
+            border_active: Color::Indexed(3),
+            indication_ok: Color::Indexed(2),
+            indication_warning: Color::Indexed(1),
+            brightness_bar: Color::Indexed(4),
+            charge_bar: Color::Indexed(4),
+            bar_background: Color::Indexed(0),
+            highlighted_text: Color::Indexed(4),
+            informative_text: Color::Indexed(5),
         }
     }
 

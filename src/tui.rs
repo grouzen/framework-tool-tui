@@ -229,10 +229,12 @@ mod tests {
         let config = Config::default();
         let mut tui = Tui::new(fingerprint, &info, config).unwrap();
 
-        // Default theme should be Framework
-        assert_eq!(tui.config.theme, ThemeVariant::Framework);
+        assert_eq!(tui.config.theme, ThemeVariant::Default);
 
         // Cycle to next theme
+        tui.next_theme();
+        assert_eq!(tui.config.theme, ThemeVariant::Framework);
+
         tui.next_theme();
         assert_eq!(tui.config.theme, ThemeVariant::Alucard);
 
@@ -275,9 +277,9 @@ mod tests {
         tui.next_theme();
         assert_eq!(tui.config.theme, ThemeVariant::MonokaiPro);
 
-        // Should wrap back to Framework
+        // Should wrap back to Default
         tui.next_theme();
-        assert_eq!(tui.config.theme, ThemeVariant::Framework);
+        assert_eq!(tui.config.theme, ThemeVariant::Default);
     }
 
     #[test]
@@ -287,8 +289,7 @@ mod tests {
         let config = Config::default();
         let mut tui = Tui::new(fingerprint, &info, config).unwrap();
 
-        // Default theme should be Framework
-        assert_eq!(tui.config.theme, ThemeVariant::Framework);
+        assert_eq!(tui.config.theme, ThemeVariant::Default);
 
         // Cycle to previous theme (should wrap to MonokaiPro)
         tui.previous_theme();
@@ -344,6 +345,9 @@ mod tests {
         let config = Config::default();
         let mut tui = Tui::new(fingerprint, &info, config).unwrap();
 
+        assert_eq!(tui.current_theme_name(), "Default");
+
+        tui.next_theme();
         assert_eq!(tui.current_theme_name(), "Framework");
 
         tui.next_theme();
@@ -363,13 +367,13 @@ mod tests {
         let config = Config::default();
         let mut tui = Tui::new(fingerprint, &info, config).unwrap();
 
-        assert_eq!(tui.config.theme, ThemeVariant::Framework);
+        assert_eq!(tui.config.theme, ThemeVariant::Default);
 
         let event = Event::Key(KeyEvent::from(KeyCode::Char('n')));
         let result = tui.handle_input(event);
 
         assert!(matches!(result, Ok(None)));
-        assert_eq!(tui.config.theme, ThemeVariant::Alucard);
+        assert_eq!(tui.config.theme, ThemeVariant::Framework);
     }
 
     #[test]
@@ -379,7 +383,7 @@ mod tests {
         let config = Config::default();
         let mut tui = Tui::new(fingerprint, &info, config).unwrap();
 
-        assert_eq!(tui.config.theme, ThemeVariant::Framework);
+        assert_eq!(tui.config.theme, ThemeVariant::Default);
 
         let event = Event::Key(KeyEvent::from(KeyCode::Char('b')));
         let result = tui.handle_input(event);
@@ -455,8 +459,8 @@ mod tests {
         let config = Config::default();
         let mut tui = Tui::new(fingerprint, &info, config).unwrap();
 
-        // Start at Framework
-        assert_eq!(tui.config.theme, ThemeVariant::Framework);
+        // Start at Default
+        assert_eq!(tui.config.theme, ThemeVariant::Default);
 
         // Switch forward 3 times with 'n'
         for _ in 0..3 {
@@ -464,13 +468,13 @@ mod tests {
             let result = tui.handle_input(event);
             assert!(matches!(result, Ok(None)));
         }
-        // After 3 next: Framework -> Alucard -> CatppuccinFrappe -> CatppuccinLatte
-        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinLatte);
+        // After 3 next: Default -> Framework -> Alucard -> CatppuccinFrappe
+        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinFrappe);
 
         // Switch backward once with 'b'
         let event = Event::Key(KeyEvent::from(KeyCode::Char('b')));
         let result = tui.handle_input(event);
         assert!(matches!(result, Ok(None)));
-        assert_eq!(tui.config.theme, ThemeVariant::CatppuccinFrappe);
+        assert_eq!(tui.config.theme, ThemeVariant::Alucard);
     }
 }

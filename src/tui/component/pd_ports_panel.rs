@@ -259,11 +259,11 @@ impl Component for PdPortsPanelComponent {
             Layout::horizontal([Constraint::Fill(1), Constraint::Fill(1)]).areas(block.inner(area));
 
         let [left_back_area, left_front_area] =
-            Layout::vertical([Constraint::Min(5), Constraint::Min(0)])
+            Layout::vertical([Constraint::Min(12), Constraint::Min(0)])
                 .margin(1)
                 .areas(left_area);
         let [right_back_area, right_front_area] =
-            Layout::vertical([Constraint::Min(5), Constraint::Min(0)])
+            Layout::vertical([Constraint::Min(12), Constraint::Min(0)])
                 .margin(1)
                 .areas(right_area);
 

@@ -8,11 +8,16 @@ use crate::{
 };
 
 pub mod brightness_panel;
+pub mod charge_graph_panel;
 pub mod charge_panel;
+pub mod charge_panels;
 pub mod footer;
 pub mod main;
 pub mod privacy_panel;
 pub mod smbios_panel;
+pub mod thermal_graph_panel;
+pub mod thermal_panel;
+pub mod thermal_panels;
 pub mod title;
 
 pub trait Component {

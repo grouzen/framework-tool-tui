@@ -1,12 +1,11 @@
+use dmidecode::Structure;
 use framework_lib::chromium_ec::commands::FpLedBrightnessLevel;
 use framework_lib::power::PowerInfo;
 use framework_lib::power::UsbChargingType;
 use framework_lib::power::UsbPdPowerInfo;
 use framework_lib::power::UsbPowerRoles;
-use framework_lib::smbios;
 use framework_lib::smbios::Platform;
-use smbioslib::DefinedStruct;
-use smbioslib::SMBiosData;
+use framework_lib::smbios::SmbiosStore;
 
 #[derive(Default)]
 pub struct FrameworkInfo {
@@ -43,7 +42,7 @@ impl FrameworkInfo {
         privacy: &Option<(bool, bool)>,
         fp_brightness: &Option<(u8, Option<FpLedBrightnessLevel>)>,
         kb_brightness: Option<u8>,
-        smbios: &Option<SMBiosData>,
+        smbios: &Option<SmbiosStore>,
         pd_ports: Vec<Option<UsbPdPowerInfo>>,
         fan_rpm: Option<Vec<u16>>,
         platform: Option<Platform>,
@@ -211,45 +210,34 @@ fn kb_brightness_percentage(kb_brightness: Option<u8>) -> Option<u8> {
     kb_brightness
 }
 
-fn smbios_version(smbios: &Option<SMBiosData>) -> Option<String> {
+fn smbios_version(smbios: &Option<SmbiosStore>) -> Option<String> {
     smbios.as_ref().and_then(|smbios| {
-        smbios
-            .iter()
-            .find_map(|undefined_struct| match undefined_struct.defined_struct() {
-                DefinedStruct::Information(data) => {
-                    Some(smbios::dmidecode_string_val(&data.version()))
-                }
-                _ => None,
-            })
-            .flatten()
+        smbios.structures().find_map(|result| match result {
+            Ok(Structure::Bios(data)) if !data.bios_version.is_empty() => {
+                Some(data.bios_version.to_string())
+            }
+            _ => None,
+        })
     })
 }
 
-fn smbios_release_date(smbios: &Option<SMBiosData>) -> Option<String> {
+fn smbios_release_date(smbios: &Option<SmbiosStore>) -> Option<String> {
     smbios.as_ref().and_then(|smbios| {
-        smbios
-            .iter()
-            .find_map(|undefined_struct| match undefined_struct.defined_struct() {
-                DefinedStruct::Information(data) => {
-                    Some(smbios::dmidecode_string_val(&data.release_date()))
-                }
-                _ => None,
-            })
-            .flatten()
+        smbios.structures().find_map(|result| match result {
+            Ok(Structure::Bios(data)) if !data.bios_release_date.is_empty() => {
+                Some(data.bios_release_date.to_string())
+            }
+            _ => None,
+        })
     })
 }
 
-fn smbios_vendor(smbios: &Option<SMBiosData>) -> Option<String> {
+fn smbios_vendor(smbios: &Option<SmbiosStore>) -> Option<String> {
     smbios.as_ref().and_then(|smbios| {
-        smbios
-            .iter()
-            .find_map(|undefined_struct| match undefined_struct.defined_struct() {
-                DefinedStruct::Information(data) => {
-                    Some(smbios::dmidecode_string_val(&data.vendor()))
-                }
-                _ => None,
-            })
-            .flatten()
+        smbios.structures().find_map(|result| match result {
+            Ok(Structure::Bios(data)) if !data.vendor.is_empty() => Some(data.vendor.to_string()),
+            _ => None,
+        })
     })
 }
 

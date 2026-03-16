@@ -51,7 +51,6 @@ jobs:
         with:
           release: "15.0"
           arch: x86_64
-          usesh: true
           mem: 8192
           sync: rsync
           copyback: false

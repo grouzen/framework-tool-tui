@@ -52,15 +52,12 @@ jobs:
         include:
           - build: linux
             os: ubuntu-latest
-            use-cross: false
             target: x86_64-unknown-linux-gnu
           - build: freebsd
             os: ubuntu-latest
-            use-cross: false
             target: x86_64-unknown-freebsd
           - build: windows
             os: windows-2025
-            use-cross: false
             target: x86_64-pc-windows-msvc
             # TODO: Remove rustflags workaround when framework_lib updates to built v0.8+ with gix feature.
             # Issue: libgit2-sys v0.14.x doesn't link advapi32.lib on Windows.
@@ -88,12 +85,6 @@ jobs:
             pkg install -y rust hidapi pkgconf
           run: |
             cargo build --release --locked
-        
-      - name: Install cross
-        if: matrix.use-cross
-        uses: taiki-e/install-action@v2
-        with:
-         tool: cross
 
       - uses: moonrepo/setup-rust@v1
         if: matrix.build != 'freebsd'
@@ -107,13 +98,9 @@ jobs:
           shared-key: "build-${{ matrix.target }}"
           cache-on-failure: true
 
-      - name: Build (without cross)
-        if: matrix.build != 'freebsd' && !matrix.use-cross
+      - name: Build
+        if: matrix.build != 'freebsd'
         run: cargo build --release --locked
         env:
-          RUSTFLAGS: ${{ matrix.rustflags }}
-
-      - name: Build (cross)
-        if: matrix.use-cross
-        run: cross build --release --locked --target ${{ matrix.target }} 
+          RUSTFLAGS: ${{ matrix.rustflags }} 
 

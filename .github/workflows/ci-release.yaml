@@ -65,11 +65,12 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Cache cargo dependencies
+      - name: Rust Cache
         if: matrix.build != 'freebsd'
         uses: Swatinem/rust-cache@v2
         with:
-          key: ${{ matrix.target }}
+          shared-key: "release-${{ matrix.target }}"
+          cache-on-failure: true
 
       - name: Build
         if: matrix.build != 'freebsd'

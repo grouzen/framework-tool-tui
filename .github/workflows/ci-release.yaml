@@ -21,15 +21,12 @@ jobs:
         include:
           - build: linux
             os: ubuntu-latest
-            use-cross: false
             target: x86_64-unknown-linux-gnu
           - build: freebsd
             os: ubuntu-latest
-            use-cross: false
             target: x86_64-unknown-freebsd
           - build: windows
             os: windows-2025
-            use-cross: false
             target: x86_64-pc-windows-msvc
             # TODO: Remove rustflags workaround when framework_lib updates to built v0.8+ with gix feature.
             # Issue: libgit2-sys v0.14.x doesn't link advapi32.lib on Windows.
@@ -57,32 +54,29 @@ jobs:
           usesh: true
           mem: 8192
           sync: rsync
+          copyback: false
           prepare: |
             pkg install -y rust hidapi pkgconf
           run: |
             cargo build --release --locked
             cp target/release/framework-tool-tui framework-tool-tui-freebsd
 
-      - name: Install cross
-        if: matrix.use-cross
-        uses: taiki-e/install-action@v2
-        with:
-         tool: cross
-
       - uses: moonrepo/setup-rust@v1
         if: matrix.build != 'freebsd'
         with:
           targets: ${{ matrix.target }}
 
-      - name: Build (without cross)
-        if: matrix.build != 'freebsd' && !matrix.use-cross
-        run: cargo build --release --locked
+      - name: Cache cargo dependencies
+        if: matrix.build != 'freebsd'
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Build
+        if: matrix.build != 'freebsd'
+        run: cargo build --release --locked --target ${{ matrix.target }}
         env:
           RUSTFLAGS: ${{ matrix.rustflags }}
-
-      - name: Build (cross)
-        if: matrix.use-cross
-        run: cross build --release --locked --target ${{ matrix.target }}
 
       - name: Build archive
         shell: bash
@@ -91,12 +85,12 @@ jobs:
 
           dirname="$binary_name-${{ env.VERSION }}-${{ matrix.target }}"
           mkdir "$dirname"
-          if [ "${{ matrix.build }}" = "windows" ]; then
-            mv "target/release/$binary_name.exe" "$dirname"
-          elif [ "${{ matrix.build }}" = "freebsd" ]; then
+          if [ "${{ matrix.build }}" = "freebsd" ]; then
             mv "$binary_name-freebsd" "$dirname/$binary_name"
+          elif [ "${{ matrix.build }}" = "windows" ]; then
+            mv "target/${{ matrix.target }}/release/$binary_name.exe" "$dirname"
           else
-            mv "target/release/$binary_name" "$dirname"
+            mv "target/${{ matrix.target }}/release/$binary_name" "$dirname"
           fi
 
           if [ "${{ matrix.build }}" = "windows" ]; then

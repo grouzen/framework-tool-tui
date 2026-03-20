@@ -53,7 +53,6 @@ jobs:
           arch: x86_64
           mem: 8192
           sync: rsync
-          copyback: false
           prepare: |
             pkg install -y rust hidapi pkgconf
           run: |

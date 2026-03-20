@@ -53,7 +53,6 @@ jobs:
           arch: x86_64
           mem: 8192
           sync: rsync
-          copyback: false
           prepare: |
             pkg install -y rust hidapi pkgconf
           run: |
@@ -64,13 +63,6 @@ jobs:
         if: matrix.build != 'freebsd'
         with:
           targets: ${{ matrix.target }}
-
-      - name: Rust Cache
-        if: matrix.build != 'freebsd'
-        uses: Swatinem/rust-cache@v2
-        with:
-          shared-key: "release-${{ matrix.target }}"
-          cache-on-failure: true
 
       - name: Build
         if: matrix.build != 'freebsd'

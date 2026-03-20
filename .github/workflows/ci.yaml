@@ -29,11 +29,6 @@ jobs:
           bins: cargo-make
           components: rustfmt,clippy
 
-      - name: Rust Cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          shared-key: "lint"
-
       - name: Check formatting
         run: cargo fmt --all --check
 
@@ -89,13 +84,6 @@ jobs:
         if: matrix.build != 'freebsd'
         with:
           targets: ${{ matrix.target }}
-
-      - name: Rust Cache
-        if: matrix.build != 'freebsd'
-        uses: Swatinem/rust-cache@v2
-        with:
-          shared-key: "build-${{ matrix.target }}"
-          cache-on-failure: true
 
       - name: Build
         if: matrix.build != 'freebsd'

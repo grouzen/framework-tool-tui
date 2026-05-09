@@ -1,3 +1,35 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=id">Bahasa Indonesia</a>
+        | <a href="https://openaitx.github.io/view.html?user=grouzen&project=framework-tool-tui&lang=as">অসমীয়া</
+      </div>
+    </div>
+  </details>
+</div>
+
 # Framework System TUI
 
 ![Rust](https://img.shields.io/badge/lang-rust-orange) ![ratatui](https://img.shields.io/badge/ui-ratatui-blue) ![Framework Laptop](https://img.shields.io/badge/hardware-Framework--Laptop-success)  

@@ -486,9 +486,9 @@ dependencies = [
 
 [[package]]
 name = "dmidecode"
-version = "1.0.0"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "91ecc81f210f04aaadfeb5aa067b7d9095ea2af9c0e140ef56b8a3f3381ec4db"
+checksum = "a898086945b8e1c1e12f0996773ae65442d84f8dcafd5ab88a4c80b1da3d3008"
 dependencies = [
  "bitflags",
  "uuid",

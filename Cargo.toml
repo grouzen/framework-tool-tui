@@ -18,7 +18,7 @@ tokio = { version = "1.47.1", features = ["full"] }
 futures = "0.3.31"
 tui-popup = "0.6.0"
 serde = { version = "1.0", features = ["derive"] }
-toml = "0.8"
+toml = "1.1"
 dirs = "5.0"
 
 [target.'cfg(unix)'.dependencies]

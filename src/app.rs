@@ -51,7 +51,10 @@ impl App {
         })
     }
 
-    pub async fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()> {
+    pub async fn run<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> color_eyre::Result<()>
+    where
+        B::Error: Send + Sync + 'static,
+    {
         let mut event_loop = EventLoop::new();
 
         event_loop.run(Duration::from_millis(self.config.tick_interval_ms));

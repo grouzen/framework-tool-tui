@@ -129,7 +129,10 @@ impl Tui {
         &mut self,
         terminal: &mut Terminal<B>,
         info: &FrameworkInfo,
-    ) -> color_eyre::Result<()> {
+    ) -> color_eyre::Result<()>
+    where
+        B::Error: Send + Sync + 'static,
+    {
         terminal.draw(|frame| {
             let block = Block::default().style(
                 Style::default()
@@ -184,14 +187,10 @@ impl Tui {
 
             let popup = Popup::new(text)
                 .title(" Error ")
-                .style(
-                    Style::default()
-                        .bg(self.theme.background)
-                        .fg(self.theme.indication_warning),
-                )
-                .border_style(Style::default().fg(self.theme.border));
+                .style((self.theme.indication_warning, self.theme.background))
+                .border_style(self.theme.border);
 
-            frame.render_widget(&popup, frame.area());
+            frame.render_widget(popup, frame.area());
         }
     }
 }

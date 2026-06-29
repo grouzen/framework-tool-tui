@@ -8,8 +8,8 @@ repository = "https://github.com/grouzen/framework-tool-tui"
 authors = ["Michael Nedokushev <michael.nedokushev@gmail.com>"]
 
 [dependencies]
-ratatui = "0.29"
-crossterm = { version = "0.28.1", features = ["event-stream"] }
+ratatui = "0.30"
+crossterm = { version = "0.29", features = ["event-stream"] }
 anyhow = "1.0"
 framework_lib = "0.6.1"
 dmidecode = "1"

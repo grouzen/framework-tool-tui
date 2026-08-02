@@ -2,10 +2,13 @@
 name = "framework-tool-tui"
 version = "0.8.4"
 edition = "2021"
+rust-version = "1.88"
 description = "TUI for controlling and monitoring Framework Computers hardware built in Rust"
 license = "MIT"
 repository = "https://github.com/grouzen/framework-tool-tui"
 authors = ["Michael Nedokushev <michael.nedokushev@gmail.com>"]
+categories = ["command-line-utilities", "hardware-support"]
+keywords = ["framework", "laptop", "tui", "hardware", "monitoring"]
 
 [dependencies]
 ratatui = "0.30"

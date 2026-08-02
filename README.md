@@ -25,9 +25,17 @@ A snappy TUI dashboard for controlling and monitoring your Framework Laptop hard
 
 The pre-compiled binaries for Linux, Windows, and FreeBSD are available for download on the [Releases](https://github.com/grouzen/framework-tool-tui/releases) page
 
+### :package: Via crates.io
+
+Install the latest released version with Cargo:
+
+```sh
+cargo install framework-tool-tui --locked
+```
+
 ### :memo: From source
 
-Requires [Rust](https://rustup.rs/) (Edition 2024) and a Framework laptop.
+Requires [Rust](https://rustup.rs/) 1.88 or later and a Framework laptop.
 
 ```sh
 git clone https://github.com/grouzen/framework-tool-tui.git

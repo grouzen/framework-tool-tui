@@ -1,6 +1,6 @@
 [package]
 name = "framework-tool-tui"
-version = "0.8.4"
+version = "0.8.5"
 edition = "2021"
 rust-version = "1.88"
 description = "TUI for controlling and monitoring Framework Computers hardware built in Rust"

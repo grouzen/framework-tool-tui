@@ -68,7 +68,7 @@ impl FrameworkInfo {
             smbios_version: smbios_version(smbios),
             smbios_release_date: smbios_release_date(smbios),
             smbios_vendor: smbios_vendor(smbios),
-            pd_ports: pd_ports_info(pd_ports),
+            pd_ports: pd_ports_info(pd_ports, platform),
             fan_rpm,
             platform,
         }
@@ -241,26 +241,56 @@ fn smbios_vendor(smbios: &Option<SmbiosStore>) -> Option<String> {
     })
 }
 
-fn pd_ports_info(pd_ports: Vec<Option<UsbPdPowerInfo>>) -> PdPortsInfo {
-    let left_back = pd_ports
-        .get(3)
-        .and_then(|port| port.as_ref().map(pd_port_info));
-    let left_front = pd_ports
-        .get(2)
-        .and_then(|port| port.as_ref().map(pd_port_info));
-    let right_back = pd_ports
-        .first()
-        .and_then(|port| port.as_ref().map(pd_port_info));
-    let right_front = pd_ports
-        .get(1)
-        .and_then(|port| port.as_ref().map(pd_port_info));
+/// Physical USB-C slot of an EC PD port.
+#[derive(Debug, Clone, Copy)]
+enum PdPortSlot {
+    RightBack,
+    RightFront,
+    LeftFront,
+    LeftBack,
+}
 
-    PdPortsInfo {
-        left_back,
-        left_front,
-        right_back,
-        right_front,
+/// Physical slot for each EC PD port, indexed by EC port (0..=3).
+/// `framework_lib` labels EC ports 0..=3 right-back, right-front, left-front,
+/// left-back (see `get_and_print_pd_info` in its `power.rs`).
+const DEFAULT_PD_PORT_ORDER: [PdPortSlot; 4] = [
+    PdPortSlot::RightBack,
+    PdPortSlot::RightFront,
+    PdPortSlot::LeftFront,
+    PdPortSlot::LeftBack,
+];
+
+/// On the Laptop 13 Pro (Intel Core Ultra Series 3) the front and back slots
+/// are physically swapped, see https://github.com/grouzen/framework-tool-tui/issues/138.
+const CORE_ULTRA_3_PD_PORT_ORDER: [PdPortSlot; 4] = [
+    PdPortSlot::RightFront,
+    PdPortSlot::RightBack,
+    PdPortSlot::LeftBack,
+    PdPortSlot::LeftFront,
+];
+
+fn pd_ports_info(pd_ports: Vec<Option<UsbPdPowerInfo>>, platform: Option<Platform>) -> PdPortsInfo {
+    let order = match platform {
+        Some(Platform::IntelCoreUltra3) => CORE_ULTRA_3_PD_PORT_ORDER,
+        _ => DEFAULT_PD_PORT_ORDER,
+    };
+
+    let mut info = PdPortsInfo::default();
+    for (ec_index, slot) in order.iter().enumerate() {
+        let Some(port) = pd_ports.get(ec_index).and_then(|port| port.as_ref()) else {
+            continue;
+        };
+        let port = pd_port_info(port);
+
+        match slot {
+            PdPortSlot::RightBack => info.right_back = Some(port),
+            PdPortSlot::RightFront => info.right_front = Some(port),
+            PdPortSlot::LeftFront => info.left_front = Some(port),
+            PdPortSlot::LeftBack => info.left_back = Some(port),
+        }
     }
+
+    info
 }
 
 fn pd_port_info(pd_port: &UsbPdPowerInfo) -> PdPortInfo {
@@ -300,5 +330,56 @@ fn pd_port_info(pd_port: &UsbPdPowerInfo) -> PdPortInfo {
         voltage_max,
         current_limit: pd_port.meas.current_lim,
         current_max: pd_port.meas.current_max,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use framework_lib::power::UsbChargeMeasures;
+
+    /// Builds one `UsbPdPowerInfo` per EC port index, each tagged by its
+    /// `max_power` so a slot can be identified in the mapped `PdPortsInfo`.
+    fn pd_ports() -> Vec<Option<UsbPdPowerInfo>> {
+        (0..4)
+            .map(|index| {
+                Some(UsbPdPowerInfo {
+                    role: UsbPowerRoles::Disconnected,
+                    charging_type: UsbChargingType::None,
+                    dualrole: false,
+                    meas: UsbChargeMeasures {
+                        voltage_max: 0,
+                        voltage_now: 0,
+                        current_max: 0,
+                        current_lim: 0,
+                    },
+                    max_power: index * 1000,
+                })
+            })
+            .collect()
+    }
+
+    fn slot_power(pd_port: &Option<PdPortInfo>) -> u32 {
+        pd_port.as_ref().expect("port is mapped").max_power
+    }
+
+    #[test]
+    fn pd_ports_info_maps_ec_index_to_physical_slot() {
+        let info = pd_ports_info(pd_ports(), None);
+
+        assert_eq!(slot_power(&info.right_back), 0);
+        assert_eq!(slot_power(&info.right_front), 1);
+        assert_eq!(slot_power(&info.left_front), 2);
+        assert_eq!(slot_power(&info.left_back), 3);
+    }
+
+    #[test]
+    fn pd_ports_info_swaps_front_and_back_on_core_ultra_3() {
+        let info = pd_ports_info(pd_ports(), Some(Platform::IntelCoreUltra3));
+
+        assert_eq!(slot_power(&info.right_front), 0);
+        assert_eq!(slot_power(&info.right_back), 1);
+        assert_eq!(slot_power(&info.left_back), 2);
+        assert_eq!(slot_power(&info.left_front), 3);
     }
 }

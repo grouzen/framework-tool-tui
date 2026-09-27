@@ -95,6 +95,34 @@ pub struct PdPortInfo {
     pub current_max: u16,
 }
 
+/// Physical USB-C slot of an EC PD port.
+#[derive(Debug, Clone, Copy)]
+enum PdPortSlot {
+    RightBack,
+    RightFront,
+    LeftFront,
+    LeftBack,
+}
+
+/// Physical slot for each EC PD port, indexed by EC port (0..=3).
+/// `framework_lib` labels EC ports 0..=3 right-back, right-front, left-front,
+/// left-back (see `get_and_print_pd_info` in its `power.rs`).
+const DEFAULT_PD_PORT_ORDER: [PdPortSlot; 4] = [
+    PdPortSlot::RightBack,
+    PdPortSlot::RightFront,
+    PdPortSlot::LeftFront,
+    PdPortSlot::LeftBack,
+];
+
+/// On the Laptop 13 Pro (Intel Core Ultra Series 3) the front and back slots
+/// are physically swapped, see https://github.com/grouzen/framework-tool-tui/issues/138.
+const CORE_ULTRA_3_PD_PORT_ORDER: [PdPortSlot; 4] = [
+    PdPortSlot::RightFront,
+    PdPortSlot::RightBack,
+    PdPortSlot::LeftBack,
+    PdPortSlot::LeftFront,
+];
+
 fn charge_percentage(power: &Option<PowerInfo>) -> Option<u32> {
     power.as_ref().and_then(|power| {
         power
@@ -241,34 +269,6 @@ fn smbios_vendor(smbios: &Option<SmbiosStore>) -> Option<String> {
     })
 }
 
-/// Physical USB-C slot of an EC PD port.
-#[derive(Debug, Clone, Copy)]
-enum PdPortSlot {
-    RightBack,
-    RightFront,
-    LeftFront,
-    LeftBack,
-}
-
-/// Physical slot for each EC PD port, indexed by EC port (0..=3).
-/// `framework_lib` labels EC ports 0..=3 right-back, right-front, left-front,
-/// left-back (see `get_and_print_pd_info` in its `power.rs`).
-const DEFAULT_PD_PORT_ORDER: [PdPortSlot; 4] = [
-    PdPortSlot::RightBack,
-    PdPortSlot::RightFront,
-    PdPortSlot::LeftFront,
-    PdPortSlot::LeftBack,
-];
-
-/// On the Laptop 13 Pro (Intel Core Ultra Series 3) the front and back slots
-/// are physically swapped, see https://github.com/grouzen/framework-tool-tui/issues/138.
-const CORE_ULTRA_3_PD_PORT_ORDER: [PdPortSlot; 4] = [
-    PdPortSlot::RightFront,
-    PdPortSlot::RightBack,
-    PdPortSlot::LeftBack,
-    PdPortSlot::LeftFront,
-];
-
 fn pd_ports_info(pd_ports: Vec<Option<UsbPdPowerInfo>>, platform: Option<Platform>) -> PdPortsInfo {
     let order = match platform {
         Some(Platform::IntelCoreUltra3) => CORE_ULTRA_3_PD_PORT_ORDER,
@@ -277,16 +277,16 @@ fn pd_ports_info(pd_ports: Vec<Option<UsbPdPowerInfo>>, platform: Option<Platfor
 
     let mut info = PdPortsInfo::default();
     for (ec_index, slot) in order.iter().enumerate() {
-        let Some(port) = pd_ports.get(ec_index).and_then(|port| port.as_ref()) else {
-            continue;
-        };
-        let port = pd_port_info(port);
+        let port = pd_ports
+            .get(ec_index)
+            .and_then(|port| port.as_ref())
+            .map(pd_port_info);
 
         match slot {
-            PdPortSlot::RightBack => info.right_back = Some(port),
-            PdPortSlot::RightFront => info.right_front = Some(port),
-            PdPortSlot::LeftFront => info.left_front = Some(port),
-            PdPortSlot::LeftBack => info.left_back = Some(port),
+            PdPortSlot::RightBack => info.right_back = port,
+            PdPortSlot::RightFront => info.right_front = port,
+            PdPortSlot::LeftFront => info.left_front = port,
+            PdPortSlot::LeftBack => info.left_back = port,
         }
     }
 

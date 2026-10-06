@@ -2657,9 +2657,9 @@ dependencies = [
 
 [[package]]
 name = "tui-popup"
-version = "0.7.6"
+version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "13c8c7b5e836607a39b397c2b43fd467fd2f0302dc42aceb1a93ee21467ac0b7"
+checksum = "66cfc2fd30265311187827fdc16867de79e662bea175d6008b3aa985fcbf8732"
 dependencies = [
  "derive-getters",
  "derive_setters",
